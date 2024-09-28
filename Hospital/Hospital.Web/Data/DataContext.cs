@@ -10,6 +10,7 @@ namespace Hospital.Web.Data
         {
         }
         public DbSet<Rol> Roles { get; set; }
+        public DbSet<User> Users { get; set; }
 
     }
 }
