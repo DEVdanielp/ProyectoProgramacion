@@ -1,0 +1,9 @@
+diff a/Hospital/Hospital.Web/appsettings.json b/Hospital/Hospital.Web/appsettings.json	(rejected hunks)
+@@ -7,7 +7,6 @@
+   },
+ 
+   "ConnectionStrings": {
+-    "MyConnection": "Server=(localdb)\\daniel; DataBase =Proyecto; User Id=daniel; Password = daniel; Encrypt = false; "
+     //"MyConnection": "Server=(localdb)\\daniel; DataBase =Proyecto; User Id=daniel; Password = daniel; Encrypt = false; ", //Daniel
+     "MyConnection": "Server=(localdb)\\MyLocalDb; DataBase =Proyecto; User Id=Dres; Password = andres2005*; Encrypt = false; " //Andres
+ 
