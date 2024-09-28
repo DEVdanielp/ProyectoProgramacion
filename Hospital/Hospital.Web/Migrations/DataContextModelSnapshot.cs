@@ -23,14 +23,21 @@ namespace Hospital.Web.Migrations
 
             modelBuilder.Entity("Hospital.Web.Data.Entities.Rol", b =>
                 {
-                    b.Property<string>("NameRol")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("NameRol");
+                    b.Property<string>("NameRol")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Roles");
                 });

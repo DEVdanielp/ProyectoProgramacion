@@ -5,7 +5,7 @@
 namespace Hospital.Web.Migrations
 {
     /// <inheritdoc />
-    public partial class RolTableCreation : Migration
+    public partial class RolTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,12 +14,14 @@ namespace Hospital.Web.Migrations
                 name: "Roles",
                 columns: table => new
                 {
-                    NameRol = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NameRol = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Roles", x => x.NameRol);
+                    table.PrimaryKey("PK_Roles", x => x.Id);
                 });
         }
 

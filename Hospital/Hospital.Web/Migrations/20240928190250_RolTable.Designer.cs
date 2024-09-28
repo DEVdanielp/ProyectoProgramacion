@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240928061758_RolTableCreation")]
-    partial class RolTableCreation
+    [Migration("20240928190250_RolTable")]
+    partial class RolTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,14 +26,21 @@ namespace Hospital.Web.Migrations
 
             modelBuilder.Entity("Hospital.Web.Data.Entities.Rol", b =>
                 {
-                    b.Property<string>("NameRol")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("NameRol");
+                    b.Property<string>("NameRol")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Roles");
                 });

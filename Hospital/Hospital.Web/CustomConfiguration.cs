@@ -23,7 +23,7 @@ namespace Hospital.Web
         //Se llaman a los servicios a usar
         public static void AddServices(WebApplicationBuilder builder)
         {
-            builder.Services.AddScoped<IRolesServices, RolService>();   //Servicios de roles
+            builder.Services.AddScoped<IRolesServices, RolService>(); //Servicios de roles
         }
     }
 
