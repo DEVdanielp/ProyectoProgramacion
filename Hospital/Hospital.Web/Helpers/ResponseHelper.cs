@@ -10,10 +10,11 @@ namespace Hospital.Web.Helpers
             return new Response<T>
             {
                 IsSuccess = true,
-                Message = message
+                Message = message,
+                Result = model
             };
         }
-        public static Response<T> MakeResponseFail(Exception ex)
+        public static Response<T> MakeResponseFail(Exception ex, string message = "Error al generar la solucitud")
         {
             return new Response<T>
             {
@@ -22,7 +23,7 @@ namespace Hospital.Web.Helpers
                     ex.Message,
                 },
                 IsSuccess = false,
-                Message = "Error al generar la solucitud"        
+                Message = message        
             };
         }
     }
