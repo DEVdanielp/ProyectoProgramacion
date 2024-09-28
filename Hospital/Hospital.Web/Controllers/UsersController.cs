@@ -14,6 +14,7 @@ namespace Hospital.Web.Controllers
         {
             _context = context;
         }
+
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -28,7 +29,7 @@ namespace Hospital.Web.Controllers
             {
                 Rol = await _context.Roles.Select(a => new SelectListItem
                 {
-                    Text = $"{a.Description}",
+                    Text = $"{a.NameRol} {a.Description}",
                     Value = a.NameRol.ToString()
                 }).ToListAsync(),
             };
@@ -42,7 +43,6 @@ namespace Hospital.Web.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    Console.WriteLine("hola");
                     return View(dto);
                 }
                 User user = new User
@@ -52,7 +52,7 @@ namespace Hospital.Web.Controllers
                     Birth = dto.Birth,
                     UserName = dto.UserName,
                     Password = dto.Password,
-                    Rol = await _context.Roles.FirstOrDefaultAsync(a => a.NameRol == dto.RolNameRol),
+                    Rol = await _context.Roles.FirstOrDefaultAsync(a => a.Id == dto.RolId),
                 };
                 await _context.Users.AddAsync(user);
                 await _context.SaveChangesAsync();
@@ -75,7 +75,7 @@ namespace Hospital.Web.Controllers
                 UserDTO dto = new UserDTO
                 {
                     Id = id,
-                    RolNameRol = user.Rol.NameRol,
+                    RolId = user.Id,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Birth = user.Birth,
@@ -84,7 +84,7 @@ namespace Hospital.Web.Controllers
 
                     Rol = await _context.Roles.Select(a => new SelectListItem
                     {
-                        Text = $"{a.Description}",
+                        Text = $"{a.NameRol} {a.Description}",
                         Value = a.NameRol.ToString()
                     }).ToListAsync(),
                 };
@@ -107,7 +107,7 @@ namespace Hospital.Web.Controllers
                 {
                     dto.Rol = await _context.Roles.Select(a => new SelectListItem
                     {
-                        Text = $"{a.Description}",
+                        Text = $"{a.NameRol} {a.Description}",
                         Value = a.NameRol.ToString()
                     }).ToArrayAsync();
                     return View(dto);
@@ -121,7 +121,7 @@ namespace Hospital.Web.Controllers
                 user.Birth = dto.Birth;
                 user.UserName = dto.UserName;
                 user.Password = dto.Password;
-                user.Rol = await _context.Roles.FirstOrDefaultAsync(a => a.NameRol == dto.RolNameRol);
+                user.Rol = await _context.Roles.FirstOrDefaultAsync(a => a.Id == dto.RolId);
 
 
                 _context.Users.Update(user);
@@ -139,8 +139,8 @@ namespace Hospital.Web.Controllers
         {
             try
             {
-                User? book = await _context.Users.FirstOrDefaultAsync(a => a.Id == id);
-                _context.Users.Remove(book);
+                User? user = await _context.Users.FirstOrDefaultAsync(a => a.Id == id);
+                _context.Users.Remove(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
 

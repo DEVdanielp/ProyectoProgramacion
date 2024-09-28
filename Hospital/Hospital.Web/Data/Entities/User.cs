@@ -26,6 +26,6 @@ namespace Hospital.Web.Data.Entities
         public string Password { get; set; }
 
         public Rol Rol { get; set; }
-        public int RolNameRol { get; set; }
+        public int RolId { get; set; }
     }
 }
