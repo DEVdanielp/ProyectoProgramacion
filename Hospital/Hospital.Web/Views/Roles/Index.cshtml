@@ -4,166 +4,53 @@
     Layout = "~/Views/Shared/MyLayout.cshtml";
 }
 
-<div class="pagetitle">
-    <h1>Roles</h1>
-    <nav>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
-            <li class="breadcrumb-item active">Roles</li>
-        </ol>
-    </nav>
-</div><!-- End Page Title -->
+    <div class="pagetitle">
+        <h1>Roles</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                <li class="breadcrumb-item active">Roles</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
 
-<div class="card">
-    <div class="card-header">
-        <h3 class="m-0 font-weight text-primary">Roles</h3>
-    </div>
+<section class="section dashboard">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="m-0 font-weight-bold text-primary">Roles</h3>
+        </div>
 
-    <div class="card-body mt-2">
+        <div class="card-body mt-2">
 
-        <!-- Tabla usada -->
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col">Rol</th>
-                    <th scope="col">Descripción</th>
-                    <th scope="col"></th>
->
-                </tr>
-            </thead>
-            <tbody>
-                @foreach(Rol item in Model)
-                {
+            <!-- Tabla usada -->
+            <table class="table table-bordered">
+                <thead>
                     <tr>
-
-                        <td>@item.NameRol</td>
-                        <td>@item.Description</td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.NameRol" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
-                            <a asp-action="Delete" asp-route-id="@item.NameRol" class="btn btn-sm btn-danger"><i class="bi bi-trash-fill"></i></a>     
-                        </td>
+                        <th scope="col">Rol</th>
+                        <th scope="col">Descripción</th>
+                        <th scope="col"></th>
+    >
                     </tr>
-                }
+                </thead>
+                <tbody>
+                    @foreach(Rol item in Model)
+                    {
+                        <tr>
+
+                            <td>@item.NameRol</td>
+                            <td>@item.Description</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.NameRol" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
+                                <a asp-action="Delete" asp-route-id="@item.NameRol" class="btn btn-sm btn-danger"><i class="bi bi-trash-fill"></i></a>     
+                            </td>
+                        </tr>
+                    }
 
                 
-            </tbody>
-        </table>
-        <!-- Tabla usada-->
+                </tbody>
+            </table>
+            <!-- Tabla usada-->
 
+        </div>
     </div>
-</div>
-
-
-
-<!-- ------------------------------------------------------------------------------------------------ -->
-
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">Bordered Table</h5>
-        <p>Add <code>.table-bordered</code> for borders on all sides of the table and cells.</p>
-        <!-- Bordered Table -->
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Position</th>
-                    <th scope="col">Age</th>
-                    <th scope="col">Start Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Brandon Jacob</td>
-                    <td>Designer</td>
-                    <td>28</td>
-                    <td>2016-05-25</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Bridie Kessler</td>
-                    <td>Developer</td>
-                    <td>35</td>
-                    <td>2014-12-05</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>Ashleigh Langosh</td>
-                    <td>Finance</td>
-                    <td>45</td>
-                    <td>2011-08-12</td>
-                </tr>
-                <tr>
-                    <th scope="row">4</th>
-                    <td>Angus Grady</td>
-                    <td>HR</td>
-                    <td>34</td>
-                    <td>2012-06-11</td>
-                </tr>
-                <tr>
-                    <th scope="row">5</th>
-                    <td>Raheem Lehner</td>
-                    <td>Dynamic Division Officer</td>
-                    <td>47</td>
-                    <td>2011-04-19</td>
-                </tr>
-            </tbody>
-        </table>
-        <!-- End Bordered Table -->
-
-        <p><a href="https://getbootstrap.com/docs/5.0/utilities/borders/#border-color" target="_blank">Border color utilities</a> can be added to change colors:</p>
-
-        <!-- Primary Color Bordered Table -->
-        <table class="table table-bordered border-primary">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Position</th>
-                    <th scope="col">Age</th>
-                    <th scope="col">Start Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Brandon Jacob</td>
-                    <td>Designer</td>
-                    <td>28</td>
-                    <td>2016-05-25</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Bridie Kessler</td>
-                    <td>Developer</td>
-                    <td>35</td>
-                    <td>2014-12-05</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>Ashleigh Langosh</td>
-                    <td>Finance</td>
-                    <td>45</td>
-                    <td>2011-08-12</td>
-                </tr>
-                <tr>
-                    <th scope="row">4</th>
-                    <td>Angus Grady</td>
-                    <td>HR</td>
-                    <td>34</td>
-                    <td>2012-06-11</td>
-                </tr>
-                <tr>
-                    <th scope="row">5</th>
-                    <td>Raheem Lehner</td>
-                    <td>Dynamic Division Officer</td>
-                    <td>47</td>
-                    <td>2011-04-19</td>
-                </tr>
-            </tbody>
-        </table>
-        <!-- End Primary Color Bordered Table -->
-
-    </div>
-</div>
+</section>

@@ -17,10 +17,18 @@ namespace Hospital.Web.Controllers
             _rolesService = rolesService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             Response<List<Rol>> response = await _rolesService.GetListAsync();
             return View(response.Result);
+        }
+
+        [HttpGet]
+
+        public async Task<IActionResult> Create()
+        {
+            return View();
         }
     }
 }
