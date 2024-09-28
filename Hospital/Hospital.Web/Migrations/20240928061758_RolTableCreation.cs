@@ -14,12 +14,12 @@ namespace Hospital.Web.Migrations
                 name: "Roles",
                 columns: table => new
                 {
-                    Nombrerol = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    NameRol = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Roles", x => x.Nombrerol);
+                    table.PrimaryKey("PK_Roles", x => x.NameRol);
                 });
         }
 

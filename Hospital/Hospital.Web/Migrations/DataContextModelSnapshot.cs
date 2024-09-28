@@ -21,16 +21,16 @@ namespace Hospital.Web.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Hospital.Web.Data.Entities.Roles", b =>
+            modelBuilder.Entity("Hospital.Web.Data.Entities.Rol", b =>
                 {
-                    b.Property<string>("Nombrerol")
+                    b.Property<string>("NameRol")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Nombrerol");
+                    b.HasKey("NameRol");
 
                     b.ToTable("Roles");
                 });

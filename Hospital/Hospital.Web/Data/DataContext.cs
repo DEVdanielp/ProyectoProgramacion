@@ -9,7 +9,7 @@ namespace Hospital.Web.Data
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
-        public DbSet<Roles> Roles { get; set; }
+        public DbSet<Rol> Roles { get; set; }
 
     }
 }

@@ -2,14 +2,14 @@
 
 namespace Hospital.Web.Data.Entities
 {
-    public class Roles
+    public class Rol
     {
         [Key]
         [Display(Name = "Rol")]
-        public string Nombrerol  { get; set; }
+        public string NameRol { get; set; } 
 
         [Display(Name = "Descripcion")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
     }
 }
