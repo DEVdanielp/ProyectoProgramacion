@@ -1,6 +1,6 @@
 ﻿@model Rol
 @{
-    ViewData["Title"] = "Crear Rol";
+    ViewData["Title"] = "Editar Rol";
     Layout = "~/Views/Shared/MyLayout.cshtml";
 }
 
@@ -10,23 +10,27 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
             <li class="breadcrumb-item"><a asp-action="Index">Roles</a></li>
-            <li class="breadcrumb-item active">Nuevo rol</li>
+            <li class="breadcrumb-item active">Editar rol</li>
         </ol>
     </nav>
 </div><!-- End Page Title -->
 
 <section class="section dashboard">
 
-    <form class="row g-3" asp-action="Create" method="post">
+    <form class="row g-3" asp-action="Edit" method="post">
+
+        <input type="hidden" asp-for="Id"/>
+
         <div class="col-12">
-            <label for="inputNanme4" class="form-label">@Html.DisplayFor(model => model.NameRol)</label>
-            <input asp-for="NameRol" class="form-control" id="inputNanme4" placeholder="Nombre del rol">
+            <label for="inputNanme4" class="form-label">@Html.DisplayFor(model => model.NameRol )</label>
+            <input asp-for="NameRol" class="form-control" id="inputNanme4">
             <span asp-validation-for="NameRol" class="text-danger"></span>
         </div>
 
         <div class="col-12">
-            <label for="inputNanme4" class="form-label">@Html.DisplayFor(model => model.Description)</label>
-            <input asp-for="Description" class="form-control" id="inputNanme4" placeholder="Descripcion del rol">
+            <label for="inputNanme4" class="form-label">@Html.DisplayFor(model => model.NameRol)</label>
+            <input asp-for="Description" class="form-control" id="inputNanme4">
+            <span asp-validation-for="Description" class="text-danger"></span>
         </div>
 
         <div class="text-center">

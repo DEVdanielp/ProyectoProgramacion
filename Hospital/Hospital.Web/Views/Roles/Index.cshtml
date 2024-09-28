@@ -16,8 +16,17 @@
 
 <section class="section dashboard">
     <div class="card">
+
         <div class="card-header">
-            <h3 class="m-0 font-weight-bold text-primary">Roles</h3>
+            <div class="row">
+
+                <h3 class="m-0 font-weight-bold text-primary col-md-11">Roles</h3>
+
+                <div class="col-md-1">
+                    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i></a>
+                </div>
+            </div>
+            
         </div>
 
         <div class="card-body mt-2">
@@ -40,8 +49,8 @@
                             <td>@item.NameRol</td>
                             <td>@item.Description</td>
                             <td>
-                                <a asp-action="Edit" asp-route-id="@item.NameRol" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
-                                <a asp-action="Delete" asp-route-id="@item.NameRol" class="btn btn-sm btn-danger"><i class="bi bi-trash-fill"></i></a>     
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger"><i class="bi bi-trash-fill"></i></a>     
                             </td>
                         </tr>
                     }
