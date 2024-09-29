@@ -25,7 +25,11 @@ namespace Hospital.Web.Data.Entities
         [Required(ErrorMessage = "El campo '{0}' es requerido.")]
         public string Password { get; set; }
 
+        public List<Appoiment> AppoimentPatient { get; set; }
+        public List<Appoiment> AppoimentDoctor { get; set; }
+
         public Rol Rol { get; set; }
         public int RolId { get; set; }
+        
     }
 }

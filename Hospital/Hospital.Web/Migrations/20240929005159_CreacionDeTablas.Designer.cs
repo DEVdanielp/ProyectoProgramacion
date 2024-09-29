@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240928192547_UserTable")]
-    partial class UserTable
+    [Migration("20240929005159_CreacionDeTablas")]
+    partial class CreacionDeTablas
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,35 @@ namespace Hospital.Web.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Hospital.Web.Data.Entities.Appoiment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<TimeOnly>("Time")
+                        .HasColumnType("time");
+
+                    b.Property<int?>("UserDoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserPatientId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserDoctorId");
+
+                    b.HasIndex("UserPatientId");
+
+                    b.ToTable("Appoiments");
+                });
 
             modelBuilder.Entity("Hospital.Web.Data.Entities.Rol", b =>
                 {
@@ -87,6 +116,21 @@ namespace Hospital.Web.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Hospital.Web.Data.Entities.Appoiment", b =>
+                {
+                    b.HasOne("Hospital.Web.Data.Entities.User", "UserDoctor")
+                        .WithMany("AppoimentDoctor")
+                        .HasForeignKey("UserDoctorId");
+
+                    b.HasOne("Hospital.Web.Data.Entities.User", "UserPatient")
+                        .WithMany("AppoimentPatient")
+                        .HasForeignKey("UserPatientId");
+
+                    b.Navigation("UserDoctor");
+
+                    b.Navigation("UserPatient");
+                });
+
             modelBuilder.Entity("Hospital.Web.Data.Entities.User", b =>
                 {
                     b.HasOne("Hospital.Web.Data.Entities.Rol", "Rol")
@@ -96,6 +140,13 @@ namespace Hospital.Web.Migrations
                         .IsRequired();
 
                     b.Navigation("Rol");
+                });
+
+            modelBuilder.Entity("Hospital.Web.Data.Entities.User", b =>
+                {
+                    b.Navigation("AppoimentDoctor");
+
+                    b.Navigation("AppoimentPatient");
                 });
 #pragma warning restore 612, 618
         }
