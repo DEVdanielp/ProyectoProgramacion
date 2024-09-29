@@ -59,7 +59,7 @@ namespace Hospital.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit([FromRoute] int Id)
         {
-            Console.WriteLine("aaaa" + Id + "aaaa");
+            
             Response<Rol> response = await _rolesService.GetOneAsync(Id);
 
             if (response.IsSuccess)

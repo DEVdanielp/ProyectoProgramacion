@@ -66,19 +66,15 @@ namespace Hospital.Web.Services
                 Rol? rol = await _context.Roles.FirstOrDefaultAsync(r => r.Id == Id);
 
                 if (rol is null) {
-                    Console.WriteLine("bad n");
-                    Console.WriteLine(Id);
                     return ResponseHelper<Rol>.MakeResponseFail("El id indicado no existe");
                 }
 
-                Console.WriteLine("good");
+                
                 return ResponseHelper<Rol>.MakeResponseSuccess(rol);
                 
             }
             catch (Exception ex)
             {
-                Console.WriteLine("bad bad");
-                Console.WriteLine(Id);
                 return ResponseHelper<Rol>.MakeResponseFail(ex);
             }
         }
