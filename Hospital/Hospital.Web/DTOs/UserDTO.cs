@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Hospital.Web.Data.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace Hospital.Web.DTOs
@@ -25,7 +26,10 @@ namespace Hospital.Web.DTOs
         [Required(ErrorMessage = "El campo '{0}' es requerido.")]
         public string Password { get; set; }
 
-        public IEnumerable<SelectListItem>? Rol { get; set; }
+        public List<Appoiment> AppoimentPatient { get; set; }
+        public List<Appoiment> AppoimentDoctor { get; set; }
+
+        public IEnumerable<SelectListItem>? Rols { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un autor")]
         [Required(ErrorMessage = "El campo '{0}' es requerido.")]
         public int RolId { get; set; }

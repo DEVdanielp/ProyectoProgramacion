@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace Hospital.Web.Data.Entities
 {
@@ -28,7 +29,8 @@ namespace Hospital.Web.Data.Entities
         public List<Appoiment> AppoimentPatient { get; set; }
         public List<Appoiment> AppoimentDoctor { get; set; }
 
-        public Rol Rol { get; set; }
+        public  Rol Rol { get; set; }
+     
         public int RolId { get; set; }
         
     }
