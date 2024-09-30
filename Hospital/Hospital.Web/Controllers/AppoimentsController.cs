@@ -26,8 +26,74 @@ namespace Hospital.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            await _appoimentsService.GetOneAsync(); 
-            return View(await _appoimentsService.GetOneAsync());
+            AppoimentDTO dto = await _appoimentsService.CreateDTO();
+            return View(dto);
+            
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(AppoimentDTO dto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View(dto);
+                }
+
+                Response<Appoiment> response = await _appoimentsService.CreateAsync(dto);
+
+                if (response.IsSuccess)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View(response);
+            }
+            catch (Exception ex)
+            {
+                return View(dto);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit([FromRoute] int Id)
+        {
+
+            Response<AppoimentDTO> response = await _appoimentsService.GetOneAsync(Id);
+
+            if (response.IsSuccess)
+            {
+                return View(response.Result);
+            }
+          
+            return RedirectToAction(nameof(Index));
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(AppoimentDTO appoiment)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View(appoiment);
+                }
+
+                Response<AppoimentDTO> response = await _appoimentsService.EditAsync(appoiment);
+
+                if (response.IsSuccess)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View(response);
+            }
+            catch (Exception ex)
+            {
+                return View(appoiment);
+            }
         }
     }
 }
