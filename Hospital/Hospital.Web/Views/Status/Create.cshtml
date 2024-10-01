@@ -1,0 +1,76 @@
+﻿@model StatusDTO
+@{
+    ViewData["Title"] = "Nuevo estado de la cita";
+    Layout = "~/Views/Shared/MyLayout.cshtml";
+}
+
+
+<div class="pagetitle">
+    <h1>Citas</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+            <li class="breadcrumb-item"><a asp-action="Index">Roles</a></li>
+            <li class="breadcrumb-item active">Nuevo estado de cita</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-6">
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Registrar cita</h5>
+
+                    <!-- General Form Elements -->
+                    <form asp-action="Create" method="post">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label">Estado de la cita</label>
+                            <div class="col-sm-10">
+                                <select asp-for="StatusAppoiment" class="form-control">
+                                    <option selected>Click para seleccionar un estado de cita</option>
+                                    <option >Programada</option>
+                                    <option >Cancelada</option>
+                                    <option >Concretada</option>
+                                </select>
+                            </div>
+                        </div>
+
+                       <!--Select-->
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label">Seleccionar Cita</label>
+                            <div class="col-sm-10">
+                                <select asp-for="AppoimentId" asp-items="Model.Appoiment" class="form-control">
+                                    <option selected>Click para seleccionar una cita</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-10">
+                                <button type="submit" class="btn btn-primary">Aceptar</button>
+                            </div>
+                        </div>
+
+                    </form><!-- End General Form Elements -->
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
