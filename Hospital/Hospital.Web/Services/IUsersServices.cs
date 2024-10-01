@@ -8,12 +8,17 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 
+
+
 namespace Hospital.Web.Services
 {
     public interface IUsersServices
     {
         public Task<Response<User>> CreateAsync(UserDTO dto);
+        public Task<UserDTO> CreateDTO();
         public Task<Response<List<User>>> GetListAsync();
+        public Task<Response<UserDTO>> EditAsync(UserDTO dto);
+        public Task<Response<UserDTO>> GetOneAsycn(int id);
     }
 
     public class UserServices : IUsersServices
@@ -50,12 +55,24 @@ namespace Hospital.Web.Services
                 return ResponseHelper<User>.MakeResponseFail(ex);
             }
         }
+        public async Task<UserDTO> CreateDTO()
+        {
+            UserDTO dto = new UserDTO
+            {
+                Rols = await _context.Roles.Select(a => new SelectListItem
+                {
+                    Text = $"{a.NameRol}",
+                    Value = a.Id.ToString()
+                }).ToListAsync(),
 
+            };
+            return dto;
+        }
         public async Task<Response<List<User>>> GetListAsync()
         {
             try
             {
-                List<User> users = await _context.Users.ToListAsync();
+                List<User> users = await _context.Users.Include(u => u.Rol).ToListAsync();
                 return ResponseHelper<List<User>>.MakeResponseSuccess(users);
             }
             catch (Exception ex)
@@ -64,6 +81,67 @@ namespace Hospital.Web.Services
             }
         }
 
+        public async Task<Response<UserDTO>> EditAsync(UserDTO dto)
+        {
+            try
+            {
 
+                User user = await _context.Users.FirstOrDefaultAsync(u => u.Id == dto.RolId);
+
+                    user.FirstName = dto.FirstName;
+                    user.LastName = dto.LastName;
+                    user.Birth = dto.Birth;
+                    user.UserName = dto.UserName;
+                    user.Password = dto.Password;
+                    user.Rol = await _context.Roles.FirstOrDefaultAsync(a => a.Id == dto.RolId);
+
+            
+
+                   
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync();
+
+                return ResponseHelper<UserDTO>.MakeResponseSuccess(dto, "sección actualizada con éxito");
+
+            }
+            catch (Exception ex)
+            {
+                return ResponseHelper<UserDTO>.MakeResponseFail(ex);
+            }
+        }
+
+        public async Task<Response<UserDTO>> GetOneAsycn(int id)
+        {
+            try
+            {
+                User? user = await _context.Users.FirstOrDefaultAsync(a => a.Id == id);
+                if (user == null)
+                {
+                    return ResponseHelper<UserDTO>.MakeResponseFail("En la seccion con el id indicado no existe");
+                }
+                UserDTO dto = new UserDTO
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Birth = user.Birth,
+                    UserName = user.UserName,
+                    Password = user.Password,
+                    Rols = await _context.Roles.Select(a => new SelectListItem
+                    {
+                        Text = $"{a.NameRol}",
+                        Value = a.Id.ToString()
+                    }).ToListAsync(),
+
+                };
+                return ResponseHelper<UserDTO>.MakeResponseSuccess(dto);
+
+            }
+            catch (Exception ex)
+            {
+                return ResponseHelper<UserDTO>.MakeResponseFail(ex);
+            }
+
+         
+        }
     }
 }

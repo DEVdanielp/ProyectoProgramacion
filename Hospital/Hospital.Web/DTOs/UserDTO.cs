@@ -26,8 +26,8 @@ namespace Hospital.Web.DTOs
         [Required(ErrorMessage = "El campo '{0}' es requerido.")]
         public string Password { get; set; }
 
-        public List<Appoiment> AppoimentPatient { get; set; }
-        public List<Appoiment> AppoimentDoctor { get; set; }
+        public List<Appoiment>? AppoimentPatient { get; set; }
+        public List<Appoiment>? AppoimentDoctor { get; set; }
 
         public IEnumerable<SelectListItem>? Rols { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un autor")]

@@ -1,6 +1,6 @@
 ﻿@model UserDTO
 @{
-    ViewData["Title"] = "Nueva Seccion";
+    ViewData["Title"] = "Editar Seccion";
 }
 
 <div class="pagetitle">
@@ -9,7 +9,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
             <li class="breadcrumb-item"><a asp-action="Index">Usuarios</a></li>
-            <li class="breadcrumb-item active">Nuevo Usuario</li>
+            <li class="breadcrumb-item active">Editar Usuario</li>
         </ol>
     </nav>
 </div>
@@ -18,11 +18,11 @@
 
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Nuevo Usuario</h5>
+            <h5 class="card-title">Editar Usuario</h5>
 
             <!-- General Form Elements -->
-            <form asp-action="Create" method="post">
-                
+            <form asp-action="Edit" method="post">
+
                 <div class="col-12">
                     <label class="col-sm-2 col-form-label">Nombres</label>
                     <label for="inputNanme4" class="form-label">@Html.DisplayFor(model => model.FirstName)</label>
@@ -40,13 +40,13 @@
 
                 <div class="col-12">
                     <label class="col-sm-2 col-form-label">Fecha de Nacimiento</label>
-                        <input type="date" class="form-control" placeholder="Fecha de Nacimiento">
+                    <input type="date" class="form-control" placeholder="Fecha de Nacimiento">
                 </div>
 
 
                 <div class="col-12">
                     <label class="col-sm-2 col-form-label">Asignar Rol</label>
-                        <select asp-for="RolId" asp-items="Model.Rols" class="form-control"></select>
+                    <select asp-for="RolId" asp-items="Model.Rols" class="form-control"></select>
                 </div>
 
                 <div class="col-12">
@@ -65,7 +65,7 @@
 
                 <div class="row mb-3">
                     <div class="col-sm-10">
-                        <button type="submit" class="btn btn-primary">Registrar Usuario</button>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                     </div>
                 </div>
 

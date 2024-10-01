@@ -3,9 +3,7 @@ using Hospital.Web.Services;
 using Hospital.Web.Core;
 using Microsoft.AspNetCore.Mvc;
 using Hospital.Web.DTOs;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Hospital.Web.Data;
-using Microsoft.EntityFrameworkCore;
+using static System.Collections.Specialized.BitVector32;
 
 
 
@@ -14,12 +12,11 @@ namespace Hospital.Web.Controllers
     public class UsersController : Controller
     {
         private readonly IUsersServices _userService;
-        private readonly DataContext _context;
 
-        public UsersController(IUsersServices userService, DataContext context)
+
+        public UsersController(IUsersServices userService)
         {
             _userService = userService;
-            _context = context;
 
         }
 
@@ -36,17 +33,10 @@ namespace Hospital.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-
-            UserDTO udto = new UserDTO
-            {
-                Rols = await _context.Roles.Select(a => new SelectListItem
-                {
-                    Text = $"{a.NameRol}",
-                    Value = a.Id.ToString()
-                }).ToListAsync(),
-            };
-            return View();
+            UserDTO dto = await _userService.CreateDTO();
+            return View(dto);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Create(UserDTO udto)
@@ -55,6 +45,7 @@ namespace Hospital.Web.Controllers
             {
                 if (!ModelState.IsValid)
                 {
+
                     return View(udto);
                 }
 
@@ -72,5 +63,43 @@ namespace Hospital.Web.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Edit([FromRoute] int id)
+        {
+            Response<UserDTO> response = await _userService.GetOneAsycn(id);
+            if (response.IsSuccess)
+            {
+
+                return View(response.Result);
+            }
+            //TODO: Mensaja de error
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(UserDTO section)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    //TODO: mensaje de error
+                    return View(section);
+                }
+                Response<UserDTO> response = await _userService.EditAsync(section);
+
+                if (response.IsSuccess)
+                {
+                    //TODO: mensaje de exito
+                    return RedirectToAction(nameof(Index));
+                }
+                //TODO: MOstrar el mensaje  de error 
+                return View(response);
+            }
+            catch (Exception ex)
+            {
+                return View(section);
+            }
+        }
     }
 }
