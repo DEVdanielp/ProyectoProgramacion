@@ -19,6 +19,7 @@ namespace Hospital.Web.Services
         public Task<Response<List<User>>> GetListAsync();
         public Task<Response<UserDTO>> EditAsync(UserDTO dto);
         public Task<Response<UserDTO>> GetOneAsycn(int id);
+        public Task<Response<User>> DeleteAsync(int Id);
     }
 
     public class UserServices : IUsersServices
@@ -139,9 +140,17 @@ namespace Hospital.Web.Services
             catch (Exception ex)
             {
                 return ResponseHelper<UserDTO>.MakeResponseFail(ex);
-            }
+            } 
+        }
 
-         
+        public async Task<Response<User>> DeleteAsync(int Id)
+        {
+            User? user = await _context.Users.FirstOrDefaultAsync(a => a.Id == Id);
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+            return ResponseHelper<User>.MakeResponseSuccess(user, "sección actualizada con éxito");
+
         }
     }
 }

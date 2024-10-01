@@ -25,11 +25,9 @@ namespace Hospital.Web
         {
             builder.Services.AddScoped<IRolesServices, RolService>(); //Servicios de roles
             builder.Services.AddScoped<IAppoimentServices, AppoimentServices>(); //Servicios de citas
-<<<<<<< HEAD
             builder.Services.AddScoped<IUsersServices, UserServices>(); //Servicios de Usuario
-=======
             builder.Services.AddScoped<IStatusServices, StatusServices>(); //Servicios de citas
->>>>>>> 509f4cf5e451535cbe509b1347653d066f959a1b
+
         }
     }
 
