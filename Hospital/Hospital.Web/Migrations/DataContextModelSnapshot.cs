@@ -51,6 +51,83 @@ namespace Hospital.Web.Migrations
                     b.ToTable("Appoiments");
                 });
 
+            modelBuilder.Entity("Hospital.Web.Data.Entities.MedicalOrder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AppoimentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Diagnosis")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<int>("IdAppoiment")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdMedication")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MedicationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppoimentId");
+
+                    b.HasIndex("MedicationId");
+
+                    b.ToTable("MedicalOrders");
+                });
+
+            modelBuilder.Entity("Hospital.Web.Data.Entities.Medication", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CommercialName")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Group")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<string>("Laboratory")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<string>("ScientificName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Medications");
+                });
+
             modelBuilder.Entity("Hospital.Web.Data.Entities.Rol", b =>
                 {
                     b.Property<int>("Id")
@@ -126,6 +203,25 @@ namespace Hospital.Web.Migrations
                     b.Navigation("UserDoctor");
 
                     b.Navigation("UserPatient");
+                });
+
+            modelBuilder.Entity("Hospital.Web.Data.Entities.MedicalOrder", b =>
+                {
+                    b.HasOne("Hospital.Web.Data.Entities.Appoiment", "Appoiment")
+                        .WithMany()
+                        .HasForeignKey("AppoimentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hospital.Web.Data.Entities.Medication", "Medication")
+                        .WithMany()
+                        .HasForeignKey("MedicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Appoiment");
+
+                    b.Navigation("Medication");
                 });
 
             modelBuilder.Entity("Hospital.Web.Data.Entities.User", b =>

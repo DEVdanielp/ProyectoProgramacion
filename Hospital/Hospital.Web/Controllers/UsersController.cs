@@ -114,7 +114,7 @@ namespace Hospital.Web.Controllers
 
                 }
 
-                User user = await _context.Users.FirstOrDefaultAsync(a => a.Id == dto.Id);
+                User? user = await _context.Users.FirstOrDefaultAsync(a => a.Id == dto.Id);
 
                 user.FirstName = dto.FirstName;
                 user.LastName = dto.LastName;
