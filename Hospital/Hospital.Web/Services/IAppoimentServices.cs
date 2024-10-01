@@ -4,6 +4,7 @@ using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
 using Hospital.Web.Helpers;
 using Humanizer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,8 +16,9 @@ namespace Hospital.Web.Services
         public Task<Response<Appoiment>> CreateAsync(AppoimentDTO model);
         public Task<AppoimentDTO> CreateDTO();
         public Task<Response<AppoimentDTO>> GetOneAsync(int Id);
-
         public Task<Response<AppoimentDTO>> EditAsync(AppoimentDTO appoiment);
+        public Task<Response<Appoiment>> DeleteAsync(int Id);
+
     }
 
     public class AppoimentServices : IAppoimentServices
@@ -140,6 +142,16 @@ namespace Hospital.Web.Services
             {
                 return ResponseHelper<AppoimentDTO>.MakeResponseFail(ex);
             }
+        }
+
+        public async Task<Response<Appoiment>> DeleteAsync(int Id)
+        {
+            Appoiment? appoiment = await _context.Appoiments.FirstOrDefaultAsync(a => a.Id == Id);
+
+            _context.Appoiments.Remove(appoiment);
+            await _context.SaveChangesAsync();
+            return ResponseHelper<Appoiment>.MakeResponseSuccess(appoiment, "sección actualizada con éxito");
+  
         }
     }
 }

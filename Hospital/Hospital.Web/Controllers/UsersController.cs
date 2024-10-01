@@ -3,7 +3,9 @@ using Hospital.Web.Services;
 using Hospital.Web.Core;
 using Microsoft.AspNetCore.Mvc;
 using Hospital.Web.DTOs;
-using static System.Collections.Specialized.BitVector32;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Hospital.Web.Data;
+using Microsoft.EntityFrameworkCore;
 
 
 

@@ -1,0 +1,12 @@
+diff a/Hospital/Hospital.Web/Controllers/UsersController.cs b/Hospital/Hospital.Web/Controllers/UsersController.cs	(rejected hunks)
+@@ -3,9 +3,7 @@
+ using Hospital.Web.Core;
+ using Microsoft.AspNetCore.Mvc;
+ using Hospital.Web.DTOs;
+-using Microsoft.AspNetCore.Mvc.Rendering;
+-using Hospital.Web.Data;
+-using Microsoft.EntityFrameworkCore;
++using static System.Collections.Specialized.BitVector32;
+ 
+ 
+ 

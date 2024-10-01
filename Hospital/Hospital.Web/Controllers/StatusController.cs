@@ -8,31 +8,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Web.Controllers
 {
-    public class AppoimentsController : Controller
+    public class StatusController : Controller
     {
-        readonly IAppoimentServices _appoimentsService;
+        readonly IStatusServices _statusService;
 
-        public AppoimentsController(IAppoimentServices appoimentsService)
+        public StatusController(IStatusServices statusService)
         {
-            _appoimentsService = appoimentsService;
+            _statusService = statusService;
         }
 
         public async Task<IActionResult> Index()
         {
-            Response<List<Appoiment>> response = await _appoimentsService.GetListAsync();
+            Response<List<Status>> response = await _statusService.GetListAsync();
             return View(response.Result);
         }
 
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            AppoimentDTO dto = await _appoimentsService.CreateDTO();
+            StatusDTO dto = await _statusService.CreateDTO();
             return View(dto);
-            
+
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(AppoimentDTO dto)
+        public async Task<IActionResult> Create(StatusDTO dto)
         {
             try
             {
@@ -41,13 +41,13 @@ namespace Hospital.Web.Controllers
                     return View(dto);
                 }
 
-                Response<Appoiment> response = await _appoimentsService.CreateAsync(dto);
+                Response<Status> response = await _statusService.CreateAsync(dto);
 
                 if (response.IsSuccess)
                 {
                     return RedirectToAction(nameof(Index));
                 }
-
+                
                 return View(response);
             }
             catch (Exception ex)
@@ -60,28 +60,28 @@ namespace Hospital.Web.Controllers
         public async Task<IActionResult> Edit([FromRoute] int Id)
         {
 
-            Response<AppoimentDTO> response = await _appoimentsService.GetOneAsync(Id);
+            Response<StatusDTO> response = await _statusService.GetOneAsync(Id);
 
             if (response.IsSuccess)
             {
                 return View(response.Result);
             }
-          
+
             return RedirectToAction(nameof(Index));
 
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(AppoimentDTO appoiment)
+        public async Task<IActionResult> Edit(StatusDTO status)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return View(appoiment);
+                    return View(status);
                 }
 
-                Response<AppoimentDTO> response = await _appoimentsService.EditAsync(appoiment);
+                Response<StatusDTO> response = await _statusService.EditAsync(status);
 
                 if (response.IsSuccess)
                 {
@@ -92,7 +92,7 @@ namespace Hospital.Web.Controllers
             }
             catch (Exception ex)
             {
-                return View(appoiment);
+                return View(status);
             }
         }
 
@@ -101,7 +101,7 @@ namespace Hospital.Web.Controllers
         {   //Este metodo redirecciona confirma la eliminacion
             try
             {
-                await _appoimentsService.DeleteAsync(id);
+                await _statusService.DeleteAsync(id);
                 return RedirectToAction(nameof(Index));
 
             }
