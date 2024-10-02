@@ -24,13 +24,13 @@
             <!-- General Form Elements -->
             <form asp-action="Create" method="post">
                 
-                <div class="col-12">
+                <div class="mb-3">
                     <label class="col-sm-2 col-form-label">Nombres</label>
                     <input asp-for="FirstName" class="form-control" id="inputNanme4" placeholder="Nombres">
                     <span asp-validation-for="FirstName" class="text-danger"></span>
                 </div>
 
-                <div class="col-12">
+                <div class="mb-3">
                     <label class="col-sm-2 col-form-label">Apellidos</label>
                     <input asp-for="LastName" class="form-control" id="inputNanme4" placeholder="Apellidos">
                     <span asp-validation-for="LastName" class="text-danger"></span>
@@ -42,30 +42,28 @@
                     <input type="date" class="form-control" asp-for="Birth" />
                     <span asp-validation-for="Birth" class="text-danger"> </span>
 
-                </div>>
+                </div>
 
-
-                <div class="col-12">
+                <div class="mb-3">
                     <label class="col-sm-2 col-form-label">Asignar Rol</label>
                         <select asp-for="RolId" asp-items="Model.Rols" class="form-control"></select>
                 </div>
 
-                <div class="col-12">
-                    <label class="col-sm-2 col-form-label">Nombre de Usuario</label>
+                <div class="mb-3">
+                    <label class="col-sm-5 col-form-label">Nombre de Usuario</label>
                     <input asp-for="UserName" class="form-control" id="inputNanme4" placeholder="Nombre Usuario">
                     <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
 
-                <div class="col-12">
+                <div class="mb-3">
                     <label class="col-sm-2 col-form-label">Contraseña</label>
                     <input asp-for="Password" type="password" class="form-control" id="inputNanme4" placeholder="Contraseña">
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
-                <div class="row mb-3">
-                    <div class="col-sm-10">
-                        <button type="submit" class="btn btn-primary">Registrar Usuario</button>
-                    </div>
+                 <div class="text-center mb-3">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a asp-action="Index" class="btn btn-secondary">Volver</a>
                 </div>
 
             </form>

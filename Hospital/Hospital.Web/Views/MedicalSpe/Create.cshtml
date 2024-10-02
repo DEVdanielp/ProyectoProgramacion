@@ -23,22 +23,21 @@
             <!-- General Form Elements -->
             <form asp-action="Create" method="post">
 
-                <div class="col-12">
+                <div class="mb-3">
                     <label class="col-sm-2 col-form-label">Nombres</label>
                     <input asp-for="Name" class="form-control" id="inputNanme4" placeholder="Nombres">
                     <span asp-validation-for="Name" class="text-danger"></span>
 
                 </div>
-                <div class="col-12">
+                <div class="mb-3">
                     <label class="col-sm-2 col-form-label">Asigne un Doctor</label>
                     <select asp-for="UserDoctorId" asp-items="Model.UserDoctor" class="form-control"></select>
                 </div>
 
 
-                <div class="row mb-3">
-                    <div class="col-sm-10">
-                        <button type="submit" class="btn btn-primary">Registrar Doctor con Especialidad</button>
-                    </div>
+                <div class="text-center mb-3">
+                    <button type="submit" class="btn btn-primary">Guardar Especialidad</button>
+                    <a asp-action="Index" class="btn btn-secondary">Volver</a>
                 </div>
 
             </form>
