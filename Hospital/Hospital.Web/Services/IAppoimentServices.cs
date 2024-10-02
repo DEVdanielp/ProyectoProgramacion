@@ -153,5 +153,7 @@ namespace Hospital.Web.Services
             return ResponseHelper<Appoiment>.MakeResponseSuccess(appoiment, "sección actualizada con éxito");
   
         }
+
+
     }
 }

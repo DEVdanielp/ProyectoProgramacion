@@ -97,5 +97,22 @@ namespace Hospital.Web.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {   //Este metodo redirecciona confirma la eliminacion
+            try
+            {
+                await _rolesService.DeleteAsync(id);
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+        }
+
+
     }
 }
