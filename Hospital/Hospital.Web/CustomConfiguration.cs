@@ -27,6 +27,7 @@ namespace Hospital.Web
             builder.Services.AddScoped<IAppoimentServices, AppoimentServices>(); //Servicios de citas
             builder.Services.AddScoped<IUsersServices, UserServices>(); //Servicios de Usuario
             builder.Services.AddScoped<IStatusServices, StatusServices>(); //Servicios de citas
+            builder.Services.AddScoped<IMedicalSpeServices, MedicalSpeServices>(); //Especialidad Medica
 
         }
     }

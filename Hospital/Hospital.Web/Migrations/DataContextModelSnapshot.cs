@@ -48,7 +48,7 @@ namespace Hospital.Web.Migrations
 
                     b.HasIndex("UserPatientId");
 
-                    b.ToTable("Appoiments");
+                    b.ToTable("Appoiments", (string)null);
                 });
 
             modelBuilder.Entity("Hospital.Web.Data.Entities.Rol", b =>
@@ -69,7 +69,7 @@ namespace Hospital.Web.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("Hospital.Web.Data.Entities.Status", b =>
@@ -91,7 +91,7 @@ namespace Hospital.Web.Migrations
 
                     b.HasIndex("AppoimentId");
 
-                    b.ToTable("Status");
+                    b.ToTable("Status", (string)null);
                 });
 
             modelBuilder.Entity("Hospital.Web.Data.Entities.User", b =>
@@ -132,7 +132,7 @@ namespace Hospital.Web.Migrations
 
                     b.HasIndex("RolId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Hospital.Web.Data.Entities.Appoiment", b =>
