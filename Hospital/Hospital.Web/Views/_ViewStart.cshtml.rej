@@ -1,0 +1,5 @@
+diff a/Hospital/Hospital.Web/Views/_ViewStart.cshtml b/Hospital/Hospital.Web/Views/_ViewStart.cshtml	(rejected hunks)
+@@ -1,2 +1,3 @@
+ ﻿@{
++    Layout = "~/Views/Shared/_MyLayout.cshtml";
+ }

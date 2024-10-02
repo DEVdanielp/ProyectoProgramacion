@@ -125,7 +125,7 @@ namespace Hospital.Web.Services
             try
             {
 
-                Appoiment prueba = await _context.Appoiments.FirstOrDefaultAsync(u => u.Id == appoiment.UserDoctorId);
+                Appoiment prueba = await _context.Appoiments.FirstOrDefaultAsync(u => u.Id == appoiment.Id);
 
                     prueba.Date = appoiment.Date;
                     prueba.Time = appoiment.Time;
