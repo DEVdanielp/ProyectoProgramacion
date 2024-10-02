@@ -29,7 +29,7 @@ namespace Hospital.Web.Data.Entities
         public List<Appoiment>? AppoimentPatient { get; set; }
         public List<Appoiment>? AppoimentDoctor { get; set; }
 
-        public  Rol Rol { get; set; }
+        public  Rol? Rol { get; set; }
      
         public int RolId { get; set; }
         

@@ -87,7 +87,7 @@ namespace Hospital.Web.Services
             try
             {
 
-                User user = await _context.Users.FirstOrDefaultAsync(u => u.Id == dto.RolId);
+                User user = await _context.Users.FirstOrDefaultAsync(u => u.Id == dto.Id);
 
                     user.FirstName = dto.FirstName;
                     user.LastName = dto.LastName;
@@ -115,7 +115,7 @@ namespace Hospital.Web.Services
         {
             try
             {
-                User? user = await _context.Users.FirstOrDefaultAsync(a => a.Id == id);
+                User? user = await _context.Users.Include(b => b.Rol).FirstOrDefaultAsync(a => a.Id == id);
                 if (user == null)
                 {
                     return ResponseHelper<UserDTO>.MakeResponseFail("En la seccion con el id indicado no existe");

@@ -1,0 +1,55 @@
+﻿@model MedicalSpeDTO
+@{
+    ViewData["Title"] = "Nueva Especialista";
+}
+
+<div class="pagetitle">
+    <h1>Especialidad Medicos</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+            <li class="breadcrumb-item"><a asp-action="Index">Especialidades</a></li>
+            <li class="breadcrumb-item active">Nuevo Medico Especialista</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section dashboard">
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Nueva  Especialidad</h5>
+
+            <!-- General Form Elements -->
+            <form asp-action="Create" method="post">
+
+                <div class="col-12">
+                    <label class="col-sm-2 col-form-label">Nombres</label>
+                    <input asp-for="Name" class="form-control" id="inputNanme4" placeholder="Nombres">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+
+                </div>
+                <div class="col-12">
+                    <label class="col-sm-2 col-form-label">Asigne un Doctor</label>
+                    <select asp-for="UserDoctorId" asp-items="Model.UserDoctor" class="form-control"></select>
+                </div>
+
+
+                <div class="row mb-3">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary">Registrar Doctor con Especialidad</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

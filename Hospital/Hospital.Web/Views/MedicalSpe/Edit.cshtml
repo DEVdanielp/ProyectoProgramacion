@@ -1,0 +1,56 @@
+﻿@model MedicalSpeDTO
+@{
+    ViewData["Title"] = "Editar Especialidad";
+}
+
+<div class="pagetitle">
+    <h1>Especialidades</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+            <li class="breadcrumb-item"><a asp-action="Index">Especialidades</a></li>
+            <li class="breadcrumb-item active">Editar Usuario</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section dashboard">
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Editar Especialidad</h5>
+
+            <!-- General Form Elements -->
+            <form asp-action="Edit" method="post" >
+                <input type="hidden" asp-for="@Model.Id" />
+
+                <div class="col-12">
+                    <label class="col-sm-2 col-form-label">Nombre</label>
+                    <input asp-for="Name" class="form-control" id="inputNanme4" placeholder="Nombre">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Autor</label>
+                    <select asp-for="UserDoctorId" asp-items="Model.UserDoctor" class="form-control"></select>
+                    <span asp-validation-for="UserDoctorId" class="text-danger"> </span>
+
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

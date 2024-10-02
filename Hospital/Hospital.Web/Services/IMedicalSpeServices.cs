@@ -65,7 +65,7 @@ namespace Hospital.Web.Services
             {
                 try
                 {
-                    List<MedicalSpe> medics = await _context.MedicalSpe.Include(u => u.UserDoctorId).ToListAsync();
+                    List<MedicalSpe> medics = await _context.MedicalSpe.Include(u => u.UserDoctor).ToListAsync();
                     return ResponseHelper<List<MedicalSpe>>.MakeResponseSuccess(medics);
                 }
                 catch (Exception ex)
@@ -79,7 +79,7 @@ namespace Hospital.Web.Services
             try
             {
 
-                MedicalSpe medic = await _context.MedicalSpe.FirstOrDefaultAsync(u => u.Id == dto.UserDoctorId);
+                MedicalSpe medic = await _context.MedicalSpe.FirstOrDefaultAsync(u => u.Id == dto.Id);
 
                 medic.Name = dto.Name;
                 medic.UserDoctor = await _context.Users.FirstOrDefaultAsync(a => a.Id == dto.UserDoctorId);
@@ -103,7 +103,7 @@ namespace Hospital.Web.Services
             {
                 try
                 {
-                    MedicalSpe? medic = await _context.MedicalSpe.FirstOrDefaultAsync(a => a.Id == id);
+                    MedicalSpe? medic = await _context.MedicalSpe.Include(b => b.UserDoctor).FirstOrDefaultAsync(a => a.Id == id);
                     if (medic == null)
                     {
                         return ResponseHelper<MedicalSpeDTO>.MakeResponseFail("En la seccion con el id indicado no existe");

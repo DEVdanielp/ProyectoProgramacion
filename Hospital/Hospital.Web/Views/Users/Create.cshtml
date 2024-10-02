@@ -1,6 +1,7 @@
 ﻿@model UserDTO
 @{
     ViewData["Title"] = "Nueva Seccion";
+
 }
 
 <div class="pagetitle">
@@ -25,23 +26,23 @@
                 
                 <div class="col-12">
                     <label class="col-sm-2 col-form-label">Nombres</label>
-                    <label for="inputNanme4" class="form-label">@Html.DisplayFor(model => model.FirstName)</label>
                     <input asp-for="FirstName" class="form-control" id="inputNanme4" placeholder="Nombres">
                     <span asp-validation-for="FirstName" class="text-danger"></span>
                 </div>
 
                 <div class="col-12">
                     <label class="col-sm-2 col-form-label">Apellidos</label>
-                    <label for="inputNanme4" class="form-label">@Html.DisplayFor(model => model.LastName)</label>
                     <input asp-for="LastName" class="form-control" id="inputNanme4" placeholder="Apellidos">
                     <span asp-validation-for="LastName" class="text-danger"></span>
                 </div>
 
 
-                <div class="col-12">
-                    <label class="col-sm-2 col-form-label">Fecha de Nacimiento</label>
-                        <input type="date" class="form-control" placeholder="Fecha de Nacimiento">
-                </div>
+                <div class="mb-3">
+                    <label class="form-label">Fecha de Nacimiento</label>
+                    <input type="date" class="form-control" asp-for="Birth" />
+                    <span asp-validation-for="Birth" class="text-danger"> </span>
+
+                </div>>
 
 
                 <div class="col-12">
@@ -51,15 +52,13 @@
 
                 <div class="col-12">
                     <label class="col-sm-2 col-form-label">Nombre de Usuario</label>
-                    <label for="inputNanme4" class="form-label">@Html.DisplayFor(model => model.UserName)</label>
                     <input asp-for="UserName" class="form-control" id="inputNanme4" placeholder="Nombre Usuario">
                     <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
 
                 <div class="col-12">
                     <label class="col-sm-2 col-form-label">Contraseña</label>
-                    <label for="inputNanme4" class="form-label">@Html.DisplayFor(model => model.Password)</label>
-                    <input asp-for="Password" class="form-control" id="inputNanme4" placeholder="Contraseña">
+                    <input asp-for="Password" type="password" class="form-control" id="inputNanme4" placeholder="Contraseña">
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
