@@ -1,4 +1,5 @@
 ﻿using Hospital.Web.Data.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Hospital.Web.Core
 {
@@ -10,6 +11,7 @@ namespace Hospital.Web.Core
         public string Message { get; set; }
         public List<String> Errors { get; set; }
         public T Result { get; set; }
+
 
     }
 }

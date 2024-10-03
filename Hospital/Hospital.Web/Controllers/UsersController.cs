@@ -1,155 +1,122 @@
-﻿using Hospital.Web.Data;
-using Hospital.Web.Data.Entities;
-using Hospital.Web.DTOs;
+﻿using Hospital.Web.Data.Entities;
+using Hospital.Web.Services;
+using Hospital.Web.Core;
 using Microsoft.AspNetCore.Mvc;
+using Hospital.Web.DTOs;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Hospital.Web.Data;
 using Microsoft.EntityFrameworkCore;
+
+
+
 namespace Hospital.Web.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly DataContext _context;
+        private readonly IUsersServices _userService;
 
-        public UsersController(DataContext context)
+
+        public UsersController(IUsersServices userService)
         {
-            _context = context;
+            _userService = userService;
+
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            List<User> list = await _context.Users.Include(b => b.Rol).ToListAsync();
-            return View(list);
+            
+                Response<List<User>> response = await _userService.GetListAsync();
+                return View(response.Result);
+            
         }
 
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            UserDTO udto = new UserDTO
-            {
-                Rol = await _context.Roles.Select(a => new SelectListItem
-                {
-                    Text = $"{a.NameRol} {a.Description}",
-                    Value = a.NameRol.ToString()
-                }).ToListAsync(),
-            };
-            return View(udto);
+            UserDTO dto = await _userService.CreateDTO();
+            return View(dto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(UserDTO dto)
+        public async Task<IActionResult> Create(UserDTO udto)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return View(dto);
-                }
-                User user = new User
-                {
-                    FirstName = dto.FirstName,
-                    LastName = dto.LastName,
-                    Birth = dto.Birth,
-                    UserName = dto.UserName,
-                    Password = dto.Password,
-                    Rol = await _context.Roles.FirstOrDefaultAsync(a => a.Id == dto.RolId),
-                };
-                await _context.Users.AddAsync(user);
-                await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                    return View(udto);
+                }
+
+                Response<User> response = await _userService.CreateAsync(udto);
+                if (response.IsSuccess)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                //TODO: MOstrar el mensaje  de error 
+                return View(response);
             }
             catch (Exception ex)
             {
-                return RedirectToAction(nameof(Index));
+                return View(udto);
             }
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit([FromRoute] int id)
         {
-            try
+            Response<UserDTO> response = await _userService.GetOneAsycn(id);
+            if (response.IsSuccess)
             {
-                User? user = await _context.Users.Include(b => b.Rol).FirstOrDefaultAsync(a => a.Id == id);
 
-                UserDTO dto = new UserDTO
-                {
-                    Id = id,
-                    RolId = user.Id,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Birth = user.Birth,
-                    UserName = user.UserName,
-                    Password = user.Password,
-
-                    Rol = await _context.Roles.Select(a => new SelectListItem
-                    {
-                        Text = $"{a.NameRol} {a.Description}",
-                        Value = a.NameRol.ToString()
-                    }).ToListAsync(),
-                };
-
-                return View(dto);
-
+                return View(response.Result);
             }
-            catch (Exception ex)
-            {
-                return RedirectToAction(nameof(Index));
-            }
+            //TODO: Mensaja de error
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(UserDTO dto)
+        public async Task<IActionResult> Edit(UserDTO section)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    dto.Rol = await _context.Roles.Select(a => new SelectListItem
-                    {
-                        Text = $"{a.NameRol} {a.Description}",
-                        Value = a.NameRol.ToString()
-                    }).ToArrayAsync();
-                    return View(dto);
-
+                    //TODO: mensaje de error
+                    return View(section);
                 }
+                Response<UserDTO> response = await _userService.EditAsync(section);
 
-                User user = await _context.Users.FirstOrDefaultAsync(a => a.Id == dto.Id);
-
-                user.FirstName = dto.FirstName;
-                user.LastName = dto.LastName;
-                user.Birth = dto.Birth;
-                user.UserName = dto.UserName;
-                user.Password = dto.Password;
-                user.Rol = await _context.Roles.FirstOrDefaultAsync(a => a.Id == dto.RolId);
-
-
-                _context.Users.Update(user);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
+                if (response.IsSuccess)
+                {
+                    //TODO: mensaje de exito
+                    return RedirectToAction(nameof(Index));
+                }
+                //TODO: MOstrar el mensaje  de error 
+                return View(response);
             }
             catch (Exception ex)
             {
-                return RedirectToAction(nameof(Index));
+                return View(section);
             }
         }
+
         [HttpPost]
         public async Task<IActionResult> Delete([FromRoute] int id)
-        {
+        {   //Este metodo redirecciona confirma la eliminacion
             try
             {
-                User? user = await _context.Users.FirstOrDefaultAsync(a => a.Id == id);
-                _context.Users.Remove(user);
-                await _context.SaveChangesAsync();
+                await _userService.DeleteAsync(id);
                 return RedirectToAction(nameof(Index));
 
-
             }
-            catch (Exception ex)
+            catch
             {
                 return RedirectToAction(nameof(Index));
             }
+
         }
     }
 }

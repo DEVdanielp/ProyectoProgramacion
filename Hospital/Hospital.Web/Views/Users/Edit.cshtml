@@ -1,0 +1,82 @@
+﻿@model UserDTO
+@{
+    ViewData["Title"] = "Editar Usuario";
+
+}
+
+
+<div class="pagetitle">
+    <h1>Usuarios</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+            <li class="breadcrumb-item"><a asp-action="Index">Usuarios</a></li>
+            <li class="breadcrumb-item active">Editar Usuario</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section dashboard">
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Editar Usuario</h5>
+
+            <!-- General Form Elements -->
+            <form asp-action="Edit" method="post">
+
+                <div class="col-12">
+                    <label class="col-sm-2 col-form-label">Nombres</label>
+                    <input asp-for="FirstName" class="form-control" id="inputNanme4" placeholder="Nombres">
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="col-12">
+                    <label class="col-sm-2 col-form-label">Apellidos</label>
+                    <input asp-for="LastName" class="form-control" id="inputNanme4" placeholder="Apellidos">
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+
+
+                <div class="mb-3">
+                    <label class="form-label">Fecha de Nacimiento</label>
+                    <input type="date" class="form-control" asp-for="Birth" />
+                    <span asp-validation-for="Birth" class="text-danger"> </span>
+
+                </div>
+
+
+                <div class="col-12">
+                    <label class="col-sm-2 col-form-label">Asignar Rol</label>
+                    <select asp-for="RolId" asp-items="Model.Rols" class="form-control"></select>
+                </div>
+
+                <div class="col-12">
+                    <input asp-for="UserName" class="form-control" id="inputNanme4" placeholder="Nombre Usuario">
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+
+                <div class="col-12">
+                    <label class="col-sm-2 col-form-label">Contraseña</label>
+                    <input asp-for="Password" class="form-control" id="inputNanme4" placeholder="Contraseña">
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

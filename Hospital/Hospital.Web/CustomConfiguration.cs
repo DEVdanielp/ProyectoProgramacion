@@ -25,9 +25,12 @@ namespace Hospital.Web
         {
             builder.Services.AddScoped<IRolesServices, RolService>(); //Servicios de roles
             builder.Services.AddScoped<IAppoimentServices, AppoimentServices>(); //Servicios de citas
+            builder.Services.AddScoped<IUsersServices, UserServices>(); //Servicios de Usuario
             builder.Services.AddScoped<IStatusServices, StatusServices>(); //Servicios de citas
+            builder.Services.AddScoped<IMedicalSpeServices, MedicalSpeServices>(); //Servicios de Especialidad Medica
             builder.Services.AddScoped<IMedicationsServices, MedicationService>();//Servicios de medicamentos
             builder.Services.AddScoped<IMedicalOrdersServices, MedicalOrdersServices>();//Servicios de Orden Medica
+
         }
     }
 

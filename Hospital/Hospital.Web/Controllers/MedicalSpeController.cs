@@ -1,108 +1,104 @@
-﻿using Hospital.Web.Core;
-using Hospital.Web.Data;
-using Hospital.Web.Data.Entities;
-using Hospital.Web.Helpers;
+﻿using Hospital.Web.Data.Entities;
 using Hospital.Web.Services;
+using Hospital.Web.Core;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Hospital.Web.DTOs;
 
 namespace Hospital.Web.Controllers
 {
-    public class RolesController : Controller
-    {
-        //Inyectamos la dependecia de la interfaz creada
-        readonly IRolesServices _rolesService;
+    public class MedicalSpeController: Controller
+    {     
+        private readonly IMedicalSpeServices _medicalspeService;
 
-        public RolesController(IRolesServices rolesService)
+        public MedicalSpeController(IMedicalSpeServices medicalpsaService)
         {
-            _rolesService = rolesService;
+            _medicalspeService = medicalpsaService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            Response<List<Rol>> response = await _rolesService.GetListAsync();
+            Response<List<MedicalSpe>> response = await _medicalspeService.GetListAsync();
             return View(response.Result);
         }
 
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            return View();
+            MedicalSpeDTO dto = await _medicalspeService.CreateDTO();
+            return View(dto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Rol rol)
+        public async Task<IActionResult> Create(MedicalSpeDTO udto)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return View(rol);
+
+                    return View(udto);
                 }
 
-                Response<Rol> response = await _rolesService.CreateAsync(rol);
-
+                Response<MedicalSpe> response = await _medicalspeService.CreateAsync(udto);
                 if (response.IsSuccess)
                 {
                     return RedirectToAction(nameof(Index));
                 }
-
+                //TODO: MOstrar el mensaje  de error 
                 return View(response);
             }
             catch (Exception ex)
             {
-                return View(rol);
+                return View(udto);
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit([FromRoute] int Id)
+        public async Task<IActionResult> Edit([FromRoute] int id)
         {
-
-            Response<Rol> response = await _rolesService.GetOneAsync(Id);
-
+            Response<MedicalSpeDTO> response = await _medicalspeService.GetOneAsycn(id);
             if (response.IsSuccess)
             {
+
                 return View(response.Result);
             }
-
+            //TODO: Mensaja de error
             return RedirectToAction(nameof(Index));
-
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Rol rol)
+        public async Task<IActionResult> Edit(MedicalSpeDTO section)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return View(rol);
+                    //TODO: mensaje de error
+                    return View(section);
                 }
-
-                Response<Rol> response = await _rolesService.EditAsync(rol);
+                Response<MedicalSpeDTO> response = await _medicalspeService.EditAsync(section);
 
                 if (response.IsSuccess)
                 {
+                    //TODO: mensaje de exito
                     return RedirectToAction(nameof(Index));
                 }
-
+                //TODO: MOstrar el mensaje  de error 
                 return View(response);
             }
             catch (Exception ex)
             {
-                return View(rol);
+                return View(section);
             }
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {   //Este metodo redirecciona confirma la eliminacion
             try
             {
-                await _rolesService.DeleteAsync(id);
+                await _medicalspeService.DeleteAsync(id);
                 return RedirectToAction(nameof(Index));
 
             }
@@ -111,8 +107,6 @@ namespace Hospital.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+          }
         }
-
-
-    }
 }
