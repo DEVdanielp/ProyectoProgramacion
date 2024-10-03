@@ -41,6 +41,7 @@ namespace Hospital.Web.Services
                 UserDoctorId = dto.UserDoctorId
             };
 
+                Console.WriteLine("fecha" + b.Date);
             await _context.Appoiments.AddAsync(b);
             await _context.SaveChangesAsync();
             return ResponseHelper<Appoiment>.MakeResponseSuccess(b, "sección creada con exito");
