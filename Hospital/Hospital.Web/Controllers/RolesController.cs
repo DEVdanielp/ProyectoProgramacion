@@ -25,7 +25,7 @@ namespace Hospital.Web.Controllers
             return View(response.Result);
         }
 
-        [HttpGet]   
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             return View();
@@ -50,7 +50,7 @@ namespace Hospital.Web.Controllers
 
                 return View(response);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return View(rol);
             }
@@ -59,7 +59,7 @@ namespace Hospital.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit([FromRoute] int Id)
         {
-            
+
             Response<Rol> response = await _rolesService.GetOneAsync(Id);
 
             if (response.IsSuccess)
@@ -96,6 +96,19 @@ namespace Hospital.Web.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {   //Este metodo redirecciona confirma la eliminacion
+            try
+            {
+                await _rolesService.DeleteAsync(id);
+                return RedirectToAction(nameof(Index));
 
+            }
+            catch
+            {
+                return RedirectToAction(nameof(Index));
+            }
+        }
     }
 }

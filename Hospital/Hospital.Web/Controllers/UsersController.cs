@@ -39,7 +39,6 @@ namespace Hospital.Web.Controllers
             return View(dto);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Create(UserDTO udto)
         {

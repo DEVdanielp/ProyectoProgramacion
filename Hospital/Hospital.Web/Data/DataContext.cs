@@ -31,12 +31,8 @@ namespace Hospital.Web.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Appoiment> Appoiments { get; set; }
         public DbSet<Status> Status { get; set; }
-<<<<<<< HEAD
         public DbSet<MedicalSpe> MedicalSpe{ get; set; }
-=======
         public DbSet<Medication> Medications { get; set; }
         public DbSet<MedicalOrder> MedicalOrders { get; set; }
->>>>>>> 7bc3fc670eb1e404604d2e1deb46ec506c199ff7
-
     }
 }
