@@ -13,8 +13,8 @@ namespace Hospital.Web.Services
         public Task<Response<Rol>> GetOneAsync(int Id);
         public Task<Response<Rol>> EditAsync(Rol model);
         public Task<Response<Rol>> CreateAsync(Rol model);
-
         public Task<Response<Rol>> DeleteAsync(int Id);
+
     }
 
     public class RolService : IRolesServices
@@ -106,9 +106,7 @@ namespace Hospital.Web.Services
             _context.Roles.Remove(rol);
             await _context.SaveChangesAsync();
             return ResponseHelper<Rol>.MakeResponseSuccess(rol, "sección actualizada con éxito");
-
         }
-
 
     }
 }

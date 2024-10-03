@@ -96,6 +96,7 @@ namespace Hospital.Web.Controllers
             }
         }
 
+
         [HttpPost]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {   //Este metodo redirecciona confirma la eliminacion
@@ -109,6 +110,9 @@ namespace Hospital.Web.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
+
         }
+
+
     }
 }
