@@ -4,6 +4,7 @@ using Hospital.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241003021212_CreatePermissionsTable")]
+    partial class CreatePermissionsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,32 +52,6 @@ namespace Hospital.Web.Migrations
                     b.HasIndex("UserPatientId");
 
                     b.ToTable("Appoiments");
-                });
-
-            modelBuilder.Entity("Hospital.Web.Data.Entities.MedicalHistory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AppoimentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NamePatient")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppoimentId");
-
-                    b.ToTable("MedicalHistory");
                 });
 
             modelBuilder.Entity("Hospital.Web.Data.Entities.MedicalOrder", b =>
@@ -295,15 +272,6 @@ namespace Hospital.Web.Migrations
                     b.Navigation("UserDoctor");
 
                     b.Navigation("UserPatient");
-                });
-
-            modelBuilder.Entity("Hospital.Web.Data.Entities.MedicalHistory", b =>
-                {
-                    b.HasOne("Hospital.Web.Data.Entities.Appoiment", "Appoiments")
-                        .WithMany()
-                        .HasForeignKey("AppoimentId");
-
-                    b.Navigation("Appoiments");
                 });
 
             modelBuilder.Entity("Hospital.Web.Data.Entities.MedicalOrder", b =>

@@ -1,0 +1,88 @@
+﻿@model List<MedicalHistory>
+@{
+    ViewData["Title"] = "Historia Clínica";
+}
+
+<div class="pagetitle">
+    <h1>Historia Clínica</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+            <li class="breadcrumb-item active">Historia Clínica</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section dashboard">
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <h3 class="m-0 font-weight-bold text-primary col-md-11">Historia Clínica</h3>
+                <div class="col-md-1">
+                    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body mt-2">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Nombre Del Paciente</th>
+                        <th scope="col">Descripción</th>
+                        <th scope="col">Id Cita</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (MedicalHistory item in Model)
+                    {
+                        <tr>
+                            <td>@item.NamePatient</td>
+                            <td>@item.Description</td>
+                            <td>@item.AppoimentId</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                    <button type="button" class="btn btn-sm btn-danger btnDelete">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            $('.btnDelete').click(function (event) {
+                event.preventDefault(); // Evita que el formulario se envíe inmediatamente
+
+                const deleteForm = $(this).closest('form'); // Encuentra el formulario más cercano
+
+                Swal.fire({
+                    title: "¿Deseas eliminar La Historia Clínica?",
+                    text: "No podrá revertirlo!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Sí, eliminarlo!",
+                    cancelButtonText: "No, cancelar"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        deleteForm.submit(); // Envía el formulario si se confirma
+                    }
+                });
+            });
+        });
+    </script>
+}
