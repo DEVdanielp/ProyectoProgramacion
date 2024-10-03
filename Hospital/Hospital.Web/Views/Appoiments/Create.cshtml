@@ -28,14 +28,14 @@
                 <div class="row mb-3">
                   <label for="inputDate" class="col-sm-2 col-form-label">Fecha de la cita</label>
                   <div class="col-sm-10">
-                    <input type="date" class="form-control">
+                    <input type= "date" asp-for="Date" value="Today" class="form-control">
                   </div>
                 </div>
                 <!--TIME-->
                 <div class="row mb-3">
                   <label for="inputTime" class="col-sm-2 col-form-label">Hora de la cita</label>
                   <div class="col-sm-10">
-                    <input type="time" class="form-control">
+                    <input type="time" asp-for="Time" class="form-control">
                   </div>
                 </div>
 
@@ -63,6 +63,7 @@
                 <div class="row mb-3">
                   <div class="col-sm-10">
                     <button type="submit" class="btn btn-primary">Registrar cita</button>
+                    <a asp-action="Index" class="btn btn-secondary">Volver</a>
                   </div>
                 </div>
 
