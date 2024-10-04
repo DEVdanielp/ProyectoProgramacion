@@ -13,7 +13,7 @@ namespace Hospital.Web.Services
         public Task<Response<List<RolesPermission>>> GetListAsync();
         public Task<Response<RolesPermission>> CreateAsync(RolPermissionsDTO model);
         public Task<RolPermissionsDTO> CreateDTO();
-        //public Task<Response<RolesPermission>> DeleteAsync(int Id);
+        public Task<Response<RolesPermission>> DeleteAsync(int Idp, int Idr);
     }
 
     public class RolPermissionServices : IRolPermissionsServices
@@ -32,7 +32,7 @@ namespace Hospital.Web.Services
                 RolesPermission rp = new RolesPermission()
                 {
                     PermisosId = dto.PermisosId,
-                    rolId = dto.PermisosId
+                    rolId = dto.rolId
                 };
 
                 await _context.RolesPermisos.AddAsync(rp);
@@ -77,15 +77,15 @@ namespace Hospital.Web.Services
             return dto;
         }
 
-       //// public async Task<Response<Appoiment>> DeleteAsync(int Id)
-       // {
-       //     Appoiment? appoiment = await _context.Appoiments.FirstOrDefaultAsync(a => a.Id == Id);
+        public async Task<Response<RolesPermission>> DeleteAsync(int Idp, int Idr)
+        {
+            RolesPermission? rp = await _context.RolesPermisos.FirstOrDefaultAsync(a => a.PermisosId == Idp && a.rolId == Idr);
 
-       //     _context.Appoiments.Remove(appoiment);
-       //     await _context.SaveChangesAsync();
-       //     return ResponseHelper<Appoiment>.MakeResponseSuccess(appoiment, "sección actualizada con éxito");
+            _context.RolesPermisos.Remove(rp);
+            await _context.SaveChangesAsync();
+            return ResponseHelper<RolesPermission>.MakeResponseSuccess(rp, "sección actualizada con éxito");
 
-       // }
+        }
 
 
     }

@@ -18,7 +18,7 @@ namespace Hospital.Web.Controllers
         public async Task<IActionResult> Index()
         {
             Response<List<RolesPermission>> response = await _rpService.GetListAsync();
-            return View(response);
+            return View(response.Result);
         }
 
         [HttpGet]
@@ -52,6 +52,22 @@ namespace Hospital.Web.Controllers
             {
                 return View(dto);
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int rolId, int PermisosId)
+        {   //Este metodo redirecciona confirma la eliminacion
+            try
+            {
+                await _rpService.DeleteAsync(PermisosId, rolId);
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
         }
 
     }
