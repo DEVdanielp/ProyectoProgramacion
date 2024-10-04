@@ -1,14 +1,14 @@
 ﻿@model List<MedicalSpe>
 @{
-    ViewData["Title"] = "Especialidad Medica";
+    ViewData["Title"] = "Especialidad Médica";
 }
 
 <div class="pagetitle">
-    <h1>Especialidad Medica</h1>
+    <h1>Especialidad Médica</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
-            <li class="breadcrumb-item active">Especialidad Medica</li>
+            <li class="breadcrumb-item active">Especialidad Médica</li>
         </ol>
     </nav>
 </div><!-- End Page Title -->
@@ -71,7 +71,7 @@
                 event.preventDefault();
 
                Swal.fire({
-              title: "¿Estas seguro de eliminar el autor?",
+              title: "¿Estás seguro de eliminar esta especialidad?",
               text: "No podras revertir este cambio",
               icon: "question",
               showCancelButton: true,

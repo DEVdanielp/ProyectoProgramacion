@@ -32,6 +32,7 @@ namespace Hospital.Web
             builder.Services.AddScoped<IMedicalOrdersServices, MedicalOrdersServices>();//Servicios de Orden Medica
             builder.Services.AddScoped<IPermissionsServices, PermissionsService>(); //Servicios de Permisos
             builder.Services.AddScoped<IMedicalHistoryServices, MedicalHistoryService>(); //Servicios de Historia Clínica
+            builder.Services.AddScoped<IRolPermissionsServices, RolPermissionServices>(); //Servicios de RolesPermisos
 
         }
     }

@@ -12,7 +12,7 @@ namespace Hospital.Web.Data.Entities
         [StringLength(32, ErrorMessage = "El nombre no puede exceder los 32 caracteres")]
         public string? Name { get; set; }
         public string? Description { get; set; }
-
+        public List<RolesPermission>? RolPermisos { get; set; }
 
 
 

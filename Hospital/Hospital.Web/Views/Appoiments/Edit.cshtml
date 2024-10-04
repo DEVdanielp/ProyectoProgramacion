@@ -9,7 +9,7 @@
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
-            <li class="breadcrumb-item"><a asp-action="Index">Roles</a></li>
+            <li class="breadcrumb-item"><a asp-action="Index">Citas</a></li>
             <li class="breadcrumb-item active">Nueva cita</li>
         </ol>
     </nav>
@@ -65,7 +65,8 @@
 
                         <div class="row mb-3">
                             <div class="col-sm-10">
-                                <button type="submit" class="btn btn-primary">Registrar cita</button>
+                                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                <a asp-action="Index" class="btn btn-secondary">Volver</a>
                             </div>
                         </div>
 

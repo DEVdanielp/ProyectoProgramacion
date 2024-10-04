@@ -25,6 +25,9 @@ namespace Hospital.Web.Data
                 .HasForeignKey(x => x.UserDoctorId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
+            modelBuilder.Entity<RolesPermission>().
+                HasKey(x => new { x.PermisosId, x.rolId });
+
         }
 
         public DbSet<Rol> Roles { get; set; }
@@ -37,6 +40,7 @@ namespace Hospital.Web.Data
        
         public DbSet<Permissions> Permissions { get; set; }
         public DbSet<MedicalHistory> MedicalHistory { get; set; }
+        public DbSet<RolesPermission> RolesPermisos { get; set; }
 
     }
 }

@@ -56,7 +56,7 @@ namespace Hospital.Web.Services
         {
             try
             {
-                List<Appoiment> appoiments = await _context.Appoiments.ToListAsync();
+                List<Appoiment> appoiments = await _context.Appoiments.Include(u => u.UserDoctor).Include(o => o.UserPatient).ToListAsync();
                 return ResponseHelper<List<Appoiment>>.MakeResponseSuccess(appoiments);
             }
             catch (Exception ex)

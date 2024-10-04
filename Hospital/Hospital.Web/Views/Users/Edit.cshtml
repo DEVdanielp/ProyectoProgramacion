@@ -25,13 +25,13 @@
             <!-- General Form Elements -->
             <form asp-action="Edit" method="post">
 
-                <div class="col-12">
+                <div class="row mb-3">
                     <label class="col-sm-2 col-form-label">Nombres</label>
                     <input asp-for="FirstName" class="form-control" id="inputNanme4" placeholder="Nombres">
                     <span asp-validation-for="FirstName" class="text-danger"></span>
                 </div>
 
-                <div class="col-12">
+                <div class="row mb-3">
                     <label class="col-sm-2 col-form-label">Apellidos</label>
                     <input asp-for="LastName" class="form-control" id="inputNanme4" placeholder="Apellidos">
                     <span asp-validation-for="LastName" class="text-danger"></span>
@@ -46,25 +46,30 @@
                 </div>
 
 
-                <div class="col-12">
+                <div class="row mb-3">
                     <label class="col-sm-2 col-form-label">Asignar Rol</label>
                     <select asp-for="RolId" asp-items="Model.Rols" class="form-control"></select>
                 </div>
 
-                <div class="col-12">
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Nombre de usuario</label>
                     <input asp-for="UserName" class="form-control" id="inputNanme4" placeholder="Nombre Usuario">
                     <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
 
-                <div class="col-12">
+                <div class="row mb-3">
                     <label class="col-sm-2 col-form-label">Contraseña</label>
                     <input asp-for="Password" class="form-control" id="inputNanme4" placeholder="Contraseña">
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
-                <div class="row mb-3">
+
+
+
+                <div class="row mb-4">
                     <div class="col-sm-10">
                         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        <a asp-action="Index" class="btn btn-secondary">Volver</a>
                     </div>
                 </div>
 

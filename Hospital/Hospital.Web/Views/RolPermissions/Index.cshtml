@@ -1,0 +1,103 @@
+﻿@model List<RolesPermission>
+@{
+    ViewData["Title"] = "Permisos de los roles";
+}
+
+<div class="pagetitle">
+    <h1>Citas :) </h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+            <li class="breadcrumb-item active">Roles y permisos</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+<section class="section dashboard">
+    <div class="card">
+
+        <div class="card-header">
+            <div class="row">
+
+                <h3 class="m-0 font-weight-bold text-primary col-md-11">Roles y Permisos</h3>
+
+                <div class="col-md-1">
+                    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i></a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card-body mt-2">
+
+            <!-- Tabla usada -->
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Rol</th>
+                        <th scope="col">Permisos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (RolesPermission item in Model)
+                    {
+                        <tr>
+
+                            <td>@item.Rol.NameRol</td>
+                            <td>@item.Permisos.Name</td>
+                            <td>
+                                <a asp-action="Edit" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
+
+                                <form asp-action="Delete" method="post" style="display: contents;">
+                                    <button class="btn btn-sm btn-danger btnDelete"><i class="bi bi-trash-fill"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+            <!-- Tabla usada-->
+
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+
+            $('.btnDelete').click(function (event) {
+
+                event.preventDefault();
+
+                Swal.fire({
+                    title: "¿Estas seguro de eliminar el autor?",
+                    text: "No podras revertir este cambio",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Si, eliminar",
+                    cancelButtonText: "No, eliminar"
+
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+
+                        const deleteForm = $(this).closest('form');
+                        deleteForm.submit();
+
+                    }
+
+                });
+
+            })
+
+        })
+
+    </script>
+}
+
