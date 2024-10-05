@@ -20,11 +20,11 @@ namespace Hospital.Web.DTOs
 
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un Medicamento")]
         [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public int IdMedication { get; set; }
+        public int MedicationId { get; set; }
         public IEnumerable<SelectListItem>? Appoiments { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar una Cita")]
         [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public int IdAppoiment { get; set; }
+        public int AppoimentId { get; set; }
     }
 }
 

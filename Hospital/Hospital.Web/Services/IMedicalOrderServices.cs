@@ -40,8 +40,8 @@ namespace Hospital.Web.Services
                 {
                     Diagnosis = medicalOrderdto.Diagnosis,
                     Description = medicalOrderdto.Description,
-                    Appoiment = await _context.Appoiments.FirstOrDefaultAsync(a => a.Id == medicalOrderdto.IdAppoiment),
-                    Medication = await _context.Medications.FirstOrDefaultAsync(a => a.Id == medicalOrderdto.IdMedication)
+                    Appoiment = await _context.Appoiments.FirstOrDefaultAsync(a => a.Id == medicalOrderdto.AppoimentId),
+                    Medication = await _context.Medications.FirstOrDefaultAsync(a => a.Id == medicalOrderdto.MedicationId)
                 };
                 await _context.MedicalOrders.AddAsync(medicalorder);
                 await _context.SaveChangesAsync();
@@ -96,8 +96,8 @@ namespace Hospital.Web.Services
 
                 medicalorder.Diagnosis = medicalOrderdto.Diagnosis;
                 medicalorder.Description = medicalOrderdto.Description;
-                medicalorder.Appoiment = await _context.Appoiments.FirstOrDefaultAsync(a => a.Id == medicalOrderdto.IdAppoiment);
-                medicalorder.Medication = await _context.Medications.FirstOrDefaultAsync(a => a.Id == medicalOrderdto.IdMedication);
+                medicalorder.Appoiment = await _context.Appoiments.FirstOrDefaultAsync(a => a.Id == medicalOrderdto.AppoimentId);
+                medicalorder.Medication = await _context.Medications.FirstOrDefaultAsync(a => a.Id == medicalOrderdto.MedicationId);
 
                 _context.MedicalOrders.Update(medicalorder);
                 await _context.SaveChangesAsync();
@@ -145,7 +145,7 @@ namespace Hospital.Web.Services
 
                 Appoiments = await _context.Appoiments.Select(a => new SelectListItem
                 {
-                    Text = $"{a.UserPatient}, Fecha: {a.Date}",
+                    Text = $"Fecha:{a.Date}, Hora:{a.Time}, Doctor: {a.UserDoctorId}",
                     Value = a.Id.ToString()
                 }).ToListAsync(),
             };
@@ -160,8 +160,8 @@ namespace Hospital.Web.Services
                 Id = id,
                 Description = response.Result.Description,
                 Diagnosis = response.Result.Diagnosis,
-                IdAppoiment = response.Result.IdAppoiment,
-                IdMedication = response.Result.IdMedication,
+                AppoimentId = response.Result.AppoimentId,
+                MedicationId = response.Result.MedicationId,
                 Medications = await _context.Medications.Select(a => new SelectListItem
                 {
                     Text = $"{a.CommercialName} {a.Description}",
@@ -170,7 +170,7 @@ namespace Hospital.Web.Services
 
                 Appoiments = await _context.Appoiments.Select(a => new SelectListItem
                 {
-                    Text = $"{a.UserPatient}, Fecha: {a.Date}",
+                    Text = $"Fecha:{a.Date}, Hora:{a.Time}, Doctor: {a.UserDoctorId}",
                     Value = a.Id.ToString()
                 }).ToListAsync(),
             };
