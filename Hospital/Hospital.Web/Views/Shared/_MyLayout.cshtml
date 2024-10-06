@@ -111,6 +111,8 @@
     <!-- ======= Scripts ======= -->
     @Html.Partial("_Scripts");
 
+    @await Component.InvokeAsync("Notyf")
+
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>

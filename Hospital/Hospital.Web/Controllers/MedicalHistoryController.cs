@@ -7,20 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace Hospital.Web.Controllers
 {
     public class MedicalHistoryController : Controller
     {
         readonly IMedicalHistoryServices _medicalhistoryService;
-        public MedicalHistoryController(IMedicalHistoryServices medicalhistoryServices)
+
+        private readonly INotyfService _notifyService;
+        public MedicalHistoryController(IMedicalHistoryServices medicalhistoryServices, INotyfService notifyService)
         {
             _medicalhistoryService = medicalhistoryServices;
+            _notifyService = notifyService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            
             Response<List<MedicalHistory>> response = await _medicalhistoryService.GetListAsync();
             return View(response.Result);
         }
@@ -28,6 +33,8 @@ namespace Hospital.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
+
+           
             MedicalHistoryDTO dto = await _medicalhistoryService.CreateDTO();
             return View(dto);
 
@@ -36,6 +43,7 @@ namespace Hospital.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(MedicalHistoryDTO medicalhistoryDTO)
         {
+            _notifyService.Success("Se ha creado la Historia Clìnica con Èxito");
             try
             {
                 if (!ModelState.IsValid)
@@ -69,6 +77,7 @@ namespace Hospital.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit([FromRoute] int Id)
         {
+         
             Response<MedicalHistory> response = await _medicalhistoryService.GetAsync(Id);
 
             if (response.IsSuccess)
@@ -91,6 +100,7 @@ namespace Hospital.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(MedicalHistoryDTO medicalhistoryDTO)
         {
+            _notifyService.Success("Se ha editado la Historia Clìnica con Èxito");
             try
             {
                 if (!ModelState.IsValid)
@@ -125,6 +135,7 @@ namespace Hospital.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
+            _notifyService.Success("Se ha eliminado la Historia Clìnica con Èxito");
             try
             {
                 Response<MedicalHistory> response = await _medicalhistoryService.DeleteAsync(id);
@@ -137,6 +148,7 @@ namespace Hospital.Web.Controllers
             }
             catch (Exception ex)
             {
+               
                 return RedirectToAction(nameof(Index));
             }
         }

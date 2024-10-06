@@ -1,4 +1,6 @@
-﻿using Hospital.Web.Data;
+﻿using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
+using Hospital.Web.Data;
 using Hospital.Web.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +18,14 @@ namespace Hospital.Web
 
             //Se instancian los servicios 
             AddServices(builder);
+
+            //Toast Notificaciòn 
+            builder.Services.AddNotyf(config =>
+            {
+                config.DurationInSeconds = 10;
+                config.IsDismissable = true;
+                config.Position = NotyfPosition.BottomRight;
+            });
 
             return builder;
         }
@@ -35,7 +45,14 @@ namespace Hospital.Web
             builder.Services.AddScoped<IRolPermissionsServices, RolPermissionServices>(); //Servicios de RolesPermisos
 
         }
+
+
+        public static WebApplication AddCustomWebAppConfiguration(this WebApplication app)
+        {
+            app.UseNotyf();
+            return app;
+        }
+
+
     }
-
-
 }

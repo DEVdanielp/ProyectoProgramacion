@@ -1,4 +1,5 @@
-﻿using Hospital.Web.Core;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Hospital.Web.Core;
 using Hospital.Web.Data;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.Helpers;
@@ -14,9 +15,12 @@ namespace Hospital.Web.Controllers
 
         readonly IPermissionsServices _permissionsService;
 
-        public PermissionsController(IPermissionsServices permissionsService)
+        private readonly INotyfService _notifyService;
+
+        public PermissionsController(IPermissionsServices permissionsService, INotyfService notifyService)
         {
             _permissionsService = permissionsService;
+            _notifyService = notifyService;
         }
 
 
@@ -31,12 +35,14 @@ namespace Hospital.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
+            
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(Permissions permissions)
         {
+            _notifyService.Success("Se ha creado el Permiso con Èxito");
             try
             {
                 if (!ModelState.IsValid)
@@ -57,12 +63,13 @@ namespace Hospital.Web.Controllers
             {
                 return View(permissions);
             }
+            
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit([FromRoute] int Id)
         {
-
+        
             Response<Permissions> response = await _permissionsService.GetOneAsync(Id);
 
             if (response.IsSuccess)
@@ -77,6 +84,7 @@ namespace Hospital.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Permissions permissions)
         {
+            _notifyService.Success("Se ha editado el Permiso con Èxito");
             try
             {
                 if (!ModelState.IsValid)
@@ -97,11 +105,13 @@ namespace Hospital.Web.Controllers
             {
                 return View(permissions);
             }
+        
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
+            _notifyService.Success("Se ha eliminado con Èxito");
             try
             {
                 Response<Permissions> response = await _permissionsService.DeleteAsync(id);
@@ -115,7 +125,9 @@ namespace Hospital.Web.Controllers
             catch (Exception ex)
             {
                 return RedirectToAction(nameof(Index));
+
             }
+            
         }
 
 
