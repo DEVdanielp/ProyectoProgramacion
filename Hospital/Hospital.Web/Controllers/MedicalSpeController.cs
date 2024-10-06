@@ -3,6 +3,8 @@ using Hospital.Web.Services;
 using Hospital.Web.Core;
 using Microsoft.AspNetCore.Mvc;
 using Hospital.Web.DTOs;
+using AspNetCoreHero.ToastNotification.Abstractions;
+using AspNetCoreHero.ToastNotification.Notyf;
 
 namespace Hospital.Web.Controllers
 {
@@ -10,9 +12,12 @@ namespace Hospital.Web.Controllers
     {     
         private readonly IMedicalSpeServices _medicalspeService;
 
-        public MedicalSpeController(IMedicalSpeServices medicalpsaService)
+        private readonly INotyfService _notifyService;
+
+        public MedicalSpeController(IMedicalSpeServices medicalpsaService, INotyfService notifyService)
         {
             _medicalspeService = medicalpsaService;
+            _notifyService = notifyService;
         }
 
         [HttpGet]
@@ -36,16 +41,17 @@ namespace Hospital.Web.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-
+                    _notifyService.Error("Revise los datos ingresados por favor");
                     return View(udto);
                 }
 
                 Response<MedicalSpe> response = await _medicalspeService.CreateAsync(udto);
                 if (response.IsSuccess)
                 {
+                    _notifyService.Success("Se ha creado la Especialidad Medica con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
-                //TODO: MOstrar el mensaje  de error 
+                _notifyService.Error("Revise los datos ingresados por favor");
                 return View(response);
             }
             catch (Exception ex)
@@ -60,10 +66,10 @@ namespace Hospital.Web.Controllers
             Response<MedicalSpeDTO> response = await _medicalspeService.GetOneAsycn(id);
             if (response.IsSuccess)
             {
-
+                
                 return View(response.Result);
             }
-            //TODO: Mensaja de error
+            _notifyService.Error("Revise los datos ingresados por favor");
             return RedirectToAction(nameof(Index));
         }
 
@@ -74,17 +80,17 @@ namespace Hospital.Web.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    //TODO: mensaje de error
+                    _notifyService.Error("Revise los datos ingresados por favor");
                     return View(section);
                 }
                 Response<MedicalSpeDTO> response = await _medicalspeService.EditAsync(section);
 
                 if (response.IsSuccess)
                 {
-                    //TODO: mensaje de exito
+                    _notifyService.Success("Se ha actualizado con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
-                //TODO: MOstrar el mensaje  de error 
+                _notifyService.Error("Revise los datos ingresados por favor");
                 return View(response);
             }
             catch (Exception ex)
@@ -98,6 +104,7 @@ namespace Hospital.Web.Controllers
         {   //Este metodo redirecciona confirma la eliminacion
             try
             {
+                _notifyService.Success("Se ha eliminado con Èxito");
                 await _medicalspeService.DeleteAsync(id);
                 return RedirectToAction(nameof(Index));
 

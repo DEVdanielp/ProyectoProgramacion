@@ -6,6 +6,8 @@ using Hospital.Web.DTOs;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Hospital.Web.Data;
 using Microsoft.EntityFrameworkCore;
+using AspNetCoreHero.ToastNotification.Notyf;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 
 
@@ -15,11 +17,11 @@ namespace Hospital.Web.Controllers
     {
         private readonly IUsersServices _userService;
 
-
-        public UsersController(IUsersServices userService)
+        private readonly INotyfService _notifyService;
+        public UsersController(IUsersServices userService, INotyfService notifyService)
         {
             _userService = userService;
-
+            _notifyService = notifyService;
         }
 
 
@@ -46,16 +48,17 @@ namespace Hospital.Web.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-
+                    _notifyService.Error("Revise los datos ingresados por favor");
                     return View(udto);
                 }
 
                 Response<User> response = await _userService.CreateAsync(udto);
                 if (response.IsSuccess)
                 {
+                    _notifyService.Success("Se ha creado el Usuario con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
-                //TODO: MOstrar el mensaje  de error 
+                _notifyService.Error("Revise los datos ingresados por favor");
                 return View(response);
             }
             catch (Exception ex)
@@ -73,7 +76,7 @@ namespace Hospital.Web.Controllers
 
                 return View(response.Result);
             }
-            //TODO: Mensaja de error
+            _notifyService.Error("Revise los datos ingresados por favor");
             return RedirectToAction(nameof(Index));
         }
 
@@ -84,17 +87,17 @@ namespace Hospital.Web.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    //TODO: mensaje de error
+                    _notifyService.Error("Revise los datos ingresados por favor");
                     return View(section);
                 }
                 Response<UserDTO> response = await _userService.EditAsync(section);
 
                 if (response.IsSuccess)
                 {
-                    //TODO: mensaje de exito
+                    _notifyService.Success("Se ha actualizado con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
-                //TODO: MOstrar el mensaje  de error 
+                _notifyService.Error("Revise los datos ingresados por favor");
                 return View(response);
             }
             catch (Exception ex)
@@ -108,6 +111,7 @@ namespace Hospital.Web.Controllers
         {   //Este metodo redirecciona confirma la eliminacion
             try
             {
+                _notifyService.Success("Se ha eliminado con Èxito");
                 await _userService.DeleteAsync(id);
                 return RedirectToAction(nameof(Index));
 
