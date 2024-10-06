@@ -43,11 +43,12 @@ namespace Hospital.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(MedicalHistoryDTO medicalhistoryDTO)
         {
-            _notifyService.Success("Se ha creado la Historia Clìnica con Èxito");
+          
             try
             {
                 if (!ModelState.IsValid)
                 {
+                    _notifyService.Error("Debes completar los campos ");
                     return View(medicalhistoryDTO);
                 }
 
@@ -63,6 +64,7 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
+                    _notifyService.Success("Se ha creado la Historia Clinica con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -100,11 +102,12 @@ namespace Hospital.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(MedicalHistoryDTO medicalhistoryDTO)
         {
-            _notifyService.Success("Se ha editado la Historia Clìnica con Èxito");
+          
             try
             {
                 if (!ModelState.IsValid)
                 {
+                    _notifyService.Error("Debes completar los campos ");
                     return View(medicalhistoryDTO);
                 }
 
@@ -121,6 +124,7 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
+                    _notifyService.Success("Se ha editado la Historia Clìnica con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -135,12 +139,13 @@ namespace Hospital.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            _notifyService.Success("Se ha eliminado la Historia Clìnica con Èxito");
+           
             try
             {
                 Response<MedicalHistory> response = await _medicalhistoryService.DeleteAsync(id);
                 if (response.IsSuccess)
                 {
+                    _notifyService.Success("Se ha eliminado la Historia Clìnica con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
 
