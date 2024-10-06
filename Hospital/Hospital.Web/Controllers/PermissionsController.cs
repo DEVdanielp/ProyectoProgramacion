@@ -42,11 +42,12 @@ namespace Hospital.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Permissions permissions)
         {
-            _notifyService.Success("Se ha creado el Permiso con Èxito");
+          
             try
             {
                 if (!ModelState.IsValid)
                 {
+                    _notifyService.Error("Debes completar los campos ");
                     return View(permissions);
                 }
 
@@ -54,6 +55,7 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
+                    _notifyService.Success("Se ha creado el Permiso con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -84,11 +86,12 @@ namespace Hospital.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Permissions permissions)
         {
-            _notifyService.Success("Se ha editado el Permiso con Èxito");
+        
             try
             {
                 if (!ModelState.IsValid)
                 {
+                    _notifyService.Error("Debes completar los campos ");
                     return View(permissions);
                 }
 
@@ -96,6 +99,7 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
+                    _notifyService.Success("Se ha editado el Permiso con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -111,12 +115,13 @@ namespace Hospital.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            _notifyService.Success("Se ha eliminado con Èxito");
+            
             try
             {
                 Response<Permissions> response = await _permissionsService.DeleteAsync(id);
                 if (response.IsSuccess)
                 {
+                    _notifyService.Success("Se ha eliminado el Permiso con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
 
