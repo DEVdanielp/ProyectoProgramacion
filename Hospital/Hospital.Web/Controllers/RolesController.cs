@@ -1,5 +1,4 @@
-﻿using AspNetCoreHero.ToastNotification.Abstractions;
-using Hospital.Web.Core;
+﻿using Hospital.Web.Core;
 using Hospital.Web.Data;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.Helpers;
@@ -12,13 +11,11 @@ namespace Hospital.Web.Controllers
     public class RolesController : Controller
     {
         //Inyectamos la dependecia de la interfaz creada
-        private readonly IRolesServices _rolesService;
-        private readonly INotyfService _notifyService;
+        readonly IRolesServices _rolesService;
 
-        public RolesController(IRolesServices rolesService, INotyfService notifyService)
+        public RolesController(IRolesServices rolesService)
         {
             _rolesService = rolesService;
-            _notifyService = notifyService;
         }
 
         [HttpGet]
@@ -41,7 +38,6 @@ namespace Hospital.Web.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    _notifyService.Error("Revise los datos ingresados por favor");
                     return View(rol);
                 }
 
@@ -49,10 +45,9 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha creado el rol con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
-                _notifyService.Error("Revise los datos ingresados por favor");
+
                 return View(response);
             }
             catch (Exception ex)
@@ -71,7 +66,7 @@ namespace Hospital.Web.Controllers
             {
                 return View(response.Result);
             }
-            _notifyService.Error("Revise los datos ingresados por favor");
+
             return RedirectToAction(nameof(Index));
 
         }
@@ -83,7 +78,6 @@ namespace Hospital.Web.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    _notifyService.Error("Revise los datos ingresados por favor");
                     return View(rol);
                 }
 
@@ -91,10 +85,9 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha actualizado con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
-                _notifyService.Error("Revise los datos ingresados por favor");
+
                 return View(response);
             }
             catch (Exception ex)
@@ -109,7 +102,6 @@ namespace Hospital.Web.Controllers
         {   //Este metodo redirecciona confirma la eliminacion
             try
             {
-                _notifyService.Success("Se ha eliminado con Èxito");
                 await _rolesService.DeleteAsync(id);
                 return RedirectToAction(nameof(Index));
 

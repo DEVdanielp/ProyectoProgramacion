@@ -14,13 +14,6 @@ namespace Hospital.Web.Migrations
                 name: "FK_MedicalOrders_Appoiments_AppoimentId",
                 table: "MedicalOrders");
 
-            migrationBuilder.DropColumn(
-                name: "IdAppoiment",
-                table: "MedicalOrders");
-
-            migrationBuilder.DropColumn(
-                name: "IdMedication",
-                table: "MedicalOrders");
 
             migrationBuilder.AlterColumn<int>(
                 name: "AppoimentId",
@@ -56,19 +49,6 @@ namespace Hospital.Web.Migrations
                 oldClrType: typeof(int),
                 oldType: "int");
 
-            migrationBuilder.AddColumn<int>(
-                name: "IdAppoiment",
-                table: "MedicalOrders",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<int>(
-                name: "IdMedication",
-                table: "MedicalOrders",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_MedicalOrders_Appoiments_AppoimentId",

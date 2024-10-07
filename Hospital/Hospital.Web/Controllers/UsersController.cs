@@ -8,7 +8,6 @@ using Hospital.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using AspNetCoreHero.ToastNotification.Notyf;
 using AspNetCoreHero.ToastNotification.Abstractions;
-using Hospital.Web.Helpers;
 
 
 
@@ -19,13 +18,10 @@ namespace Hospital.Web.Controllers
         private readonly IUsersServices _userService;
 
         private readonly INotyfService _notifyService;
-
-        private readonly ICombosHelpers _comboshelper;
-        public UsersController(IUsersServices userService, INotyfService notifyService, ICombosHelpers comboshelper)
+        public UsersController(IUsersServices userService, INotyfService notifyService)
         {
             _userService = userService;
             _notifyService = notifyService;
-            _comboshelper = comboshelper;
         }
 
 
@@ -41,10 +37,7 @@ namespace Hospital.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            UserDTO dto = new UserDTO
-            {
-                Rols = await _comboshelper.GetComboRols()
-            };
+            UserDTO dto = await _userService.CreateDTO();
             return View(dto);
         }
 
@@ -56,22 +49,17 @@ namespace Hospital.Web.Controllers
                 if (!ModelState.IsValid)
                 {
                     _notifyService.Error("Revise los datos ingresados por favor");
-                    udto.Rols = await _comboshelper.GetComboRols();
                     return View(udto);
                 }
 
                 Response<User> response = await _userService.CreateAsync(udto);
-
-                if (!response.IsSuccess)
+                if (response.IsSuccess)
                 {
-                    _notifyService.Error("Revise los datos ingresados por favor");
-                    udto.Rols = await _comboshelper.GetComboRols();
-                    return View(udto);
+                    _notifyService.Success("Se ha creado el Usuario con Èxito");
+                    return RedirectToAction(nameof(Index));
                 }
-
-                _notifyService.Success("Se ha creado el Usuario con Èxito");
-                 return RedirectToAction(nameof(Index));
-                
+                _notifyService.Error("Revise los datos ingresados por favor");
+                return View(response);
             }
             catch (Exception ex)
             {

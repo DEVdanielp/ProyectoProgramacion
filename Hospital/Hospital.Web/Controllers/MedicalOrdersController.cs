@@ -13,11 +13,18 @@ namespace Hospital.Web.Controllers
     {
         readonly IMedicalOrdersServices _medicalOrdersService;
         private readonly INotyfService _notifyService;
-        public MedicalOrdersController(IMedicalOrdersServices medicalOrdersServices,INotyfService notifyService)
+        private readonly ILogger<MedicalOrdersController> _logger;
+
+        public MedicalOrdersController(
+            IMedicalOrdersServices medicalOrdersServices,
+            INotyfService notifyService,
+            ILogger<MedicalOrdersController> logger)
         {
             _medicalOrdersService = medicalOrdersServices;
             _notifyService = notifyService;
+            _logger = logger;
         }
+
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -35,6 +42,13 @@ namespace Hospital.Web.Controllers
         {
             try
             {
+                _logger.LogInformation($"Diagnosis: {medicalOrderdto.Diagnosis}, Description: {medicalOrderdto.Description}, Appoiments: {medicalOrderdto.Appoiments}, Medications: {medicalOrderdto.Medications}");
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogInformation("------------------no esta siento valido----------------------");
+                    Response<MedicalOrderDTO> responseList = await _medicalOrdersService.GetListDtoAsync();
+                    return View(responseList.Result);
+                }
 
                 Response<MedicalOrderDTO> response = await _medicalOrdersService.CreateAsync(medicalOrderdto);
 

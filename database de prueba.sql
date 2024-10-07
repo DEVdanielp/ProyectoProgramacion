@@ -1,4 +1,4 @@
-USE Proyecto
+
 select * from Roles
 -- Inserciones en la tabla Roles e
 INSERT INTO Roles ( NameRol, Description) VALUES
@@ -66,29 +66,13 @@ INSERT INTO Status ( StatusAppoiment, AppoimentId) VALUES
 
 
 -- Inserciones en la tabla MedicalOrders eta tabla esta mala, la estoy corrigiendo :)
-INSERT INTO MedicalOrders (Description, Diagnosis, MedicationId, AppoimentId) VALUES
-( 'Orden de antibióticos', 'Infección respiratoria', 1, 1),
-( 'Orden de analgésicos', 'Dolor crónico', 2, 2),
-( 'Orden de radiografía', 'Dolor en el pecho', 3, 3),
-( 'Orden de fisioterapia', 'Lesión muscular', 4, 4),
-( 'Orden de control', 'Consulta de seguimiento', 5, 5);
+	
+INSERT INTO MedicalOrders (Description, Diagnosis, MedicationId, AppoimentId) 
+VALUES
+('Orden de antibióticos', 'Infección respiratoria', 1, 1),
+('Orden de analgésicos', 'Dolor crónico', 2, 2),
+('Orden de radiografía', 'Dolor en el pecho', 3, 3),
+('Orden de fisioterapia', 'Lesión muscular', 4, 4),
+('Orden de control', 'Consulta de seguimiento', 5, 5);
 
-INSERT INTO Permissions (Name, Description) VALUES
-( 'Cambiar contraseña', 'Cambiar la contraseña para logearse'),
-( 'Asignar permiso a rol', 'Asignar permiso a rol'),
-( 'Crear rol', 'Crear un nuevo rol en caso de ser necesario'),
-( 'Quitar permiso a rol', 'limitar un rol en caso de ser necesario'),
-( 'Crear usuario', 'Agregar a una persona dentro de la pagina'),
-( 'Recetar medicamente', 'aa')
-
-INSERT INTO RolesPermisos(rolId, PermisosId) VALUES
-(1,1),
-( 1,6),
-(2,1),
-(3,1),
-(3,2),
-(3,3)
-
-select * from Roles
-select * from Permissions
 
