@@ -14,7 +14,7 @@ namespace Hospital.Web.Services
     public interface IMedicalHistoryServices
     {
         Task<Response<List<MedicalHistory>>> GetListAsync();
-        Task<Response<MedicalHistory>> GetAsync(int Id);
+        Task<Response<MedicalHistoryDTO>> GetOneAsync(int Id);
         Task<Response<MedicalHistory>> EditAsync(MedicalHistory model);
         Task<Response<MedicalHistory>> CreateAsync(MedicalHistory model);
         public Task<MedicalHistoryDTO> CreateDTO();
@@ -65,24 +65,7 @@ namespace Hospital.Web.Services
             }
         }
 
-        public async Task<Response<MedicalHistory>> GetAsync(int Id)
-        {
-            try
-            {
-                MedicalHistory medicalhistory = await _context.MedicalHistory.FirstOrDefaultAsync(r => r.Id == Id);
 
-                if (medicalhistory == null)
-                {
-                    return ResponseHelper<MedicalHistory>.MakeResponseFail("El id indicado no existe");
-                }
-
-                return ResponseHelper<MedicalHistory>.MakeResponseSuccess(medicalhistory);
-            }
-            catch (Exception ex)
-            {
-                return ResponseHelper<MedicalHistory>.MakeResponseFail(ex);
-            }
-        }
 
         public async Task<Response<MedicalHistory>> EditAsync(MedicalHistory model)
         {
@@ -132,6 +115,38 @@ namespace Hospital.Web.Services
 
             };
             return dto;
+        }
+
+        public async Task<Response<MedicalHistoryDTO>> GetOneAsync(int Id)
+        {
+            try
+            {
+                MedicalHistory? status = await _context.MedicalHistory.FirstOrDefaultAsync(a => a.Id == Id);
+
+                if (status is null)
+                {
+                    return ResponseHelper<MedicalHistoryDTO>.MakeResponseFail("El id indicado no existe");
+                }
+
+                MedicalHistoryDTO dto = new MedicalHistoryDTO
+                {
+                    Description = status.Description,
+                    NamePatient = status.NamePatient,
+
+                    Appoiment = await _context.Appoiments.Select(a => new SelectListItem
+                    {
+                        Text = $"Fecha: {a.Date}, Hora: {a.Time}",
+                        Value = a.Id.ToString()
+                    }).ToListAsync(),
+
+                };
+                return ResponseHelper<MedicalHistoryDTO>.MakeResponseSuccess(dto);
+
+            }
+            catch (Exception ex)
+            {
+                return ResponseHelper<MedicalHistoryDTO>.MakeResponseFail(ex);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Hospital.Web.Core;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Hospital.Web.Core;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
 using Hospital.Web.Services;
@@ -8,11 +9,13 @@ namespace Hospital.Web.Controllers
 {
     public class RolPermissionsController : Controller
     {
-        readonly IRolPermissionsServices _rpService;
+        private readonly IRolPermissionsServices _rpService;
+        private readonly INotyfService _notifyService;
 
-        public RolPermissionsController(IRolPermissionsServices rp)
+        public RolPermissionsController(IRolPermissionsServices rp, INotyfService notifyService)
         {
             _rpService = rp;
+            _notifyService = notifyService;
         }
 
         public async Task<IActionResult> Index()
@@ -36,6 +39,7 @@ namespace Hospital.Web.Controllers
             {
                 if (!ModelState.IsValid)
                 {
+                    _notifyService.Error("Revise los datos ingresados por favor");
                     return View(dto);
                 }
 
@@ -43,9 +47,11 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
+                    _notifyService.Success("Se ha asignado este permiso con éxito");
                     return RedirectToAction(nameof(Index));
                 }
 
+                _notifyService.Error("Revise los datos ingresados por favor");
                 return View(response);
             }
             catch (Exception ex)
@@ -60,6 +66,7 @@ namespace Hospital.Web.Controllers
             try
             {
                 await _rpService.DeleteAsync(PermisosId, rolId);
+                _notifyService.Success("Se ha eliminado con éxito");
                 return RedirectToAction(nameof(Index));
 
             }

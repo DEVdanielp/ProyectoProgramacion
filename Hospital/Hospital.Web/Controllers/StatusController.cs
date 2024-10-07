@@ -1,4 +1,5 @@
-﻿using Hospital.Web.Core;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Hospital.Web.Core;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
 using Hospital.Web.Services;
@@ -10,11 +11,13 @@ namespace Hospital.Web.Controllers
 {
     public class StatusController : Controller
     {
-        readonly IStatusServices _statusService;
+        private readonly IStatusServices _statusService;
+        private readonly INotyfService _notifyService;
 
-        public StatusController(IStatusServices statusService)
+        public StatusController(IStatusServices statusService, INotyfService notifyService)
         {
             _statusService = statusService;
+            _notifyService = notifyService;
         }
 
         public async Task<IActionResult> Index()
@@ -38,6 +41,7 @@ namespace Hospital.Web.Controllers
             {
                 if (!ModelState.IsValid)
                 {
+                    _notifyService.Error("Revise los datos ingresados por favor");
                     return View(dto);
                 }
 
@@ -45,9 +49,10 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
+                    _notifyService.Success("Se ha creado este estado con éxito");
                     return RedirectToAction(nameof(Index));
                 }
-                
+                _notifyService.Error("Revise los datos ingresados por favor");
                 return View(response);
             }
             catch (Exception ex)
@@ -66,7 +71,7 @@ namespace Hospital.Web.Controllers
             {
                 return View(response.Result);
             }
-
+            _notifyService.Error("Revise los datos ingresados por favor");
             return RedirectToAction(nameof(Index));
 
         }
@@ -78,6 +83,7 @@ namespace Hospital.Web.Controllers
             {
                 if (!ModelState.IsValid)
                 {
+                    _notifyService.Error("Revise los datos ingresados por favor");
                     return View(status);
                 }
 
@@ -85,9 +91,10 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
+                    _notifyService.Success("Se ha actualizado con éxito");
                     return RedirectToAction(nameof(Index));
                 }
-
+                _notifyService.Error("Revise los datos ingresados por favor");
                 return View(response);
             }
             catch (Exception ex)
@@ -102,6 +109,7 @@ namespace Hospital.Web.Controllers
             try
             {
                 await _statusService.DeleteAsync(id);
+                _notifyService.Success("Se ha eliminado con éxito");
                 return RedirectToAction(nameof(Index));
 
             }

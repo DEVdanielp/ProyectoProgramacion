@@ -54,7 +54,7 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha creado la Orden Medica con Èxito");
+                    _notifyService.Success("Se ha creado la orden médica con éxito");
                     return RedirectToAction(nameof(Index));
                 }
                 _notifyService.Error("Revise los datos ingresados por favor");
@@ -75,8 +75,10 @@ namespace Hospital.Web.Controllers
                 Response<MedicalOrderDTO> response = await _medicalOrdersService.ToDtoAsync(id);
                 if (!response.IsSuccess)
                 {
+                    _notifyService.Error("Revise los datos ingresados por favor");
                     return RedirectToAction(nameof(Index));
                 }
+
                 return View(response.Result);
             }
             catch (Exception ex)
@@ -94,7 +96,7 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha actualizado con Èxito");
+                    _notifyService.Success("Se ha actualizado con éxito");
                     return RedirectToAction(nameof(Index));
                 }
                 _notifyService.Error("Revise los datos ingresados por favor");
@@ -113,7 +115,7 @@ namespace Hospital.Web.Controllers
                 Response<MedicalOrder> response = await _medicalOrdersService.DeleteAsync(id);
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha eliminado con Èxito");
+                    _notifyService.Success("Se ha eliminado con éxito");
                     return RedirectToAction(nameof(Index));
                 }
 

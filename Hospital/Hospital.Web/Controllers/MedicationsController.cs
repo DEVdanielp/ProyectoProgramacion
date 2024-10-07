@@ -43,7 +43,7 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha creado el Medicamento con Èxito");
+                    _notifyService.Success("Se ha creado el medicamento con éxito");
                     return RedirectToAction(nameof(Index));
                 }
                 _notifyService.Error("Revise los datos ingresados por favor");
@@ -82,7 +82,7 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha actualizado con Èxito");
+                    _notifyService.Success("Se ha actualizado con éxito");
                     return RedirectToAction(nameof(Index));
                 }
                 _notifyService.Error("Revise los datos ingresados por favor");
@@ -102,7 +102,7 @@ namespace Hospital.Web.Controllers
                 Response<Medication> response = await _medicationsService.DeleteAsync(id);
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha eliminado con Èxito");
+                    _notifyService.Success("Se ha eliminado con éxito");
                     return RedirectToAction(nameof(Index));
                 }
 

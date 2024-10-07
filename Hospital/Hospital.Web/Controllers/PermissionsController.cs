@@ -55,7 +55,7 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha creado el Permiso con Èxito");
+                    _notifyService.Success("Se ha creado el Permiso con éxito");
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -99,7 +99,7 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha editado el Permiso con Èxito");
+                    _notifyService.Success("Se ha editado el Permiso con éxito");
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -121,7 +121,7 @@ namespace Hospital.Web.Controllers
                 Response<Permissions> response = await _permissionsService.DeleteAsync(id);
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha eliminado el Permiso con Èxito");
+                    _notifyService.Success("Se ha eliminado el Permiso con éxito");
                     return RedirectToAction(nameof(Index));
                 }
 

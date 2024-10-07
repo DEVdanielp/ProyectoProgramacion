@@ -48,7 +48,7 @@ namespace Hospital.Web.Controllers
                 Response<MedicalSpe> response = await _medicalspeService.CreateAsync(udto);
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha creado la Especialidad Medica con Èxito");
+                    _notifyService.Success("Se ha creado la especialidad médica con éxito");
                     return RedirectToAction(nameof(Index));
                 }
                 _notifyService.Error("Revise los datos ingresados por favor");
@@ -87,7 +87,7 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha actualizado con Èxito");
+                    _notifyService.Success("Se ha actualizado con éxito");
                     return RedirectToAction(nameof(Index));
                 }
                 _notifyService.Error("Revise los datos ingresados por favor");
@@ -104,7 +104,7 @@ namespace Hospital.Web.Controllers
         {   //Este metodo redirecciona confirma la eliminacion
             try
             {
-                _notifyService.Success("Se ha eliminado con Èxito");
+                _notifyService.Success("Se ha eliminado con éxito");
                 await _medicalspeService.DeleteAsync(id);
                 return RedirectToAction(nameof(Index));
 

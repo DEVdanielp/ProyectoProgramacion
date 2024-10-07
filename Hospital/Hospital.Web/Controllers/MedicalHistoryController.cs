@@ -64,7 +64,7 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha creado la Historia Clinica con Èxito");
+                    _notifyService.Success("Se ha creado la Historia Clinica con éxito");
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -79,24 +79,16 @@ namespace Hospital.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit([FromRoute] int Id)
         {
-         
-            Response<MedicalHistory> response = await _medicalhistoryService.GetAsync(Id);
+
+            Response<MedicalHistoryDTO> response = await _medicalhistoryService.GetOneAsync(Id);
 
             if (response.IsSuccess)
             {
-                // Mapea el resultado a MedicalHistoryDTO
-                MedicalHistoryDTO model = new MedicalHistoryDTO
-                {
-                    Id = response.Result.Id,
-                    NamePatient = response.Result.NamePatient,
-                    Description = response.Result.Description,
-                    AppoimentId = response.Result.AppoimentId,
-                    Appoiment = new List<SelectListItem>() // Asumiendo que tienes una lista de citas
-                };
-                return View(model);
+                return View(response.Result);
             }
-
+            _notifyService.Error("Revise los datos ingresados por favor");
             return RedirectToAction(nameof(Index));
+
         }
 
         [HttpPost]
@@ -124,7 +116,7 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha editado la Historia Clìnica con Èxito");
+                    _notifyService.Success("Se ha editado la Historia Clìnica con éxito");
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -145,7 +137,7 @@ namespace Hospital.Web.Controllers
                 Response<MedicalHistory> response = await _medicalhistoryService.DeleteAsync(id);
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha eliminado la Historia Clìnica con Èxito");
+                    _notifyService.Success("Se ha eliminado la Historia Clìnica con éxito");
                     return RedirectToAction(nameof(Index));
                 }
 
