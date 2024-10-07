@@ -1,4 +1,5 @@
-﻿using Hospital.Web.Core;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Hospital.Web.Core;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
 using Hospital.Web.Services;
@@ -11,11 +12,11 @@ namespace Hospital.Web.Controllers
     public class MedicalOrdersController : Controller
     {
         readonly IMedicalOrdersServices _medicalOrdersService;
-        private readonly ILogger<MedicalOrdersController> _logger;
-        public MedicalOrdersController(IMedicalOrdersServices medicalOrdersServices, ILogger<MedicalOrdersController> logger)
+        private readonly INotyfService _notifyService;
+        public MedicalOrdersController(IMedicalOrdersServices medicalOrdersServices,INotyfService notifyService)
         {
             _medicalOrdersService = medicalOrdersServices;
-            _logger = logger;
+            _notifyService = notifyService;
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -34,22 +35,15 @@ namespace Hospital.Web.Controllers
         {
             try
             {
-                //_logger.LogInformation($"Diagnosis: {medicalOrderdto.Diagnosis}, Description: {medicalOrderdto.Description}, AppoimentId: {medicalOrderdto.IdAppoiment}, MedicationId: {medicalOrderdto.IdMedication}, Appoiments: {medicalOrderdto.Appoiments}, Medications: { medicalOrderdto.Medications}");
-
-                //if (!ModelState.IsValid)
-                //{
-                //    _logger.LogInformation("------------------no esta siento valido----------------------");
-                //    Response<MedicalOrderDTO> responseList = await _medicalOrdersService.GetListDtoAsync();
-                //    return View(responseList.Result);
-                //}
 
                 Response<MedicalOrderDTO> response = await _medicalOrdersService.CreateAsync(medicalOrderdto);
 
                 if (response.IsSuccess)
                 {
+                    _notifyService.Success("Se ha creado la Orden Medica con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
-
+                _notifyService.Error("Revise los datos ingresados por favor");
                 return View(response);
             }
             catch (Exception ex)
@@ -69,7 +63,6 @@ namespace Hospital.Web.Controllers
                 {
                     return RedirectToAction(nameof(Index));
                 }
-
                 return View(response.Result);
             }
             catch (Exception ex)
@@ -82,18 +75,15 @@ namespace Hospital.Web.Controllers
         {
             try
             {
-                //if (!ModelState.IsValid)
-                //{
-                //    return View();
-                //}
 
                 Response<MedicalOrderDTO> response = await _medicalOrdersService.EditAsync(medicalorderdto);
 
                 if (response.IsSuccess)
                 {
+                    _notifyService.Success("Se ha actualizado con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
-
+                _notifyService.Error("Revise los datos ingresados por favor");
                 return View(response);
             }
             catch (Exception ex)
@@ -109,6 +99,7 @@ namespace Hospital.Web.Controllers
                 Response<MedicalOrder> response = await _medicalOrdersService.DeleteAsync(id);
                 if (response.IsSuccess)
                 {
+                    _notifyService.Success("Se ha eliminado con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
 

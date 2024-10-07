@@ -7,7 +7,7 @@
     <h1>Historia Clínica</h1>
     <nav>
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li>
             <li class="breadcrumb-item"><a asp-action="Index">MedicalHistory</a></li>
             <li class="breadcrumb-item active">Editar Medicamnetos</li>
         </ol>
@@ -29,13 +29,14 @@
             <label for="inputNanme4" class="form-label">Descripción</label>
             <input asp-for="Description" class="form-control" id="inputNanme4">
         </div>
-        <div class="col-12">
-            <label class="form-label">Cita</label>
-            <select input asp-for="Appoiment" asp-items="Model.Appoiment" class="form-control">
-            </select>
-            <span asp-validation-for="AppoimentId" class="text-danger"></span>
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label">Seleccionar Cita</label>
+            <div class="col-sm-10">
+                <select asp-for="AppoimentId" asp-items="Model.Appoiment" class="form-control">
+                    <option selected>Click para seleccionar una cita</option>
+                </select>
+            </div>
         </div>
- 
 
         <div class="text-center">
             <button type="submit" class="btn btn-primary">Guardar</button>
