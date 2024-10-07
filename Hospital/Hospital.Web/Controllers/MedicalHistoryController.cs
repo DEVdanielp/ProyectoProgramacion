@@ -91,7 +91,7 @@ namespace Hospital.Web.Controllers
                     NamePatient = response.Result.NamePatient,
                     Description = response.Result.Description,
                     AppoimentId = response.Result.AppoimentId,
-                    Appoiments = new List<SelectListItem>() // Asumiendo que tienes una lista de citas
+                    Appoiment = new List<SelectListItem>() // Asumiendo que tienes una lista de citas
                 };
                 return View(model);
             }

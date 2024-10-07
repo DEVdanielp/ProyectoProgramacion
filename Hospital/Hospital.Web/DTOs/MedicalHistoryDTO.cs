@@ -24,7 +24,7 @@ namespace Hospital.Web.DTOs
         public int? AppoimentId { get; set; } // ID de la cita asociada
 
         // Lista de citas disponibles para seleccionar
-        public List<SelectListItem>? Appoiments { get; set; }
+        public IEnumerable<SelectListItem>? Appoiment { get; set; }
 
     }
 }

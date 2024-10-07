@@ -31,7 +31,8 @@
         </div>
         <div class="col-12">
             <label class="form-label">Cita</label>
-            < asp-for="Appoiment" asp-items="Model.Appoiment" class="form-control"></>
+            <select input asp-for="Appoiment" asp-items="Model.Appoiment" class="form-control">
+            </select>
             <span asp-validation-for="AppoimentId" class="text-danger"></span>
         </div>
  

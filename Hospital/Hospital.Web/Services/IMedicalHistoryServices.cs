@@ -124,7 +124,7 @@ namespace Hospital.Web.Services
         {
             MedicalHistoryDTO dto = new MedicalHistoryDTO
             {
-                Appoiments = await _context.Appoiments.Select(a => new SelectListItem
+                Appoiment = await _context.Appoiments.Select(a => new SelectListItem
                 {
                     Text = $"Fecha:{a.Date}, Hora:{a.Time}, Doctor: {a.UserDoctorId}",
                     Value = a.Id.ToString()
