@@ -11,71 +11,57 @@ namespace Hospital.Web.Services
     public interface IMedicalSpeServices
     {
         public Task<Response<MedicalSpe>> CreateAsync(MedicalSpeDTO dto);
-        public Task<MedicalSpeDTO> CreateDTO();
         public Task<Response<List<MedicalSpe>>> GetListAsync();
         public Task<Response<MedicalSpeDTO>> EditAsync(MedicalSpeDTO dto);
         public Task<Response<MedicalSpeDTO>> GetOneAsycn(int id);
         public Task<Response<MedicalSpe>> DeleteAsync(int Id);
-    }   
+    }
 
-        public class MedicalSpeServices : IMedicalSpeServices
+    public class MedicalSpeServices : IMedicalSpeServices
+    {
+        private readonly DataContext _context;
+
+        private readonly IConvertHelper _convertHelper;
+
+        public MedicalSpeServices(DataContext context, IConvertHelper convertHelper)
         {
-            private readonly DataContext _context;
+            _context = context;
+            _convertHelper = convertHelper;
+        }
 
-            public MedicalSpeServices(DataContext context)
+        public async Task<Response<MedicalSpe>> CreateAsync(MedicalSpeDTO dto)
+        {
+            try
             {
-                _context = context;
+                MedicalSpe Spe = _convertHelper.ToMedicalSpe(dto);
+                await _context.MedicalSpe.AddAsync(Spe);
+                await _context.SaveChangesAsync();
+
+                return ResponseHelper<MedicalSpe>.MakeResponseSuccess(Spe, "Seccion creada con exito ");
+
             }
-
-            public async Task<Response<MedicalSpe>> CreateAsync(MedicalSpeDTO dto)
+            catch (Exception ex)
             {
-                try
-                {
-                    MedicalSpe Spe = new MedicalSpe
-                    {
-                        Name = dto.Name,
-                        UserDoctor = await _context.Users.FirstOrDefaultAsync(a => a.Id == dto.UserDoctorId)
-
-                    };
-                    await _context.MedicalSpe.AddAsync(Spe);
-                    await _context.SaveChangesAsync();
-
-                    return ResponseHelper<MedicalSpe>.MakeResponseSuccess(Spe, "Seccion creada con exito ");
-
-                }
-                catch (Exception ex)
-                {
-                    return ResponseHelper<MedicalSpe>.MakeResponseFail(ex);
-                }
+                return ResponseHelper<MedicalSpe>.MakeResponseFail(ex);
             }
-            public async Task<MedicalSpeDTO> CreateDTO()
-            {
-                MedicalSpeDTO dto = new MedicalSpeDTO
-                {
-                    UserDoctor = await _context.Users.Select(a => new SelectListItem
-                    {
-                        Text = $"{a.FirstName} {a.LastName}",
-                        Value = a.Id.ToString()
-                    }).ToListAsync(),
+        }
 
-                };
-                return dto;
-            }
-            public async Task<Response<List<MedicalSpe>>> GetListAsync()
-            {
-                try
-                {
-                    List<MedicalSpe> medics = await _context.MedicalSpe.Include(u => u.UserDoctor).ToListAsync();
-                    return ResponseHelper<List<MedicalSpe>>.MakeResponseSuccess(medics);
-                }
-                catch (Exception ex)
-                {
-                    return ResponseHelper<List<MedicalSpe>>.MakeResponseFail(ex);
-                }
-            }
 
-            public async Task<Response<MedicalSpeDTO>> EditAsync(MedicalSpeDTO dto)
+        public async Task<Response<List<MedicalSpe>>> GetListAsync()
+        {
+            try
             {
+                List<MedicalSpe> medics = await _context.MedicalSpe.Include(u => u.UserDoctor).ToListAsync();
+                return ResponseHelper<List<MedicalSpe>>.MakeResponseSuccess(medics);
+            }
+            catch (Exception ex)
+            {
+                return ResponseHelper<List<MedicalSpe>>.MakeResponseFail(ex);
+            }
+        }
+
+        public async Task<Response<MedicalSpeDTO>> EditAsync(MedicalSpeDTO dto)
+        {
             try
             {
 
@@ -87,56 +73,56 @@ namespace Hospital.Web.Services
 
 
 
-                    _context.MedicalSpe.Update(medic);
-                    await _context.SaveChangesAsync();
+                _context.MedicalSpe.Update(medic);
+                await _context.SaveChangesAsync();
 
-                    return ResponseHelper<MedicalSpeDTO>.MakeResponseSuccess(dto, "sección actualizada con éxito");
+                return ResponseHelper<MedicalSpeDTO>.MakeResponseSuccess(dto, "sección actualizada con éxito");
 
-                }
-                catch (Exception ex)
-                {
-                    return ResponseHelper<MedicalSpeDTO>.MakeResponseFail(ex);
-                }
             }
-
-            public async Task<Response<MedicalSpeDTO>> GetOneAsycn(int id)
+            catch (Exception ex)
             {
-                try
+                return ResponseHelper<MedicalSpeDTO>.MakeResponseFail(ex);
+            }
+        }
+
+        public async Task<Response<MedicalSpeDTO>> GetOneAsycn(int id)
+        {
+            try
+            {
+                MedicalSpe? medic = await _context.MedicalSpe.Include(b => b.UserDoctor).FirstOrDefaultAsync(a => a.Id == id);
+                if (medic == null)
                 {
-                    MedicalSpe? medic = await _context.MedicalSpe.Include(b => b.UserDoctor).FirstOrDefaultAsync(a => a.Id == id);
-                    if (medic == null)
-                    {
-                        return ResponseHelper<MedicalSpeDTO>.MakeResponseFail("En la seccion con el id indicado no existe");
-                    }
+                    return ResponseHelper<MedicalSpeDTO>.MakeResponseFail("En la seccion con el id indicado no existe");
+                }
                 MedicalSpeDTO dto = new MedicalSpeDTO
                 {
-                        Name = medic.Name,
-                        UserDoctor = await _context.Users.Select(a => new SelectListItem
-                        {
-                            Text = $"{a.FirstName} {a.LastName}",
-                            Value = a.Id.ToString()
-                        }).ToListAsync(),
+                    Name = medic.Name,
+                    UserDoctor = await _context.Users.Select(a => new SelectListItem
+                    {
+                        Text = $"{a.FirstName} {a.LastName}",
+                        Value = a.Id.ToString()
+                    }).ToListAsync(),
 
-                    };
-                    return ResponseHelper<MedicalSpeDTO>.MakeResponseSuccess(dto);
+                };
+                return ResponseHelper<MedicalSpeDTO>.MakeResponseSuccess(dto);
 
-                }
-                catch (Exception ex)
-                {
-                    return ResponseHelper<MedicalSpeDTO>.MakeResponseFail(ex);
-                }
             }
-
-            public async Task<Response<MedicalSpe>> DeleteAsync(int Id)
+            catch (Exception ex)
             {
-                MedicalSpe? medic = await _context.MedicalSpe.FirstOrDefaultAsync(a => a.Id == Id);
-
-                _context.MedicalSpe.Remove(medic);
-                await _context.SaveChangesAsync();
-                return ResponseHelper<MedicalSpe>.MakeResponseSuccess(medic, "sección actualizada con éxito");
-
+                return ResponseHelper<MedicalSpeDTO>.MakeResponseFail(ex);
             }
-        
+        }
+
+        public async Task<Response<MedicalSpe>> DeleteAsync(int Id)
+        {
+            MedicalSpe? medic = await _context.MedicalSpe.FirstOrDefaultAsync(a => a.Id == Id);
+
+            _context.MedicalSpe.Remove(medic);
+            await _context.SaveChangesAsync();
+            return ResponseHelper<MedicalSpe>.MakeResponseSuccess(medic, "sección actualizada con éxito");
+
+        }
+
     }
 }
 

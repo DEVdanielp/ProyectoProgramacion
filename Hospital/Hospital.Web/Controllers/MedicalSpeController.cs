@@ -5,19 +5,23 @@ using Microsoft.AspNetCore.Mvc;
 using Hospital.Web.DTOs;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using AspNetCoreHero.ToastNotification.Notyf;
+using Hospital.Web.Helpers;
 
 namespace Hospital.Web.Controllers
 {
-    public class MedicalSpeController: Controller
-    {     
+    public class MedicalSpeController : Controller
+    {
         private readonly IMedicalSpeServices _medicalspeService;
 
         private readonly INotyfService _notifyService;
 
-        public MedicalSpeController(IMedicalSpeServices medicalpsaService, INotyfService notifyService)
+        private readonly ICombosHelpers _comboshelper;
+
+        public MedicalSpeController(IMedicalSpeServices medicalpsaService, INotyfService notifyService, ICombosHelpers comboshelper)
         {
             _medicalspeService = medicalpsaService;
             _notifyService = notifyService;
+            _comboshelper = comboshelper;
         }
 
         [HttpGet]
@@ -30,7 +34,10 @@ namespace Hospital.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            MedicalSpeDTO dto = await _medicalspeService.CreateDTO();
+            MedicalSpeDTO dto = new MedicalSpeDTO
+            {
+                UserDoctor = await _comboshelper.GetComboUsers()
+            };
             return View(dto);
         }
 
@@ -42,17 +49,19 @@ namespace Hospital.Web.Controllers
                 if (!ModelState.IsValid)
                 {
                     _notifyService.Error("Revise los datos ingresados por favor");
+                    udto.UserDoctor = await _comboshelper.GetComboUsers();
                     return View(udto);
                 }
 
                 Response<MedicalSpe> response = await _medicalspeService.CreateAsync(udto);
-                if (response.IsSuccess)
+                if (!response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha creado la especialidad médica con éxito");
-                    return RedirectToAction(nameof(Index));
+                    _notifyService.Error("Revise los datos ingresados por favor");
+                    udto.UserDoctor = await _comboshelper.GetComboUsers();
+                    return View(udto);
                 }
-                _notifyService.Error("Revise los datos ingresados por favor");
-                return View(response);
+                _notifyService.Success("Se ha creado el Usuario con Èxito");
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
@@ -66,7 +75,7 @@ namespace Hospital.Web.Controllers
             Response<MedicalSpeDTO> response = await _medicalspeService.GetOneAsycn(id);
             if (response.IsSuccess)
             {
-                
+
                 return View(response.Result);
             }
             _notifyService.Error("Revise los datos ingresados por favor");
@@ -87,7 +96,7 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha actualizado con éxito");
+                    _notifyService.Success("Se ha actualizado con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
                 _notifyService.Error("Revise los datos ingresados por favor");
@@ -104,7 +113,7 @@ namespace Hospital.Web.Controllers
         {   //Este metodo redirecciona confirma la eliminacion
             try
             {
-                _notifyService.Success("Se ha eliminado con éxito");
+                _notifyService.Success("Se ha eliminado con Èxito");
                 await _medicalspeService.DeleteAsync(id);
                 return RedirectToAction(nameof(Index));
 
@@ -114,6 +123,6 @@ namespace Hospital.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-          }
         }
+    }
 }
