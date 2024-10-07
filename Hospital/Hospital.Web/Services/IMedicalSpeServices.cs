@@ -11,7 +11,6 @@ namespace Hospital.Web.Services
     public interface IMedicalSpeServices
     {
         public Task<Response<MedicalSpe>> CreateAsync(MedicalSpeDTO dto);
-        public Task<MedicalSpeDTO> CreateDTO();
         public Task<Response<List<MedicalSpe>>> GetListAsync();
         public Task<Response<MedicalSpeDTO>> EditAsync(MedicalSpeDTO dto);
         public Task<Response<MedicalSpeDTO>> GetOneAsycn(int id);
@@ -22,21 +21,19 @@ namespace Hospital.Web.Services
         {
             private readonly DataContext _context;
 
-            public MedicalSpeServices(DataContext context)
-            {
-                _context = context;
-            }
+            private readonly IConvertHelper _convertHelper;
 
-            public async Task<Response<MedicalSpe>> CreateAsync(MedicalSpeDTO dto)
+        public MedicalSpeServices(DataContext context, IConvertHelper convertHelper)
+        {
+            _context = context;
+            _convertHelper = convertHelper;
+        }
+
+        public async Task<Response<MedicalSpe>> CreateAsync(MedicalSpeDTO dto)
             {
                 try
                 {
-                    MedicalSpe Spe = new MedicalSpe
-                    {
-                        Name = dto.Name,
-                        UserDoctor = await _context.Users.FirstOrDefaultAsync(a => a.Id == dto.UserDoctorId)
-
-                    };
+                    MedicalSpe Spe = _convertHelper.ToMedicalSpe(dto);
                     await _context.MedicalSpe.AddAsync(Spe);
                     await _context.SaveChangesAsync();
 
@@ -48,19 +45,8 @@ namespace Hospital.Web.Services
                     return ResponseHelper<MedicalSpe>.MakeResponseFail(ex);
                 }
             }
-            public async Task<MedicalSpeDTO> CreateDTO()
-            {
-                MedicalSpeDTO dto = new MedicalSpeDTO
-                {
-                    UserDoctor = await _context.Users.Select(a => new SelectListItem
-                    {
-                        Text = $"{a.FirstName} {a.LastName}",
-                        Value = a.Id.ToString()
-                    }).ToListAsync(),
-
-                };
-                return dto;
-            }
+ 
+            
             public async Task<Response<List<MedicalSpe>>> GetListAsync()
             {
                 try

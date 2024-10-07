@@ -15,7 +15,6 @@ namespace Hospital.Web.Services
     public interface IUsersServices
     {
         public Task<Response<User>> CreateAsync(UserDTO dto);
-        public Task<UserDTO> CreateDTO();
         public Task<Response<List<User>>> GetListAsync();
         public Task<Response<UserDTO>> EditAsync(UserDTO dto);
         public Task<Response<UserDTO>> GetOneAsycn(int id);
@@ -26,25 +25,18 @@ namespace Hospital.Web.Services
     {
         private readonly DataContext _context;
 
-        public UserServices(DataContext context)
+        private readonly IConvertHelper _convertHelper;
+        public UserServices(DataContext context, IConvertHelper convertHelper)
         {
             _context = context;
+            _convertHelper = convertHelper;
         }
 
         public async Task<Response<User>> CreateAsync(UserDTO dto)
         {
             try
             {
-                User user = new User
-                {
-                    FirstName = dto.FirstName,
-                    LastName = dto.LastName,
-                    Birth = dto.Birth,
-                    UserName = dto.UserName,
-                    Password = dto.Password,
-                    Rol = await _context.Roles.FirstOrDefaultAsync(a => a.Id == dto.RolId)
-
-                };
+                User user = _convertHelper.ToUser(dto);
                 await _context.Users.AddAsync(user);
                 await _context.SaveChangesAsync();
 
@@ -56,19 +48,7 @@ namespace Hospital.Web.Services
                 return ResponseHelper<User>.MakeResponseFail(ex);
             }
         }
-        public async Task<UserDTO> CreateDTO()
-        {
-            UserDTO dto = new UserDTO
-            {
-                Rols = await _context.Roles.Select(a => new SelectListItem
-                {
-                    Text = $"{a.NameRol}",
-                    Value = a.Id.ToString()
-                }).ToListAsync(),
-
-            };
-            return dto;
-        }
+       
         public async Task<Response<List<User>>> GetListAsync()
         {
             try

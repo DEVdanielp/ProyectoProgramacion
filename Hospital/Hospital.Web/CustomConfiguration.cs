@@ -1,6 +1,7 @@
 ﻿using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
 using Hospital.Web.Data;
+using Hospital.Web.Helpers;
 using Hospital.Web.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,6 +34,7 @@ namespace Hospital.Web
         //Se llaman a los servicios a usar
         public static void AddServices(WebApplicationBuilder builder)
         {
+            //Services
             builder.Services.AddScoped<IRolesServices, RolService>(); //Servicios de roles
             builder.Services.AddScoped<IAppoimentServices, AppoimentServices>(); //Servicios de citas
             builder.Services.AddScoped<IUsersServices, UserServices>(); //Servicios de Usuario
@@ -44,6 +46,9 @@ namespace Hospital.Web
             builder.Services.AddScoped<IMedicalHistoryServices, MedicalHistoryService>(); //Servicios de Historia Clínica
             builder.Services.AddScoped<IRolPermissionsServices, RolPermissionServices>(); //Servicios de RolesPermisos
 
+            //Helpers
+            builder.Services.AddScoped<IConvertHelper, ConvertHelper>();
+            builder.Services.AddScoped<ICombosHelpers, CombosHelper>();
         }
 
 
