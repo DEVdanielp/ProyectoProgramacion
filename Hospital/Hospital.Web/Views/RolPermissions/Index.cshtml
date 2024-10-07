@@ -46,8 +46,6 @@
                             <td>@item.Rol.NameRol</td>
                             <td>@item.Permisos.Name</td>
                             <td>
-                                <a asp-action="Edit" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
-
                                 <form asp-action="Delete" asp-route-rolId="@item.rolId" asp-route-PermisosId="@item.PermisosId" method="post" style="display: contents;">
                                     <button class="btn btn-sm btn-danger btnDelete"><i class="bi bi-trash-fill"></i></button>
                                 </form>

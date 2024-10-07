@@ -1,4 +1,5 @@
-﻿using Hospital.Web.Core;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Hospital.Web.Core;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
 using Hospital.Web.Services;
@@ -9,10 +10,12 @@ namespace Hospital.Web.Controllers
     public class RolPermissionsController : Controller
     {
         readonly IRolPermissionsServices _rpService;
+        private readonly INotyfService _notifyService;
 
-        public RolPermissionsController(IRolPermissionsServices rp)
+        public RolPermissionsController(IRolPermissionsServices rp, INotyfService notifyService)
         {
             _rpService = rp;
+            _notifyService = notifyService;
         }
 
         public async Task<IActionResult> Index()
@@ -36,6 +39,7 @@ namespace Hospital.Web.Controllers
             {
                 if (!ModelState.IsValid)
                 {
+                    _notifyService.Error("Revise los datos ingresados por favor");
                     return View(dto);
                 }
 
@@ -43,8 +47,10 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
+                    _notifyService.Success("Se ha otorgado el permiso con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
+                _notifyService.Error("Revise los datos ingresados por favor");
 
                 return View(response);
             }
@@ -59,6 +65,7 @@ namespace Hospital.Web.Controllers
         {   //Este metodo redirecciona confirma la eliminacion
             try
             {
+                _notifyService.Success("Se ha quitado el permiso con Èxito");
                 await _rpService.DeleteAsync(PermisosId, rolId);
                 return RedirectToAction(nameof(Index));
 
