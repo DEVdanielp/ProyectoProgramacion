@@ -5,6 +5,15 @@
 
 <h1>@ViewData["Title"]</h1>
 
+<div class="pagetitle">
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li>
+            <li class="breadcrumb-item"><a asp-action="Index">Historia Clínica</a></li>
+            <li class="breadcrumb-item active">Nueva Historia Clínica</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
 <form asp-action="Create" method="post">
     <div class="form-group">
         <label asp-for="NamePatient" class="control-label"></label>
@@ -31,7 +40,6 @@
         <a asp-action="Index" class="btn btn-secondary">Volver</a>
     </div>
 </form><!-- Vertical Form -->
-</section>
 
 @section Scripts {
     @{
