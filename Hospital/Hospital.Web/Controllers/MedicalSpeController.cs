@@ -10,7 +10,7 @@ namespace Hospital.Web.Controllers
 {
     public class MedicalSpeController: Controller
     {     
-        readonly IMedicalSpeServices _medicalspeService;
+        private readonly IMedicalSpeServices _medicalspeService;
 
         private readonly INotyfService _notifyService;
 
