@@ -16,7 +16,7 @@ namespace Hospital.Web.Services
         Task<Response<List<MedicalHistory>>> GetListAsync();
         Task<Response<MedicalHistoryDTO>> GetOneAsync(int Id);
         Task<Response<MedicalHistory>> EditAsync(MedicalHistory model);
-        Task<Response<MedicalHistory>> CreateAsync(MedicalHistory model);
+        Task<Response<MedicalHistory>> CreateAsync(MedicalHistoryDTO model);
         public Task<MedicalHistoryDTO> CreateDTO();
         Task<Response<MedicalHistory>> DeleteAsync(int id);
     }
@@ -25,22 +25,18 @@ namespace Hospital.Web.Services
     {
         private readonly DataContext _context;
 
-        public MedicalHistoryService(DataContext context)
+        private readonly IConvertHelper _convertHelper;
+        public MedicalHistoryService(DataContext context, IConvertHelper convertHelper)
         {
             _context = context;
+            _convertHelper = convertHelper;
         }
 
-        public async Task<Response<MedicalHistory>> CreateAsync(MedicalHistory model)
+        public async Task<Response<MedicalHistory>> CreateAsync(MedicalHistoryDTO model)
         {
             try
             {
-                MedicalHistory medicalhistory = new MedicalHistory
-                {
-                    NamePatient = model.NamePatient,
-                    Description = model.Description,
-                    AppoimentId = model.AppoimentId
-                };
-
+                MedicalHistory medicalhistory = _convertHelper.ToMedicalHistory(model);  
                 await _context.MedicalHistory.AddAsync(medicalhistory);
                 await _context.SaveChangesAsync();
 

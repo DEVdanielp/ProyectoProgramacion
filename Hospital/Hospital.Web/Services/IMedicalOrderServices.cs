@@ -26,9 +26,11 @@ namespace Hospital.Web.Services
     {
         private readonly DataContext _context;
 
-        public MedicalOrdersServices(DataContext context)
+        private readonly IConvertHelper _convertHelper;
+        public MedicalOrdersServices(DataContext context, IConvertHelper convertHelper)
         {
             _context = context;
+            _convertHelper = convertHelper;
         }
 
 
@@ -36,13 +38,7 @@ namespace Hospital.Web.Services
         {
             try
             {
-                MedicalOrder medicalorder = new MedicalOrder
-                {
-                    Diagnosis = medicalOrderdto.Diagnosis,
-                    Description = medicalOrderdto.Description,
-                    Appoiment = await _context.Appoiments.FirstOrDefaultAsync(a => a.Id == medicalOrderdto.AppoimentId),
-                    Medication = await _context.Medications.FirstOrDefaultAsync(a => a.Id == medicalOrderdto.MedicationId)
-                };
+                MedicalOrder medicalorder = _convertHelper.ToMedicalOrder(medicalOrderdto);
                 await _context.MedicalOrders.AddAsync(medicalorder);
                 await _context.SaveChangesAsync();
 

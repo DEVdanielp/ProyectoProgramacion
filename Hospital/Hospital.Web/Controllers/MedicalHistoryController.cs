@@ -8,18 +8,20 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using Hospital.Web.Helpers;
 
 namespace Hospital.Web.Controllers
 {
     public class MedicalHistoryController : Controller
     {
         readonly IMedicalHistoryServices _medicalhistoryService;
-
+        private readonly ICombosHelpers _comboshelper;
         private readonly INotyfService _notifyService;
-        public MedicalHistoryController(IMedicalHistoryServices medicalhistoryServices, INotyfService notifyService)
+        public MedicalHistoryController(IMedicalHistoryServices medicalhistoryServices, INotyfService notifyService,ICombosHelpers comboshelper)
         {
             _medicalhistoryService = medicalhistoryServices;
             _notifyService = notifyService;
+            _comboshelper = comboshelper;
         }
 
         [HttpGet]
@@ -34,9 +36,12 @@ namespace Hospital.Web.Controllers
         public async Task<IActionResult> Create()
         {
 
-           
-            MedicalHistoryDTO dto = await _medicalhistoryService.CreateDTO();
-            return View(dto);
+
+            MedicalHistoryDTO dto = new MedicalHistoryDTO
+            {
+                Appoiment = await _comboshelper.GetComboAppoiments()
+            };
+            return View(dto);   
 
         }
 
@@ -49,18 +54,19 @@ namespace Hospital.Web.Controllers
                 if (!ModelState.IsValid)
                 {
                     _notifyService.Error("Debes completar los campos ");
+                    medicalhistoryDTO.Appoiment = await _comboshelper.GetComboAppoiments();
                     return View(medicalhistoryDTO);
                 }
 
                 // Mapeo explícito del DTO a la entidad MedicalHistory
-                MedicalHistory medicalHistory = new MedicalHistory
-                {
-                    NamePatient = medicalhistoryDTO.NamePatient,
-                    Description = medicalhistoryDTO.Description,
-                    AppoimentId = medicalhistoryDTO.AppoimentId
-                };
+                //MedicalHistory medicalHistory = new MedicalHistory
+                //{
+                //    NamePatient = medicalhistoryDTO.NamePatient,
+                //    Description = medicalhistoryDTO.Description,
+                //    AppoimentId = medicalhistoryDTO.AppoimentId
+                //};
 
-                Response<MedicalHistory> response = await _medicalhistoryService.CreateAsync(medicalHistory);
+                Response<MedicalHistory> response = await _medicalhistoryService.CreateAsync(medicalhistoryDTO);
 
                 if (response.IsSuccess)
                 {

@@ -9,6 +9,8 @@ namespace Hospital.Web.Helpers
         public User ToUser(UserDTO dto);
         public MedicalSpe ToMedicalSpe(MedicalSpeDTO dto);
         public MedicalOrder ToMedicalOrder(MedicalOrderDTO dto);
+
+        public MedicalHistory ToMedicalHistory(MedicalHistoryDTO dto);
     }
 
     public class ConvertHelper : IConvertHelper
@@ -43,6 +45,19 @@ namespace Hospital.Web.Helpers
                 AppoimentId = medicalOrderdto.AppoimentId,
                 MedicationId = medicalOrderdto.MedicationId
             };
+        }
+
+        public MedicalHistory ToMedicalHistory(MedicalHistoryDTO dto)
+        
+        {
+            return new MedicalHistory
+            {
+
+                NamePatient = dto.NamePatient,
+                Description = dto.Description,
+                AppoimentId = dto.AppoimentId
+            };
+        
         }
     }
 }

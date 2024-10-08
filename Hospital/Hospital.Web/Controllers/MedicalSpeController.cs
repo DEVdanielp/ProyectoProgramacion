@@ -22,6 +22,7 @@ namespace Hospital.Web.Controllers
             _medicalspeService = medicalpsaService;
             _notifyService = notifyService;
             _comboshelper = comboshelper;
+                
         }
 
         [HttpGet]
