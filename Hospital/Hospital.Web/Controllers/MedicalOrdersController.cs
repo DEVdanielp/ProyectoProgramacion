@@ -2,6 +2,7 @@
 using Hospital.Web.Core;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
+using Hospital.Web.Helpers;
 using Hospital.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,18 +14,13 @@ namespace Hospital.Web.Controllers
     {
         readonly IMedicalOrdersServices _medicalOrdersService;
         private readonly INotyfService _notifyService;
-        private readonly ILogger<MedicalOrdersController> _logger;
-
-        public MedicalOrdersController(
-            IMedicalOrdersServices medicalOrdersServices,
-            INotyfService notifyService,
-            ILogger<MedicalOrdersController> logger)
+        private readonly ICombosHelpers _comboshelper;
+        public MedicalOrdersController(IMedicalOrdersServices medicalOrdersServices, INotyfService notifyService, ICombosHelpers comboshelper)
         {
             _medicalOrdersService = medicalOrdersServices;
             _notifyService = notifyService;
-            _logger = logger;
+            _comboshelper = comboshelper;
         }
-
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -34,27 +30,24 @@ namespace Hospital.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            Response<MedicalOrderDTO> response = await _medicalOrdersService.GetListDtoAsync();
-            return View(response.Result);
+            MedicalOrderDTO dto = new MedicalOrderDTO
+            {
+                Appoiments = await _comboshelper.GetComboAppoiments(),
+                Medications = await _comboshelper.GetComboMedications(),
+            };
+            return View(dto);
         }
         [HttpPost]
         public async Task<IActionResult> Create(MedicalOrderDTO medicalOrderdto)
         {
             try
             {
-                _logger.LogInformation($"Diagnosis: {medicalOrderdto.Diagnosis}, Description: {medicalOrderdto.Description}, Appoiments: {medicalOrderdto.Appoiments}, Medications: {medicalOrderdto.Medications}");
-                if (!ModelState.IsValid)
-                {
-                    _logger.LogInformation("------------------no esta siento valido----------------------");
-                    Response<MedicalOrderDTO> responseList = await _medicalOrdersService.GetListDtoAsync();
-                    return View(responseList.Result);
-                }
 
                 Response<MedicalOrderDTO> response = await _medicalOrdersService.CreateAsync(medicalOrderdto);
 
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha creado la orden médica con éxito");
+                    _notifyService.Success("Se ha creado la Orden Medica con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
                 _notifyService.Error("Revise los datos ingresados por favor");
@@ -75,10 +68,8 @@ namespace Hospital.Web.Controllers
                 Response<MedicalOrderDTO> response = await _medicalOrdersService.ToDtoAsync(id);
                 if (!response.IsSuccess)
                 {
-                    _notifyService.Error("Revise los datos ingresados por favor");
                     return RedirectToAction(nameof(Index));
                 }
-
                 return View(response.Result);
             }
             catch (Exception ex)
@@ -96,7 +87,7 @@ namespace Hospital.Web.Controllers
 
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha actualizado con éxito");
+                    _notifyService.Success("Se ha actualizado con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
                 _notifyService.Error("Revise los datos ingresados por favor");
@@ -115,7 +106,7 @@ namespace Hospital.Web.Controllers
                 Response<MedicalOrder> response = await _medicalOrdersService.DeleteAsync(id);
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha eliminado con éxito");
+                    _notifyService.Success("Se ha eliminado con Èxito");
                     return RedirectToAction(nameof(Index));
                 }
 
