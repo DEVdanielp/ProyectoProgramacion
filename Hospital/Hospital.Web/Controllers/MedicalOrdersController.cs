@@ -2,6 +2,7 @@
 using Hospital.Web.Core;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
+using Hospital.Web.Helpers;
 using Hospital.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,10 +14,12 @@ namespace Hospital.Web.Controllers
     {
         readonly IMedicalOrdersServices _medicalOrdersService;
         private readonly INotyfService _notifyService;
-        public MedicalOrdersController(IMedicalOrdersServices medicalOrdersServices,INotyfService notifyService)
+        private readonly ICombosHelpers _comboshelper;
+        public MedicalOrdersController(IMedicalOrdersServices medicalOrdersServices,INotyfService notifyService, ICombosHelpers comboshelper)
         {
             _medicalOrdersService = medicalOrdersServices;
             _notifyService = notifyService;
+            _comboshelper = comboshelper;   
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -27,8 +30,12 @@ namespace Hospital.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            Response<MedicalOrderDTO> response = await _medicalOrdersService.GetListDtoAsync();
-            return View(response.Result);
+            MedicalOrderDTO dto = new MedicalOrderDTO
+            {
+                Appoiments = await _comboshelper.GetComboAppoiments(),
+                Medications = await _comboshelper.GetComboMedications(),    
+            };
+            return View(dto);
         }
         [HttpPost]
         public async Task<IActionResult> Create(MedicalOrderDTO medicalOrderdto)

@@ -17,7 +17,6 @@ namespace Hospital.Web.Services
         public Task<Response<MedicalOrderDTO>> EditAsync(MedicalOrderDTO model);
         public Task<Response<MedicalOrderDTO>> CreateAsync(MedicalOrderDTO model);
         public Task<Response<MedicalOrder>> DeleteAsync(int id);
-        public Task<Response<MedicalOrderDTO>> GetListDtoAsync();
         public Task<Response<MedicalOrderDTO>> ToDtoAsync(int id);
 
     }
@@ -25,10 +24,11 @@ namespace Hospital.Web.Services
     public class MedicalOrdersServices : IMedicalOrdersServices
     {
         private readonly DataContext _context;
-
-        public MedicalOrdersServices(DataContext context)
+        private readonly IConvertHelper _convertHelper;
+        public MedicalOrdersServices(DataContext context, IConvertHelper convertHelper)
         {
             _context = context;
+            _convertHelper = convertHelper;
         }
 
 
@@ -36,13 +36,7 @@ namespace Hospital.Web.Services
         {
             try
             {
-                MedicalOrder medicalorder = new MedicalOrder
-                {
-                    Diagnosis = medicalOrderdto.Diagnosis,
-                    Description = medicalOrderdto.Description,
-                    Appoiment = await _context.Appoiments.FirstOrDefaultAsync(a => a.Id == medicalOrderdto.AppoimentId),
-                    Medication = await _context.Medications.FirstOrDefaultAsync(a => a.Id == medicalOrderdto.MedicationId)
-                };
+                MedicalOrder medicalorder = _convertHelper.ToMedicalOrder(medicalOrderdto);
                 await _context.MedicalOrders.AddAsync(medicalorder);
                 await _context.SaveChangesAsync();
 
@@ -131,26 +125,6 @@ namespace Hospital.Web.Services
             {
                 return ResponseHelper<MedicalOrder>.MakeResponseFail(ex);
             }
-        }
-        public async Task<Response<MedicalOrderDTO>> GetListDtoAsync()
-        {
-            MedicalOrderDTO? medicalOrderdto = new MedicalOrderDTO
-            {
-
-                Medications = await _context.Medications.Select(a => new SelectListItem
-                {
-                    Text = $"{a.CommercialName} {a.Description}",
-                    Value = a.Id.ToString()
-                }).ToListAsync(),
-
-                Appoiments = await _context.Appoiments.Select(a => new SelectListItem
-                {
-                    Text = $"Fecha:{a.Date}, Hora:{a.Time}, Doctor: {a.UserDoctorId}",
-                    Value = a.Id.ToString()
-                }).ToListAsync(),
-            };
-            return ResponseHelper<MedicalOrderDTO>.MakeResponseSuccess(medicalOrderdto);
-
         }
         public async Task<Response<MedicalOrderDTO>> ToDtoAsync(int id)
         {

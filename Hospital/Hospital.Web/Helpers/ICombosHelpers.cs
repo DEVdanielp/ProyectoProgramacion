@@ -10,6 +10,8 @@ namespace Hospital.Web.Helpers
     {
         public Task<IEnumerable<SelectListItem>> GetComboRols();
         public Task<IEnumerable<SelectListItem>> GetComboUsers();
+        public Task<IEnumerable<SelectListItem>> GetComboMedications();
+        public Task<IEnumerable<SelectListItem>> GetComboAppoiments();
     }
 
     public class CombosHelper : ICombosHelpers
@@ -23,11 +25,11 @@ namespace Hospital.Web.Helpers
 
         public async Task<IEnumerable<SelectListItem>> GetComboRols()
         {
-           List<SelectListItem> list = await _context.Roles.Select(r => new SelectListItem
-           {
-               Text = $"{r.NameRol}",
-               Value = r.Id.ToString()
-           }).ToListAsync();
+            List<SelectListItem> list = await _context.Roles.Select(r => new SelectListItem
+            {
+                Text = $"{r.NameRol}",
+                Value = r.Id.ToString()
+            }).ToListAsync();
 
             list.Insert(0, new SelectListItem
             {
@@ -47,13 +49,32 @@ namespace Hospital.Web.Helpers
                 Text = $"{u.FirstName} {u.LastName}",
                 Value = u.Id.ToString()
             }).ToListAsync();
-             
+
             list.Insert(0, new SelectListItem
             {
                 Text = "Seleccione un Doctor",
                 Value = "0"
             });
 
+            return list;
+        }
+        public async Task<IEnumerable<SelectListItem>> GetComboMedications()
+        {
+            List<SelectListItem> list = await _context.Medications.Select(a => new SelectListItem
+            {
+                Text = $"{a.CommercialName} {a.Description}",
+                Value = a.Id.ToString()
+            }).ToListAsync();
+            return list;
+
+        }
+        public async Task<IEnumerable<SelectListItem>> GetComboAppoiments()
+        {
+            List<SelectListItem> list = await _context.Appoiments.Select(a => new SelectListItem
+            {
+                Text = $"Fecha:{a.Date}, Hora:{a.Time}, Doctor: {a.UserDoctorId}",
+                Value = a.Id.ToString()
+            }).ToListAsync();
             return list;
         }
     }
