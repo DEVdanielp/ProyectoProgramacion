@@ -22,11 +22,12 @@ namespace Hospital.Web.Services
         private readonly DataContext _context;
 
         private readonly IConvertHelper _convertHelper;
-
-        public MedicalSpeServices(DataContext context, IConvertHelper convertHelper)
+        private readonly ICombosHelpers _combo;
+        public MedicalSpeServices(DataContext context, IConvertHelper convertHelper, ICombosHelpers combo)
         {
             _context = context;
             _convertHelper = convertHelper;
+            _combo = combo;
         }
 
         public async Task<Response<MedicalSpe>> CreateAsync(MedicalSpeDTO dto)
@@ -97,11 +98,7 @@ namespace Hospital.Web.Services
                 MedicalSpeDTO dto = new MedicalSpeDTO
                 {
                     Name = medic.Name,
-                    UserDoctor = await _context.Users.Select(a => new SelectListItem
-                    {
-                        Text = $"{a.FirstName} {a.LastName}",
-                        Value = a.Id.ToString()
-                    }).ToListAsync(),
+                    UserDoctor = await _combo.GetComboDoctor()
 
                 };
                 return ResponseHelper<MedicalSpeDTO>.MakeResponseSuccess(dto);

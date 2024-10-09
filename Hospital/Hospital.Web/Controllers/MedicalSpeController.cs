@@ -37,7 +37,7 @@ namespace Hospital.Web.Controllers
         {
             MedicalSpeDTO dto = new MedicalSpeDTO
             {
-                UserDoctor = await _comboshelper.GetComboUsers()
+                UserDoctor = await _comboshelper.GetComboDoctor()
             };
             return View(dto);
         }
@@ -50,7 +50,7 @@ namespace Hospital.Web.Controllers
                 if (!ModelState.IsValid)
                 {
                     _notifyService.Error("Revise los datos ingresados por favor");
-                    udto.UserDoctor = await _comboshelper.GetComboUsers();
+                    udto.UserDoctor = await _comboshelper.GetComboDoctor();
                     return View(udto);
                 }
 
@@ -58,7 +58,7 @@ namespace Hospital.Web.Controllers
                 if (!response.IsSuccess)
                 {
                     _notifyService.Error("Revise los datos ingresados por favor");
-                    udto.UserDoctor = await _comboshelper.GetComboUsers();
+                    udto.UserDoctor = await _comboshelper.GetComboDoctor();
                     return View(udto);
                 }
                 _notifyService.Success("Se ha creado el Usuario con Èxito");

@@ -14,7 +14,6 @@ namespace Hospital.Web.Services
     {
         public Task<Response<List<Status>>> GetListAsync();
         public Task<Response<Status>> CreateAsync(StatusDTO model);
-        public Task<StatusDTO> CreateDTO();
         public Task<Response<StatusDTO>> GetOneAsync(int Id);
         public Task<Response<StatusDTO>> EditAsync(StatusDTO status);
         public Task<Response<Status>> DeleteAsync(int Id);
@@ -24,22 +23,21 @@ namespace Hospital.Web.Services
     public class StatusServices : IStatusServices
     {
         private readonly DataContext _context;
+        private readonly IConvertHelper _converter;
+        private readonly ICombosHelpers _combosHelpers;
 
-        public StatusServices(DataContext context)
+        public StatusServices(DataContext context, IConvertHelper converter, ICombosHelpers combosHelpers)
         {
             _context = context;
+            _converter = converter;
+            _combosHelpers = combosHelpers;
         }
 
         public async Task<Response<Status>> CreateAsync(StatusDTO dto)
         {
             try
             {
-                Status b = new Status()
-                {
-                    StatusAppoiment = dto.StatusAppoiment,
-                    AppoimentId = dto.AppoimentId
-                };
-
+                Status b = _converter.ToStatus(dto);
                 await _context.Status.AddAsync(b);
                 await _context.SaveChangesAsync();
                 return ResponseHelper<Status>.MakeResponseSuccess(b, "sección creada con exito");
@@ -63,19 +61,6 @@ namespace Hospital.Web.Services
             }
         }
 
-        public async Task<StatusDTO> CreateDTO()
-        {
-            StatusDTO dto = new StatusDTO
-            {
-                Appoiment = await _context.Appoiments.Select(a => new SelectListItem
-                {
-                    Text = $"Fecha: {a.Date}, Hora: {a.Time}",
-                    Value = a.Id.ToString()
-                }).ToListAsync(),
-            };
-            return dto;
-        }
-
         public async Task<Response<StatusDTO>> GetOneAsync(int id)
         {
             try
@@ -91,11 +76,7 @@ namespace Hospital.Web.Services
                 {
                     StatusAppoiment = status.StatusAppoiment,
 
-                    Appoiment = await _context.Appoiments.Select(a => new SelectListItem
-                    {
-                        Text = $"Fecha: {a.Date}, Hora: {a.Time}",
-                        Value = a.Id.ToString()
-                    }).ToListAsync(),
+                    Appoiment = await _combosHelpers.GetComboAppoiments()
 
                 };
                 return ResponseHelper<StatusDTO>.MakeResponseSuccess(dto);

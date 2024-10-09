@@ -1,7 +1,9 @@
 ﻿using Hospital.Web.Data;
+using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
 using Humanizer;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Web.Helpers
@@ -9,10 +11,13 @@ namespace Hospital.Web.Helpers
     public interface ICombosHelpers
     {
         public Task<IEnumerable<SelectListItem>> GetComboRols();
-        public Task<IEnumerable<SelectListItem>> GetComboUsers();
+        public Task<IEnumerable<SelectListItem>> GetComboDoctor();
         public Task<IEnumerable<SelectListItem>> GetComboMedications();
         public Task<IEnumerable<SelectListItem>> GetComboAppoiments();
+        public Task<IEnumerable<SelectListItem>> GetComboPatient();
+        public Task<IEnumerable<SelectListItem>> GetComboPermissions();
     }
+
 
     public class CombosHelper : ICombosHelpers
     {
@@ -41,7 +46,7 @@ namespace Hospital.Web.Helpers
             return list;
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetComboUsers()
+        public async Task<IEnumerable<SelectListItem>> GetComboDoctor()
         {
             List<SelectListItem> list = await _context.Users.Select(u => new SelectListItem
             {
@@ -53,6 +58,24 @@ namespace Hospital.Web.Helpers
             list.Insert(0, new SelectListItem
             {
                 Text = "Seleccione un Doctor",
+                Value = "0"
+            });
+
+            return list;
+        }
+
+        public async Task<IEnumerable<SelectListItem>> GetComboPatient()
+        {
+            List<SelectListItem> list = await _context.Users.Select(u => new SelectListItem
+            {
+
+                Text = $"{u.FirstName} {u.LastName}",
+                Value = u.Id.ToString()
+            }).ToListAsync();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "Seleccione un Paciente",
                 Value = "0"
             });
 
@@ -77,5 +100,16 @@ namespace Hospital.Web.Helpers
             }).ToListAsync();
             return list;
         }
+
+        public async Task<IEnumerable<SelectListItem>> GetComboPermissions()
+        {
+            List<SelectListItem> list = await _context.Permissions.Select(a => new SelectListItem
+            {
+                Text = $"{a.Name}",
+                Value = a.Id.ToString()
+            }).ToListAsync();
+            return list;
+        }
+        
     }
 }

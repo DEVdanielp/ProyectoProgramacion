@@ -27,10 +27,12 @@ namespace Hospital.Web.Services
         private readonly DataContext _context;
 
         private readonly IConvertHelper _convertHelper;
-        public MedicalOrdersServices(DataContext context, IConvertHelper convertHelper)
+        private readonly ICombosHelpers _combosHelpers;
+        public MedicalOrdersServices(DataContext context, IConvertHelper convertHelper, ICombosHelpers combosHelpers)
         {
             _context = context;
             _convertHelper = convertHelper;
+            _combosHelpers = combosHelpers;
         }
 
 
@@ -133,17 +135,9 @@ namespace Hospital.Web.Services
             MedicalOrderDTO? medicalOrderdto = new MedicalOrderDTO
             {
 
-                Medications = await _context.Medications.Select(a => new SelectListItem
-                {
-                    Text = $"{a.CommercialName} {a.Description}",
-                    Value = a.Id.ToString()
-                }).ToListAsync(),
+                Medications = await _combosHelpers.GetComboMedications(),
 
-                Appoiments = await _context.Appoiments.Select(a => new SelectListItem
-                {
-                    Text = $"Fecha:{a.Date}, Hora:{a.Time}, Doctor: {a.UserDoctorId}",
-                    Value = a.Id.ToString()
-                }).ToListAsync(),
+                Appoiments = await _combosHelpers.GetComboAppoiments()
             };
             return ResponseHelper<MedicalOrderDTO>.MakeResponseSuccess(medicalOrderdto);
 

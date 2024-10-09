@@ -14,7 +14,6 @@ namespace Hospital.Web.Services
     {
         public Task<Response<List<Appoiment>>> GetListAsync();
         public Task<Response<Appoiment>> CreateAsync(AppoimentDTO model);
-        public Task<AppoimentDTO> CreateDTO();
         public Task<Response<AppoimentDTO>> GetOneAsync(int Id);
         public Task<Response<AppoimentDTO>> EditAsync(AppoimentDTO appoiment);
         public Task<Response<Appoiment>> DeleteAsync(int Id);
@@ -24,24 +23,19 @@ namespace Hospital.Web.Services
     public class AppoimentServices : IAppoimentServices
     {
         private readonly DataContext _context;
-
-        public AppoimentServices(DataContext context)
+        private readonly IConvertHelper _converter;
+        private readonly ICombosHelpers _combo;
+        public AppoimentServices(DataContext context, IConvertHelper converter, ICombosHelpers combo)
         {
             _context = context;
+            _converter = converter;
+            _combo = combo;
         }
 
         public async Task<Response<Appoiment>> CreateAsync(AppoimentDTO dto)
         {
             try { 
-            Appoiment b = new Appoiment()
-            {
-                Date = dto.Date,
-                Time = dto.Time,
-                UserPatientId = dto.UserPatientId,
-                UserDoctorId = dto.UserDoctorId
-            };
-
-                Console.WriteLine("fecha" + b.Date);
+            Appoiment b = _converter.ToAppoiment(dto);
             await _context.Appoiments.AddAsync(b);
             await _context.SaveChangesAsync();
             return ResponseHelper<Appoiment>.MakeResponseSuccess(b, "sección creada con exito");
@@ -65,24 +59,6 @@ namespace Hospital.Web.Services
             }
         }
 
-        public async Task<AppoimentDTO> CreateDTO()
-        {
-            AppoimentDTO dto = new AppoimentDTO
-            {
-                UserDoctor = await _context.Users.Select(a => new SelectListItem
-                {
-                    Text = $"{a.FirstName} {a.LastName}",
-                    Value = a.Id.ToString()
-                }).ToListAsync(),
-
-                UserPatient = await _context.Users.Select(a => new SelectListItem
-                {
-                    Text = $"{a.FirstName} {a.LastName}",
-                    Value = a.Id.ToString()
-                }).ToListAsync(),
-            };
-            return dto;
-        }
 
         public async Task<Response<AppoimentDTO>> GetOneAsync(int id)
         {
@@ -100,17 +76,9 @@ namespace Hospital.Web.Services
                     Date = appoiment.Date,
                     Time = appoiment.Time,
                    
-                    UserDoctor = await _context.Users.Select(a => new SelectListItem
-                    {
-                        Text = $"{a.FirstName} {a.LastName}",
-                        Value = a.Id.ToString()
-                    }).ToListAsync(),
+                    UserDoctor = await _combo.GetComboDoctor(),
 
-                    UserPatient = await _context.Users.Select(a => new SelectListItem
-                    {
-                        Text = $"{a.FirstName} {a.LastName}",
-                        Value = a.Id.ToString()
-                    }).ToListAsync(),
+                    UserPatient = await _combo.GetComboPatient(),
                 };
                 return ResponseHelper <AppoimentDTO>.MakeResponseSuccess(dto);
 
