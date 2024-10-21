@@ -2,6 +2,7 @@
 using Hospital.Web.Core;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
+using Hospital.Web.Helpers;
 using Hospital.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,11 +14,13 @@ namespace Hospital.Web.Controllers
     {
         private readonly IStatusServices _statusService;
         private readonly INotyfService _notifyService;
+        private readonly ICombosHelpers _comboshelper;
 
-        public StatusController(IStatusServices statusService, INotyfService notifyService)
+        public StatusController(IStatusServices statusService, INotyfService notifyService, ICombosHelpers comboshelper)
         {
             _statusService = statusService;
             _notifyService = notifyService;
+            _comboshelper = comboshelper;
         }
 
         public async Task<IActionResult> Index()
@@ -29,7 +32,10 @@ namespace Hospital.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            StatusDTO dto = await _statusService.CreateDTO();
+            StatusDTO dto = new StatusDTO
+            {
+                Appoiment = await _comboshelper.GetComboAppoiments()
+            };
             return View(dto);
 
         }

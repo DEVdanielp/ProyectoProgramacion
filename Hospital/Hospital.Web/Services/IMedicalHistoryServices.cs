@@ -17,7 +17,6 @@ namespace Hospital.Web.Services
         Task<Response<MedicalHistoryDTO>> GetOneAsync(int Id);
         Task<Response<MedicalHistory>> EditAsync(MedicalHistory model);
         Task<Response<MedicalHistory>> CreateAsync(MedicalHistoryDTO model);
-        public Task<MedicalHistoryDTO> CreateDTO();
         Task<Response<MedicalHistory>> DeleteAsync(int id);
     }
 
@@ -26,10 +25,12 @@ namespace Hospital.Web.Services
         private readonly DataContext _context;
 
         private readonly IConvertHelper _convertHelper;
-        public MedicalHistoryService(DataContext context, IConvertHelper convertHelper)
+        private readonly ICombosHelpers _combos;
+        public MedicalHistoryService(DataContext context, IConvertHelper convertHelper, ICombosHelpers combos)
         {
             _context = context;
             _convertHelper = convertHelper;
+            _combos = combos;
         }
 
         public async Task<Response<MedicalHistory>> CreateAsync(MedicalHistoryDTO model)
@@ -98,21 +99,6 @@ namespace Hospital.Web.Services
                 return ResponseHelper<MedicalHistory>.MakeResponseFail(ex);
             }
         }
-
-        public async Task<MedicalHistoryDTO> CreateDTO()
-        {
-            MedicalHistoryDTO dto = new MedicalHistoryDTO
-            {
-                Appoiment = await _context.Appoiments.Select(a => new SelectListItem
-                {
-                    Text = $"Fecha:{a.Date}, Hora:{a.Time}, Doctor: {a.UserDoctorId}",
-                    Value = a.Id.ToString()
-                }).ToListAsync()
-
-            };
-            return dto;
-        }
-
         public async Task<Response<MedicalHistoryDTO>> GetOneAsync(int Id)
         {
             try
@@ -129,11 +115,7 @@ namespace Hospital.Web.Services
                     Description = status.Description,
                     NamePatient = status.NamePatient,
 
-                    Appoiment = await _context.Appoiments.Select(a => new SelectListItem
-                    {
-                        Text = $"Fecha: {a.Date}, Hora: {a.Time}",
-                        Value = a.Id.ToString()
-                    }).ToListAsync(),
+                    Appoiment = await _combos.GetComboAppoiments()
 
                 };
                 return ResponseHelper<MedicalHistoryDTO>.MakeResponseSuccess(dto);

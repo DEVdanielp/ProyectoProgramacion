@@ -9,9 +9,11 @@ namespace Hospital.Web.Helpers
         public User ToUser(UserDTO dto);
         public MedicalSpe ToMedicalSpe(MedicalSpeDTO dto);
         public MedicalOrder ToMedicalOrder(MedicalOrderDTO dto);
-
         public MedicalHistory ToMedicalHistory(MedicalHistoryDTO dto);
-    }
+        public Appoiment ToAppoiment(AppoimentDTO dto);
+        public Status ToStatus(StatusDTO dto);
+        public RolesPermission ToRP(RolPermissionsDTO dto);
+   }
 
     public class ConvertHelper : IConvertHelper
     {
@@ -58,6 +60,35 @@ namespace Hospital.Web.Helpers
                 AppoimentId = dto.AppoimentId
             };
         
+        }
+
+        public Appoiment ToAppoiment(AppoimentDTO dto)
+        {
+            return new Appoiment
+            {
+                Date = dto.Date,
+                Time = dto.Time,
+                UserDoctorId= dto.UserDoctorId,
+                UserPatientId= dto.UserPatientId
+            };
+        }
+
+        public Status ToStatus(StatusDTO dto)
+        {
+            return new Status
+            {
+                AppoimentId = dto.AppoimentId,
+                StatusAppoiment = dto.StatusAppoiment
+            };
+        }
+
+        public RolesPermission ToRP(RolPermissionsDTO dto)
+        {
+            return new RolesPermission
+            {
+                PermisosId = dto.PermisosId,
+                rolId = dto.rolId
+            };
         }
     }
 }

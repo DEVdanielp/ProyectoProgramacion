@@ -2,6 +2,7 @@
 using Hospital.Web.Core;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
+using Hospital.Web.Helpers;
 using Hospital.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,11 +12,13 @@ namespace Hospital.Web.Controllers
     {
         private readonly IRolPermissionsServices _rpService;
         private readonly INotyfService _notifyService;
+        private readonly ICombosHelpers _combosHelpers;
 
-        public RolPermissionsController(IRolPermissionsServices rp, INotyfService notifyService)
+        public RolPermissionsController(IRolPermissionsServices rp, INotyfService notifyService, ICombosHelpers combosHelpers)
         {
             _rpService = rp;
             _notifyService = notifyService;
+            _combosHelpers = combosHelpers;
         }
 
         public async Task<IActionResult> Index()
@@ -27,7 +30,11 @@ namespace Hospital.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            RolPermissionsDTO dto = await _rpService.CreateDTO();
+            RolPermissionsDTO dto = new RolPermissionsDTO
+            {
+                Permisos = await _combosHelpers.GetComboPermissions(),
+                Rol = await _combosHelpers.GetComboRols(),    
+            };
             return View(dto);
 
         }
