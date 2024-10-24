@@ -2,16 +2,18 @@
 using Hospital.Web.Data;
 using Hospital.Web.DTOs;
 using Hospital.Web.Helpers;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Hospital.Web.Core;
 using Microsoft.EntityFrameworkCore;
+using Hospital.Web.Core.Pagination;
+using Azure.Core;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Hospital.Web.Services
 {
     public interface IMedicalSpeServices
     {
         public Task<Response<MedicalSpe>> CreateAsync(MedicalSpeDTO dto);
-        public Task<Response<List<MedicalSpe>>> GetListAsync();
+        public Task<Response<PaginationResponse<MedicalSpe>>> GetListAsync(PaginationRequest request);
         public Task<Response<MedicalSpeDTO>> EditAsync(MedicalSpeDTO dto);
         public Task<Response<MedicalSpeDTO>> GetOneAsycn(int id);
         public Task<Response<MedicalSpe>> DeleteAsync(int Id);
@@ -48,16 +50,34 @@ namespace Hospital.Web.Services
         }
 
 
-        public async Task<Response<List<MedicalSpe>>> GetListAsync()
+        public async Task<Response<PaginationResponse<MedicalSpe>>> GetListAsync(PaginationRequest request)
         {
             try
             {
-                List<MedicalSpe> medics = await _context.MedicalSpe.Include(u => u.UserDoctor).ToListAsync();
-                return ResponseHelper<List<MedicalSpe>>.MakeResponseSuccess(medics);
+                IQueryable<MedicalSpe> query = _context.MedicalSpe.AsQueryable().Include(b => b.UserDoctor);
+
+                if (!string.IsNullOrWhiteSpace(request.Filter))
+                {
+                    query = query.Where(s => s.Name.ToLower().Contains(request.Filter.ToLower()));
+                }
+
+                PagedList<MedicalSpe> list = await PagedList<MedicalSpe>.ToPagedListAsync(query, request);
+
+                PaginationResponse<MedicalSpe> result = new PaginationResponse<MedicalSpe>
+                {
+                    List = list,
+                    TotalCount = list.TotalCount,
+                    RecordsPerPage = list.RecordsPerPage,
+                    CurrentPage = list.CurrentPage,
+                    TotalPages = list.TotalPages,
+                    Filter = request.Filter
+                };
+
+                return ResponseHelper<PaginationResponse<MedicalSpe>>.MakeResponseSuccess(result, "Especialidad Medica obtenidas con exito");
             }
             catch (Exception ex)
             {
-                return ResponseHelper<List<MedicalSpe>>.MakeResponseFail(ex);
+                return ResponseHelper<PaginationResponse<MedicalSpe>>.MakeResponseFail(ex);
             }
         }
 

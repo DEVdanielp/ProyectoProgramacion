@@ -4,8 +4,9 @@ using Hospital.Web.Core;
 using Microsoft.AspNetCore.Mvc;
 using Hospital.Web.DTOs;
 using AspNetCoreHero.ToastNotification.Abstractions;
-using AspNetCoreHero.ToastNotification.Notyf;
 using Hospital.Web.Helpers;
+using Hospital.Web.Core.Pagination;
+
 
 namespace Hospital.Web.Controllers
 {
@@ -26,11 +27,21 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage, 
+                                               [FromQuery] int? Page, 
+                                               [FromQuery] string? Filter)
         {
-            Response<List<MedicalSpe>> response = await _medicalspeService.GetListAsync();
+            PaginationRequest request = new PaginationRequest
+            {
+                RecordsPerPage = RecordsPerPage ?? 15,
+                Page = Page ?? 1,
+                Filter = Filter
+            };
+
+            Response<PaginationResponse<MedicalSpe>> response = await _medicalspeService.GetListAsync(request);
             return View(response.Result);
         }
+    
 
         [HttpGet]
         public async Task<IActionResult> Create()

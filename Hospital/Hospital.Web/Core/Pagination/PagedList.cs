@@ -23,7 +23,7 @@ namespace Hospital.Web.Core.Pagination
         {
             int count = await query.CountAsync();
             List<T> items = await  query.Paginate<T>(request)
-                .ToListAsync();
+                                       .ToListAsync();
 
             return new PagedList<T>(items,count, request.Page, request.RecordsPerPage); 
         }
