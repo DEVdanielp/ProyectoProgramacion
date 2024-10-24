@@ -9,10 +9,6 @@ namespace Hospital.Web.Data.Entities
 
         [Display(Name = "NameRol")]
         public string NameRol { get; set; }
-
-        [Display(Name = "Description")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-        public string? Description { get; set; }
         public List<RolesPermission>? RolPermisos { get; set; }
     }
 }
