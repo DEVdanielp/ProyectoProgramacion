@@ -1,5 +1,6 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Hospital.Web.Core;
+using Hospital.Web.Core.Pagination;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
 using Hospital.Web.Helpers;
@@ -23,9 +24,18 @@ namespace Hospital.Web.Controllers
             _comboshelper = comboshelper;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
+                                               [FromQuery]int? Page,
+                                               [FromQuery] string? Filter)
         {
-            Response<List<Status>> response = await _statusService.GetListAsync();
+            PaginationRequest request = new PaginationRequest
+            {
+                RecordsPerPage = RecordsPerPage ?? 5,
+                Page = Page ?? 1,
+                Filter = Filter
+            };
+
+            Response<PaginationResponse<Status>> response = await _statusService.GetListAsync(request);
             return View(response.Result);
         }
 
