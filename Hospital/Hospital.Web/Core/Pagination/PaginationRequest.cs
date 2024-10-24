@@ -4,6 +4,7 @@
     {
         private int _page = 1;
         private int _maxRecordsPerPage = 50;
+        private int _recordsPerPage = 5;
 
         public string? Filter { get; set; }
 
