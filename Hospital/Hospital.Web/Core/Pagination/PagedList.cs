@@ -15,13 +15,12 @@ namespace Hospital.Web.Core.Pagination
             TotalCount = count;
             RecordsPerPage = recordsPerPage;
             CurrentPage = pageNumber;
-            TotalPages = (int)Math.Ceiling(count/(double)recordsPerPage);
             AddRange(items);
         }
 
-        public static async Task<PagedList<T>> ToPagedListAsync(IQueryable<T> query, PaginationRequest request) 
+        public static async Task<PagedList<T>> ToPagedListAsync(IQueryable<T> query, PaginationRequest request)
         {
-            int count = await query.CountAsync(); 
+            int count = await query.CountAsync();
 
             List<T> items = await query.Paginate<T>(request)
                                        .ToListAsync();
