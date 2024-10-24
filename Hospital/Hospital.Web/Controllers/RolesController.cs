@@ -1,5 +1,6 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Hospital.Web.Core;
+using Hospital.Web.Core.Pagination;
 using Hospital.Web.Data;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.Helpers;
@@ -22,9 +23,18 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
+                                               [FromQuery] int? page,
+                                               [FromQuery] string? filter)
         {
-            Response<List<Rol>> response = await _rolesService.GetListAsync();
+            PaginationRequest request = new PaginationRequest()
+            {
+                RecordsPerPage = RecordsPerPage ?? 15,
+                Page = page ?? 1,
+                Filter = filter 
+            };
+
+            Response<PaginationResponse<Rol>> response = await _rolesService.GetListAsync(request);
             return View(response.Result);
         }
 

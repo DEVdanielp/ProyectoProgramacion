@@ -1,4 +1,5 @@
 ﻿using Hospital.Web.Core;
+using Hospital.Web.Core.Pagination;
 using Hospital.Web.Data;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.Helpers;
@@ -9,7 +10,7 @@ namespace Hospital.Web.Services
 {
     public interface IRolesServices
     {
-        public Task<Response<List<Rol>>> GetListAsync();
+        public Task<Response<PaginationResponse<Rol>>> GetListAsync(PaginationRequest request);
         public Task<Response<Rol>> GetOneAsync(int Id);
         public Task<Response<Rol>> EditAsync(Rol model);
         public Task<Response<Rol>> CreateAsync(Rol model);
@@ -32,8 +33,7 @@ namespace Hospital.Web.Services
             {
                 Rol rol = new Rol
                 {
-                    NameRol = model.NameRol,
-                    Description = model.Description
+                    NameRol = model.NameRol
                 };
 
                 await _context.Roles.AddAsync(rol);
@@ -48,15 +48,34 @@ namespace Hospital.Web.Services
             }
         }
 
-        public async Task<Response<List<Rol>>> GetListAsync()
+        public async Task<Response<PaginationResponse<Rol>>> GetListAsync(PaginationRequest request)
         {
             try
             {
-                List<Rol> roles = await _context.Roles.ToListAsync();
-                return ResponseHelper<List<Rol>>.MakeResponseSuccess(roles);
+                IQueryable<Rol> query = _context.Roles.AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(request.Filter))
+                {
+                    query = query.Where(r => r.NameRol.ToLower().Contains(request.Filter.ToLower()));
+                }
+
+                PagedList<Rol> list = await PagedList<Rol>.ToPagedListAsync(query, request);
+
+                PaginationResponse<Rol> result = new PaginationResponse<Rol>
+                {
+                    List = list,
+                    TotalCount = list.Count,
+                    RecordsPerPage = list.RecordsPerPage,
+                    CurrentPage = list.CurrentPage,
+                    TotalPages = list.TotalPages,
+                    Filter = request.Filter
+                };
+
+                return ResponseHelper<PaginationResponse<Rol>>.MakeResponseSuccess(result, "Roles obtenidos con exito");
+
             }
             catch (Exception ex) { 
-                return ResponseHelper<List<Rol>>.MakeResponseFail(ex);
+                return ResponseHelper<PaginationResponse<Rol>>.MakeResponseFail(ex);
             }
         }
 
