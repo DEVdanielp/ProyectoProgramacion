@@ -37,29 +37,11 @@
                 </div>
 
 
-                <div class="mb-3">
-                    <label class="form-label">Fecha de Nacimiento</label>
-                    <input type="date" class="form-control" value="Today" asp-for="Birth" />
-                    <span asp-validation-for="Birth" class="text-danger"> </span>
-
-                </div>
-
-                <div class="mb-3">
+                @* <div class="mb-3">
                     <label class="col-sm-2 col-form-label">Asignar Rol</label>
-                        <select asp-for="RolId" asp-items="Model.Rols" class="form-control"></select>
-                </div>
+                    <select asp-for="HospitalRoleId" asp-items="Model.HospitalRole" class="form-control"></select>
+                </div> *@
 
-                <div class="mb-3">
-                    <label class="col-sm-5 col-form-label">Nombre de Usuario</label>
-                    <input asp-for="UserName" class="form-control" id="inputNanme4" placeholder="Nombre Usuario">
-                    <span asp-validation-for="UserName" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label class="col-sm-2 col-form-label">Contraseña</label>
-                    <input asp-for="Password" type="password" class="form-control" id="inputNanme4" placeholder="Contraseña">
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
 
                  <div class="text-center mb-3">
                     <button type="submit" class="btn btn-primary">Guardar usuario</button>

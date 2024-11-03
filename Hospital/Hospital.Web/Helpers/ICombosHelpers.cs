@@ -30,9 +30,9 @@ namespace Hospital.Web.Helpers
 
         public async Task<IEnumerable<SelectListItem>> GetComboRols()
         {
-            List<SelectListItem> list = await _context.Roles.Select(r => new SelectListItem
+            List<SelectListItem> list = await _context.HospitalRoles.Select(r => new SelectListItem
             {
-                Text = $"{r.NameRol}",
+                Text = $"{r.Name}",
                 Value = r.Id.ToString()
             }).ToListAsync();
 

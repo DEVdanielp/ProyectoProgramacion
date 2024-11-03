@@ -23,10 +23,10 @@ namespace Hospital.Web.Services
     public class StatusServices : IStatusServices
     {
         private readonly DataContext _context;
-        private readonly IConvertHelper _converter;
+        private readonly IConverterHelper _converter;
         private readonly ICombosHelpers _combosHelpers;
 
-        public StatusServices(DataContext context, IConvertHelper converter, ICombosHelpers combosHelpers)
+        public StatusServices(DataContext context, IConverterHelper converter, ICombosHelpers combosHelpers)
         {
             _context = context;
             _converter = converter;

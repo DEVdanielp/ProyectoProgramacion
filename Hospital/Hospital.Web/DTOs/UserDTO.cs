@@ -1,5 +1,4 @@
 ﻿using Hospital.Web.Data.Entities;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace Hospital.Web.DTOs
@@ -8,30 +7,25 @@ namespace Hospital.Web.DTOs
     {
         public int Id { get; set; }
 
-        [MaxLength(32, ErrorMessage = "El campo '{0}' debe tener maximo '{1}' caracteres")]
-        [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public string FirstName { get; set; }
+        [Display(Name = "Documento")]
+        [MaxLength(32, ErrorMessage = "El campo {0} debe terner máximo {1} caractéres.")]
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        public string Document { get; set; } = null!;
 
-        [MaxLength(32, ErrorMessage = "El campo '{0}' debe tener maximo '{1}' caracteres")]
-        [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public string LastName { get; set; }
+        [Display(Name = "Nombres")]
+        [MaxLength(32, ErrorMessage = "El campo {0} debe terner máximo {1} caractéres.")]
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        public string FirstName { get; set; } = null!;
 
-        public DateOnly Birth { get; set; }
+        [Display(Name = "Apellidos")]
+        [MaxLength(32, ErrorMessage = "El campo {0} debe terner máximo {1} caractéres.")]
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        public string LastName { get; set; } = null!;
 
-        [MaxLength(32, ErrorMessage = "El campo '{0}' debe tener maximo '{1}' caracteres")]
-        [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public string UserName { get; set; }
+        public string FullName => $"{FirstName} {LastName}";
 
-        [MaxLength(32, ErrorMessage = "El campo '{0}' debe tener maximo '{1}' caracteres")]
-        [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public string Password { get; set; }
+        public int HospitalRoleId { get; set; }
 
-        public List<Appoiment>? AppoimentPatient { get; set; }
-        public List<Appoiment>? AppoimentDoctor { get; set; }
-
-        public IEnumerable<SelectListItem>? Rols { get; set; }
-        [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un autor")]
-        [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public int RolId { get; set; }
+        public HospitalRole HospitalRole { get; set; }
     }
 }

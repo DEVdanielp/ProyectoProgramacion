@@ -1,46 +1,63 @@
 ﻿using Hospital.Web.Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Web.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<User>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(modelBuilder);
+            ConfigureKeys(builder);
+            ConfigureIndexes(builder);
 
-            modelBuilder.Entity<Appoiment>()
-                .HasOne(x => x.UserPatient)
-                .WithMany(x => x.AppoimentPatient)
-                .HasForeignKey(x => x.UserPatientId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-
-            modelBuilder.Entity<Appoiment>()
-                .HasOne(x => x.UserDoctor)
-                .WithMany(x => x.AppoimentDoctor)
-                .HasForeignKey(x => x.UserDoctorId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-
-            modelBuilder.Entity<RolesPermission>().
-                HasKey(x => new { x.PermisosId, x.rolId });
-
+            base.OnModelCreating(builder);
         }
 
-        public DbSet<Rol> Roles { get; set; }
+        private void ConfigureKeys(ModelBuilder builder)
+        {
+            //Haciendo la Relacion Muchos a Muchos
+            // Role Permissions
+            builder.Entity<RolePermission>().HasKey(rp => new { rp.RoleId, rp.PermissionId });
+
+            builder.Entity<RolePermission>().HasOne(rp => rp.Role)
+                                            .WithMany(r => r.RolePermissions)
+                                            .HasForeignKey(rp => rp.RoleId);
+
+            builder.Entity<RolePermission>().HasOne(rp => rp.Permission)
+                                            .WithMany(p => p.RolePermissions)
+                                            .HasForeignKey(rp => rp.PermissionId);
+        }
+
+        private void ConfigureIndexes(ModelBuilder builder)
+        {
+            //Haciendo unicos, ciertos atributos de las Entidades
+            // Roles
+            builder.Entity<HospitalRole>().HasIndex(r => r.Name)
+                                             .IsUnique();
+            // Medical Specialitation
+            builder.Entity<MedicalSpe>().HasIndex(m => m.Name)
+                                             .IsUnique();
+            // Users
+            builder.Entity<User>().HasIndex(u => u.Document)
+                                             .IsUnique();
+        }
+
         public DbSet<User> Users { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<HospitalRole> HospitalRoles { get; set; }
         public DbSet<Appoiment> Appoiments { get; set; }
         public DbSet<Status> Status { get; set; }
         public DbSet<MedicalSpe> MedicalSpe{ get; set; }
         public DbSet<Medication> Medications { get; set; }
         public DbSet<MedicalOrder> MedicalOrders { get; set; }
-       
-        public DbSet<Permissions> Permissions { get; set; }
         public DbSet<MedicalHistory> MedicalHistory { get; set; }
-        public DbSet<RolesPermission> RolesPermisos { get; set; }
+        public DbSet<RolePermission> RolePermissions { get; set; }
 
+        
     }
 }

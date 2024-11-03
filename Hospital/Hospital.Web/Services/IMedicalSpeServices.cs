@@ -23,9 +23,9 @@ namespace Hospital.Web.Services
     {
         private readonly DataContext _context;
 
-        private readonly IConvertHelper _convertHelper;
+        private readonly IConverterHelper _convertHelper;
         private readonly ICombosHelpers _combo;
-        public MedicalSpeServices(DataContext context, IConvertHelper convertHelper, ICombosHelpers combo)
+        public MedicalSpeServices(DataContext context, IConverterHelper convertHelper, ICombosHelpers combo)
         {
             _context = context;
             _convertHelper = convertHelper;
@@ -50,11 +50,12 @@ namespace Hospital.Web.Services
         }
 
 
+
         public async Task<Response<PaginationResponse<MedicalSpe>>> GetListAsync(PaginationRequest request)
         {
             try
             {
-                IQueryable<MedicalSpe> query = _context.MedicalSpe.AsQueryable().Include(b => b.UserDoctor);
+                IQueryable<MedicalSpe> query = _context.MedicalSpe.AsQueryable().Include(s => s.UserDoctor);
 
                 if (!string.IsNullOrWhiteSpace(request.Filter))
                 {
@@ -89,7 +90,7 @@ namespace Hospital.Web.Services
                 MedicalSpe medic = await _context.MedicalSpe.FirstOrDefaultAsync(u => u.Id == dto.Id);
 
                 medic.Name = dto.Name;
-                medic.UserDoctor = await _context.Users.FirstOrDefaultAsync(a => a.Id == dto.UserDoctorId);
+                /*edic.UserDoctor = await _context.Users.FirstOrDefaultAsync(a => a.Id == dto.UserDoctorId);*/
 
 
 
