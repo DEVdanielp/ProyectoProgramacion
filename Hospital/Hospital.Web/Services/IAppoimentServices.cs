@@ -1,4 +1,5 @@
 ﻿using Hospital.Web.Core;
+using Hospital.Web.Core.Pagination;
 using Hospital.Web.Data;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
@@ -12,7 +13,7 @@ namespace Hospital.Web.Services
 {
     public interface IAppoimentServices
     {
-        public Task<Response<List<Appoiment>>> GetListAsync();
+        public Task<Response<PaginationResponse<Appoiment>>> GetListAsync(PaginationRequest request);
         public Task<Response<Appoiment>> CreateAsync(AppoimentDTO model);
         public Task<Response<AppoimentDTO>> GetOneAsync(int Id);
         public Task<Response<AppoimentDTO>> EditAsync(AppoimentDTO appoiment);
@@ -46,16 +47,44 @@ namespace Hospital.Web.Services
             }
         }
 
-        public async Task<Response<List<Appoiment>>> GetListAsync()
+        public async Task<Response<PaginationResponse<Appoiment>>> GetListAsync(PaginationRequest request)
         {
             try
             {
-                List<Appoiment> appoiments = await _context.Appoiments.Include(u => u.UserDoctor).Include(o => o.UserPatient).ToListAsync();
-                return ResponseHelper<List<Appoiment>>.MakeResponseSuccess(appoiments);
+
+                IQueryable<Appoiment> query = _context.Appoiments
+                                              .Include(a => a.UserDoctor)  // Primer include
+                                              .Include(a => a.UserPatient)  // Segundo include
+                                              .AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(request.Filter))
+                {
+                    if (int.TryParse(request.Filter, out int filterValue))
+                    {
+                        // Filtramos por Id numérico igual al valor del filtro
+                        query = query.Where(s => s.Id == filterValue);
+                    }
+                    //query = query.Where(s => s.Id.Contains(request.Filter.ToLower)));
+                }
+
+                PagedList<Appoiment> list = await PagedList<Appoiment>.ToPagedListAsync(query, request);
+
+                PaginationResponse<Appoiment> result = new PaginationResponse<Appoiment> 
+                {
+                   List = list, 
+                   TotalCount = list.TotalCount,
+                   RecordsPerPage = list.RecordsPerPage,
+                   CurrentPage = list.CurrentPage,
+                   TotalPages = list.TotalPages,
+                   Filter = request.Filter
+                };
+
+                return ResponseHelper<PaginationResponse<Appoiment>>.MakeResponseSuccess(result, "Citas obtenidas con éxisto");
+
             }
             catch (Exception ex)
             {
-                return ResponseHelper<List<Appoiment>>.MakeResponseFail(ex);
+                return ResponseHelper<PaginationResponse<Appoiment>>.MakeResponseFail(ex);
             }
         }
 

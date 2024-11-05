@@ -1,4 +1,5 @@
 ﻿using Hospital.Web.Core;
+using Hospital.Web.Core.Pagination;
 using Hospital.Web.Data;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
@@ -12,7 +13,7 @@ namespace Hospital.Web.Services
 {
     public interface IStatusServices
     {
-        public Task<Response<List<Status>>> GetListAsync();
+        public Task<Response<PaginationResponse<Status>>> GetListAsync(PaginationRequest request);
         public Task<Response<Status>> CreateAsync(StatusDTO model);
         public Task<Response<StatusDTO>> GetOneAsync(int Id);
         public Task<Response<StatusDTO>> EditAsync(StatusDTO status);
@@ -48,16 +49,37 @@ namespace Hospital.Web.Services
             }
         }
 
-        public async Task<Response<List<Status>>> GetListAsync()
+        public async Task<Response<PaginationResponse<Status>>> GetListAsync(PaginationRequest request)
         {
             try
             {
-                List<Status> status = await _context.Status.ToListAsync();
-                return ResponseHelper<List<Status>>.MakeResponseSuccess(status);
+                IQueryable<Status> query = _context.Status.AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(request.Filter))
+                {
+                    if (int.TryParse(request.Filter, out int filterValue))
+                    {
+                        // Filtramos por Id numérico igual al valor del filtro
+                        query = query.Where(s => s.Id == filterValue);
+                    }
+                    //query = query.Where(s => s.Id.Contains(request.Filter.ToLower)));
+                }
+
+                PagedList<Status> list = await PagedList<Status>.ToPagedListAsync(query, request);
+                PaginationResponse<Status> result = new PaginationResponse<Status>
+                {
+                    List = list,
+                    TotalCount = list.TotalCount,
+                    RecordsPerPage = list.RecordsPerPage,
+                    CurrentPage = list.CurrentPage,
+                    TotalPages = list.TotalPages,
+                    Filter = request.Filter
+                };
+                return ResponseHelper<PaginationResponse<Status>>.MakeResponseSuccess(result, "Estado obtenido con éxito");
             }
             catch (Exception ex)
             {
-                return ResponseHelper<List<Status>>.MakeResponseFail(ex);
+                return ResponseHelper<PaginationResponse<Status>>.MakeResponseFail(ex);
             }
         }
 

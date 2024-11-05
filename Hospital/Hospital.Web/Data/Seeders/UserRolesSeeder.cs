@@ -21,7 +21,7 @@ namespace Hospital.Web.Data.Seeders
             await CheckUsers();
         }
 
-        private async Task CheckUsers()
+        private async Task CheckUsers() //Creacion automatica de usuarios necesarios para la base de datos
         {
             // Usuario Admin
             User? user = await _usersService.GetUserAsync("DonNadie@yupimail.com");
@@ -72,7 +72,7 @@ namespace Hospital.Web.Data.Seeders
             }
         }
 
-        private async Task CheckRoles()
+        private async Task CheckRoles() //Creacion automatica de los roles necesarios para el sistema
         {
             await AdminRoleAsync();
             await ContentManagerAsync();
@@ -93,11 +93,11 @@ namespace Hospital.Web.Data.Seeders
 
         private async Task ContentManagerAsync()
         {
-            bool exists = await _context.HospitalRoles.AnyAsync(r => r.Name == "Gestor de contenido");
+            bool exists = await _context.HospitalRoles.AnyAsync(r => r.Name == "Gestor de medicamentos");
 
             if (!exists)
             {
-                HospitalRole role = new HospitalRole { Name = "Gestor de contenido" };
+                HospitalRole role = new HospitalRole { Name = "Gestor de medicamentos" };
                 await _context.HospitalRoles.AddAsync(role);
                 await _context.SaveChangesAsync();
             }

@@ -1,79 +1,74 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Hospital.Web.Core;
 using Hospital.Web.Core.Pagination;
+using Hospital.Web.Data;
 using Hospital.Web.Data.Entities;
-using Hospital.Web.DTOs;
 using Hospital.Web.Helpers;
 using Hospital.Web.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Web.Controllers
 {
-    public class StatusController : Controller
+    public class RolesController : Controller
     {
-        private readonly IStatusServices _statusService;
+        //Inyectamos la dependecia de la interfaz creada
+        private readonly IRolesServices _rolesService;
         private readonly INotyfService _notifyService;
-        private readonly ICombosHelpers _comboshelper;
 
-        public StatusController(IStatusServices statusService, INotyfService notifyService, ICombosHelpers comboshelper)
+        public RolesController(IRolesServices rolesService, INotyfService notifyService)
         {
-            _statusService = statusService;
+            _rolesService = rolesService;
             _notifyService = notifyService;
-            _comboshelper = comboshelper;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
-                                               [FromQuery]int? Page,
-                                               [FromQuery] string? Filter)
+                                               [FromQuery] int? page,
+                                               [FromQuery] string? filter)
         {
-            PaginationRequest request = new PaginationRequest
+            PaginationRequest request = new PaginationRequest()
             {
-                RecordsPerPage = RecordsPerPage ?? 5,
-                Page = Page ?? 1,
-                Filter = Filter
+                RecordsPerPage = RecordsPerPage ?? 15,
+                Page = page ?? 1,
+                Filter = filter 
             };
 
-            Response<PaginationResponse<Status>> response = await _statusService.GetListAsync(request);
+            Response<PaginationResponse<HospitalRole>> response = await _rolesService.GetListAsync(request);
             return View(response.Result);
         }
 
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            StatusDTO dto = new StatusDTO
-            {
-                Appoiment = await _comboshelper.GetComboAppoiments()
-            };
-            return View(dto);
-
+            return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(StatusDTO dto)
+        public async Task<IActionResult> Create(HospitalRole rol)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
                     _notifyService.Error("Revise los datos ingresados por favor");
-                    return View(dto);
+                    return View(rol);
                 }
 
-                Response<Status> response = await _statusService.CreateAsync(dto);
+                Response<HospitalRole> response = await _rolesService.CreateAsync(rol);
 
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha creado este estado con éxito");
+                    _notifyService.Success("Se ha creado este rol con éxito");
                     return RedirectToAction(nameof(Index));
                 }
+
                 _notifyService.Error("Revise los datos ingresados por favor");
                 return View(response);
             }
             catch (Exception ex)
             {
-                return View(dto);
+                return View(rol);
             }
         }
 
@@ -81,50 +76,53 @@ namespace Hospital.Web.Controllers
         public async Task<IActionResult> Edit([FromRoute] int Id)
         {
 
-            Response<StatusDTO> response = await _statusService.GetOneAsync(Id);
+            Response<HospitalRole> response = await _rolesService.GetOneAsync(Id);
 
             if (response.IsSuccess)
             {
                 return View(response.Result);
             }
+
             _notifyService.Error("Revise los datos ingresados por favor");
             return RedirectToAction(nameof(Index));
 
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(StatusDTO status)
+        public async Task<IActionResult> Edit(HospitalRole rol)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
                     _notifyService.Error("Revise los datos ingresados por favor");
-                    return View(status);
+                    return View(rol);
                 }
 
-                Response<StatusDTO> response = await _statusService.EditAsync(status);
+                Response<HospitalRole> response = await _rolesService.EditAsync(rol);
 
                 if (response.IsSuccess)
                 {
-                    _notifyService.Success("Se ha actualizado con éxito");
+                    _notifyService.Success("Se ha actualizado este rol con éxito");
                     return RedirectToAction(nameof(Index));
                 }
+
                 _notifyService.Error("Revise los datos ingresados por favor");
                 return View(response);
             }
             catch (Exception ex)
             {
-                return View(status);
+                return View(rol);
             }
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {   //Este metodo redirecciona confirma la eliminacion
             try
             {
-                await _statusService.DeleteAsync(id);
+                await _rolesService.DeleteAsync(id);
                 _notifyService.Success("Se ha eliminado con éxito");
                 return RedirectToAction(nameof(Index));
 
@@ -135,5 +133,7 @@ namespace Hospital.Web.Controllers
             }
 
         }
+
+
     }
 }
