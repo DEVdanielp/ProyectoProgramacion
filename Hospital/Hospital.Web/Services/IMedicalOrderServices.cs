@@ -26,9 +26,9 @@ namespace Hospital.Web.Services
     {
         private readonly DataContext _context;
 
-        private readonly IConvertHelper _convertHelper;
+        private readonly IConverterHelper _convertHelper;
         private readonly ICombosHelpers _combosHelpers;
-        public MedicalOrdersServices(DataContext context, IConvertHelper convertHelper, ICombosHelpers combosHelpers)
+        public MedicalOrdersServices(DataContext context, IConverterHelper convertHelper, ICombosHelpers combosHelpers)
         {
             _context = context;
             _convertHelper = convertHelper;

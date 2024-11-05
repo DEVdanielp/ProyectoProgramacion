@@ -1,47 +1,70 @@
-﻿using Hospital.Web.Core;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Hospital.Web.Core;
+using Hospital.Web.Core.Pagination;
 using Hospital.Web.Data;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
 using Hospital.Web.Helpers;
-using Humanizer;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-
-
-
-
 namespace Hospital.Web.Services
 {
-    public interface IUsersServices
+    public interface IUsersService
     {
+        public Task<IdentityResult> AddUserAsync(User user, string password);
+        public Task<IdentityResult> ConfirmEmailAsync(User user, string token);
+        public Task<string> GenerateEmailConfirmationTokenAsync(User user);
+        public Task<User> GetUserAsync(string email);
+        public Task<SignInResult> LoginAsync(LoginDTO dto);
+        public Task LogoutAsync();
+
         public Task<Response<User>> CreateAsync(UserDTO dto);
-        public Task<Response<List<User>>> GetListAsync();
-        public Task<Response<UserDTO>> EditAsync(UserDTO dto);
-        public Task<Response<UserDTO>> GetOneAsycn(int id);
-        public Task<Response<User>> DeleteAsync(int Id);
+        public Task<Response<PaginationResponse<User>>> GetListAsync(PaginationRequest request);
+        public Task<User> GetUserAsync(Guid id);
+        public Task<IdentityResult> UpdateUserAsync(User user);
+        public Task<Response<User>> UpdateUserAsync(UserDTO dto);
+
     }
 
-    public class UserServices : IUsersServices
+    public class UsersService : IUsersService
     {
         private readonly DataContext _context;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly IConverterHelper _converterHelper;
 
-        private readonly IConvertHelper _convertHelper;
-        public UserServices(DataContext context, IConvertHelper convertHelper)
+        public UsersService(DataContext context, SignInManager<User> signInManager, UserManager<User> userManager, IConverterHelper converterHelper)
         {
             _context = context;
-            _convertHelper = convertHelper;
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _converterHelper = converterHelper;
+        }
+
+        public async Task<IdentityResult> AddUserAsync(User user, string password)
+        {
+            return await _userManager.CreateAsync(user, password);
+        }
+
+        public async Task<IdentityResult> ConfirmEmailAsync(User user, string token)
+        {
+            return await _userManager.ConfirmEmailAsync(user, token);
         }
 
         public async Task<Response<User>> CreateAsync(UserDTO dto)
         {
             try
             {
-                User user = _convertHelper.ToUser(dto);
-                await _context.Users.AddAsync(user);
-                await _context.SaveChangesAsync();
+                User user = _converterHelper.ToUser(dto);
+                Guid id = Guid.NewGuid();
+                user.Id = id.ToString();
 
-                return ResponseHelper<User>.MakeResponseSuccess(user, "Seccion creada con exito ");
+                IdentityResult result = await AddUserAsync(user, dto.Document);
 
+                // TODO: Ajustar cuando se realize funcionalidad para envío de Email
+                string token = await GenerateEmailConfirmationTokenAsync(user);
+                await ConfirmEmailAsync(user, token);
+
+                return ResponseHelper<User>.MakeResponseSuccess(user, "Usuario creado con éxito");
             }
             catch (Exception ex)
             {
@@ -49,88 +72,96 @@ namespace Hospital.Web.Services
             }
         }
 
-        public async Task<Response<List<User>>> GetListAsync()
+        public async Task<string> GenerateEmailConfirmationTokenAsync(User user)
+        {
+            return await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        }
+
+        public async Task<Response<PaginationResponse<User>>> GetListAsync(PaginationRequest request)
         {
             try
             {
-                List<User> users = await _context.Users.Include(u => u.Rol).ToListAsync();
-                return ResponseHelper<List<User>>.MakeResponseSuccess(users);
+                IQueryable<User> query = _context.Users.AsQueryable().Include(u => u.HospitalRole);
+
+                if (!string.IsNullOrWhiteSpace(request.Filter))
+                {
+                    query = query.Where(s => s.FirstName.ToLower().Contains(request.Filter.ToLower())
+                                            || s.LastName.ToLower().Contains(request.Filter.ToLower())
+                                            || s.Document.ToLower().Contains(request.Filter.ToLower())
+                                            || s.Email.ToLower().Contains(request.Filter.ToLower())
+                                            || s.PhoneNumber.ToLower().Contains(request.Filter.ToLower()));
+                }
+
+                PagedList<User> list = await PagedList<User>.ToPagedListAsync(query, request);
+
+                PaginationResponse<User> result = new PaginationResponse<User>
+                {
+                    List = list,
+                    TotalCount = list.TotalCount,
+                    RecordsPerPage = list.RecordsPerPage,
+                    CurrentPage = list.CurrentPage,
+                    TotalPages = list.TotalPages,
+                    Filter = request.Filter
+                };
+
+                return ResponseHelper<PaginationResponse<User>>.MakeResponseSuccess(result, "Usuarios obtenidos con éxito");
             }
             catch (Exception ex)
             {
-                return ResponseHelper<List<User>>.MakeResponseFail(ex);
+                return ResponseHelper<PaginationResponse<User>>.MakeResponseFail(ex);
             }
         }
 
-        public async Task<Response<UserDTO>> EditAsync(UserDTO dto)
+        public async Task<User> GetUserAsync(string email)
+        {
+            User? user = await _context.Users.Include(u => u.HospitalRole)
+                                             .FirstOrDefaultAsync(u => u.Email == email);
+
+            return user;
+        }
+
+        public async Task<User> GetUserAsync(Guid id)
+        {
+            return await _context.Users.Include(u => u.HospitalRole)
+                                             .FirstOrDefaultAsync(u => u.Id == id.ToString());
+        }
+
+        public async Task<SignInResult> LoginAsync(LoginDTO dto)
+        {
+            return await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, false, false);
+        }
+
+        public async Task LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
+        }
+
+        public async Task<IdentityResult> UpdateUserAsync(User user)
+        {
+            return await _userManager.UpdateAsync(user);
+        }
+
+        public async Task<Response<User>> UpdateUserAsync(UserDTO dto)
         {
             try
             {
-
-                User user = await _context.Users.FirstOrDefaultAsync(u => u.Id == dto.Id);
-
+                User user = await GetUserAsync(dto.Id);
+                user.PhoneNumber = dto.PhoneNumber;
+                user.Document = dto.Document;
                 user.FirstName = dto.FirstName;
                 user.LastName = dto.LastName;
-                user.Birth = dto.Birth;
-                user.UserName = dto.UserName;
-                user.Password = dto.Password;
-                user.Rol = await _context.Roles.FirstOrDefaultAsync(a => a.Id == dto.RolId);
-
-
-
+                user.HospitalRoleId = dto.HospitalRoleId;
 
                 _context.Users.Update(user);
+
                 await _context.SaveChangesAsync();
 
-                return ResponseHelper<UserDTO>.MakeResponseSuccess(dto, "sección actualizada con éxito");
-
+                return ResponseHelper<User>.MakeResponseSuccess(user, "Usuario actualizado con éxito");
             }
             catch (Exception ex)
             {
-                return ResponseHelper<UserDTO>.MakeResponseFail(ex);
+                return ResponseHelper<User>.MakeResponseFail(ex);
             }
-        }
-
-        public async Task<Response<UserDTO>> GetOneAsycn(int id)
-        {
-            try
-            {
-                User? user = await _context.Users.Include(b => b.Rol).FirstOrDefaultAsync(a => a.Id == id);
-                if (user == null)
-                {
-                    return ResponseHelper<UserDTO>.MakeResponseFail("En la seccion con el id indicado no existe");
-                }
-                UserDTO dto = new UserDTO
-                {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Birth = user.Birth,
-                    UserName = user.UserName,
-                    Password = user.Password,
-                    Rols = await _context.Roles.Select(a => new SelectListItem
-                    {
-                        Text = $"{a.NameRol}",
-                        Value = a.Id.ToString()
-                    }).ToListAsync(),
-
-                };
-                return ResponseHelper<UserDTO>.MakeResponseSuccess(dto);
-
-            }
-            catch (Exception ex)
-            {
-                return ResponseHelper<UserDTO>.MakeResponseFail(ex);
-            }
-        }
-
-        public async Task<Response<User>> DeleteAsync(int Id)
-        {
-            User? user = await _context.Users.FirstOrDefaultAsync(a => a.Id == Id);
-
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-            return ResponseHelper<User>.MakeResponseSuccess(user, "sección actualizada con éxito");
-
         }
     }
 }

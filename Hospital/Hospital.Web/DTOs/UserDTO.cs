@@ -6,32 +6,36 @@ namespace Hospital.Web.DTOs
 {
     public class UserDTO
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        [MaxLength(32, ErrorMessage = "El campo '{0}' debe tener maximo '{1}' caracteres")]
-        [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public string FirstName { get; set; }
+        [Display(Name = "Documento")]
+        [MaxLength(32, ErrorMessage = "El campo {0} debe terner máximo {1} caractéres.")]
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        public string Document { get; set; } = null!;
 
-        [MaxLength(32, ErrorMessage = "El campo '{0}' debe tener maximo '{1}' caracteres")]
-        [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public string LastName { get; set; }
+        [Display(Name = "Nombres")]
+        [MaxLength(32, ErrorMessage = "El campo {0} debe terner máximo {1} caractéres.")]
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        public string FirstName { get; set; } = null!;
 
-        public DateOnly Birth { get; set; }
+        [Display(Name = "Apellidos")]
+        [MaxLength(32, ErrorMessage = "El campo {0} debe terner máximo {1} caractéres.")]
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        public string LastName { get; set; } = null!;
 
-        [MaxLength(32, ErrorMessage = "El campo '{0}' debe tener maximo '{1}' caracteres")]
-        [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public string UserName { get; set; }
+        [Display(Name = "Teléfono")]
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        public string PhoneNumber { get; set; } = null!;
 
-        [MaxLength(32, ErrorMessage = "El campo '{0}' debe tener maximo '{1}' caracteres")]
-        [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public string Password { get; set; }
+        [Display(Name = "Email")]
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        [EmailAddress(ErrorMessage = "El campo {0} deve ser un Email válido")]
+        public string Email { get; set; } = null!;
 
-        public List<Appoiment>? AppoimentPatient { get; set; }
-        public List<Appoiment>? AppoimentDoctor { get; set; }
+        public string FullName => $"{FirstName} {LastName}";
 
-        public IEnumerable<SelectListItem>? Rols { get; set; }
-        [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un autor")]
-        [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public int RolId { get; set; }
+        public int HospitalRoleId { get; set; }
+
+        public IEnumerable<SelectListItem>? HospitalRoles { get; set; }
     }
 }

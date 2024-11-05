@@ -1,37 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace Hospital.Web.Data.Entities
 {
-    public class User
+    public class User : IdentityUser
     {
-        [Key]
-        public int Id { get; set; }
+        [Display(Name = "Documento")]
+        [MaxLength(32, ErrorMessage = "El campo {0} debe terner máximo {1} caractéres.")]
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        public string Document { get; set; } = null!;
 
-        [MaxLength(32, ErrorMessage = "El campo '{0}' debe tener maximo '{1}' caracteres")]
-        [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public string FirstName { get; set; }
+        [Display(Name = "Nombres")]
+        [MaxLength(32, ErrorMessage = "El campo {0} debe terner máximo {1} caractéres.")]
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        public string FirstName { get; set; } = null!;
 
-        [MaxLength(32, ErrorMessage = "El campo '{0}' debe tener maximo '{1}' caracteres")]
-        [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public string LastName { get; set; }
+        [Display(Name = "Apellidos")]
+        [MaxLength(32, ErrorMessage = "El campo {0} debe terner máximo {1} caractéres.")]
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        public string LastName { get; set; } = null!;
 
-        public DateOnly Birth { get; set; }
+        public string FullName => $"{FirstName} {LastName}";
 
-        [MaxLength(32, ErrorMessage = "El campo '{0}' debe tener maximo '{1}' caracteres")]
-        [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public string UserName { get; set; }
+        public int HospitalRoleId { get; set; }
 
-        [MaxLength(32, ErrorMessage = "El campo '{0}' debe tener maximo '{1}' caracteres")]
-        [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public string Password { get; set; }
-
-        public List<Appoiment>? AppoimentPatient { get; set; }
-        public List<Appoiment>? AppoimentDoctor { get; set; }
-
-        public  Rol? Rol { get; set; }
-     
-        public int RolId { get; set; }
-        
+        public HospitalRole HospitalRole { get; set; }
     }
 }

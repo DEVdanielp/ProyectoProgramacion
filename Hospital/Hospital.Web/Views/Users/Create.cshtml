@@ -1,75 +1,48 @@
-﻿@model UserDTO
+﻿
+@model UserDTO
 @{
-    ViewData["Title"] = "Nueva Seccion";
-
+    ViewData["Title"] = "Nuevo Usuario";
 }
 
 <div class="pagetitle">
     <h1>Usuarios</h1>
     <nav>
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
             <li class="breadcrumb-item"><a asp-action="Index">Usuarios</a></li>
             <li class="breadcrumb-item active">Nuevo Usuario</li>
         </ol>
     </nav>
 </div>
 
+
 <section class="section dashboard">
+
 
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Nuevo Usuario</h5>
+            <h5 class="card-title text-primary">Nuevo Usuario</h5>
 
-            <!-- General Form Elements -->
-            <form asp-action="Create" method="post">
-                
-                <div class="mb-3">
-                    <label class="col-sm-2 col-form-label">Nombres</label>
-                    <input asp-for="FirstName" class="form-control" id="inputNanme4" placeholder="Nombres">
-                    <span asp-validation-for="FirstName" class="text-danger"></span>
-                </div>
+            <form class="row g-3" asp-action="Create" method="POST">
 
-                <div class="mb-3">
-                    <label class="col-sm-2 col-form-label">Apellidos</label>
-                    <input asp-for="LastName" class="form-control" id="inputNanme4" placeholder="Apellidos">
-                    <span asp-validation-for="LastName" class="text-danger"></span>
-                </div>
+                <div class="col-md-12">
+                    <div class="form-floating">
+                        <input asp-for="Email" class="form-control" placeholder="Email">
+                        <label asp-for="Email"></label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
 
-
-                <div class="mb-3">
-                    <label class="form-label">Fecha de Nacimiento</label>
-                    <input type="date" class="form-control" value="Today" asp-for="Birth" />
-                    <span asp-validation-for="Birth" class="text-danger"> </span>
+                    <partial name="_UserPartial" />
 
                 </div>
 
-                <div class="mb-3">
-                    <label class="col-sm-2 col-form-label">Asignar Rol</label>
-                        <select asp-for="RolId" asp-items="Model.Rols" class="form-control"></select>
-                </div>
-
-                <div class="mb-3">
-                    <label class="col-sm-5 col-form-label">Nombre de Usuario</label>
-                    <input asp-for="UserName" class="form-control" id="inputNanme4" placeholder="Nombre Usuario">
-                    <span asp-validation-for="UserName" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label class="col-sm-2 col-form-label">Contraseña</label>
-                    <input asp-for="Password" type="password" class="form-control" id="inputNanme4" placeholder="Contraseña">
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-
-                 <div class="text-center mb-3">
-                    <button type="submit" class="btn btn-primary">Guardar usuario</button>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
                     <a asp-action="Index" class="btn btn-secondary">Volver</a>
                 </div>
-
             </form>
 
         </div>
-
     </div>
 </section>
 

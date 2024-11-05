@@ -24,9 +24,9 @@ namespace Hospital.Web.Services
     public class AppoimentServices : IAppoimentServices
     {
         private readonly DataContext _context;
-        private readonly IConvertHelper _converter;
+        private readonly IConverterHelper _converter;
         private readonly ICombosHelpers _combo;
-        public AppoimentServices(DataContext context, IConvertHelper converter, ICombosHelpers combo)
+        public AppoimentServices(DataContext context, IConverterHelper converter, ICombosHelpers combo)
         {
             _context = context;
             _converter = converter;
@@ -127,8 +127,8 @@ namespace Hospital.Web.Services
 
                     prueba.Date = appoiment.Date;
                     prueba.Time = appoiment.Time;
-                    prueba.UserDoctor = await _context.Users.FirstOrDefaultAsync(u => u.Id == appoiment.UserDoctorId);
-                    prueba.UserPatient = await _context.Users.FirstOrDefaultAsync(u => u.Id == appoiment.UserPatientId);
+                    //prueba.UserDoctor = await _context.Users.FirstOrDefaultAsync(u => u.Id == appoiment.User);
+
 
                 _context.Appoiments.Update(prueba);
                 await _context.SaveChangesAsync();

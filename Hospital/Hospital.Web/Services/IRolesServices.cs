@@ -10,11 +10,11 @@ namespace Hospital.Web.Services
 {
     public interface IRolesServices
     {
-        public Task<Response<PaginationResponse<Rol>>> GetListAsync(PaginationRequest request);
-        public Task<Response<Rol>> GetOneAsync(int Id);
-        public Task<Response<Rol>> EditAsync(Rol model);
-        public Task<Response<Rol>> CreateAsync(Rol model);
-        public Task<Response<Rol>> DeleteAsync(int Id);
+        public Task<Response<PaginationResponse<HospitalRole>>> GetListAsync(PaginationRequest request);
+        public Task<Response<HospitalRole>> GetOneAsync(int Id);
+        public Task<Response<HospitalRole>> EditAsync(HospitalRole model);
+        public Task<Response<HospitalRole>> CreateAsync(HospitalRole model);
+        public Task<Response<HospitalRole>> DeleteAsync(int Id);
 
     }
 
@@ -27,41 +27,41 @@ namespace Hospital.Web.Services
             _context = context;
         }
 
-        public async Task<Response<Rol>> CreateAsync(Rol model)
+        public async Task<Response<HospitalRole>> CreateAsync(HospitalRole model)
         {
             try
             {
-                Rol rol = new Rol
+                HospitalRole rol = new HospitalRole
                 {
-                    NameRol = model.NameRol
+                    Name = model.Name
                 };
 
-                await _context.Roles.AddAsync(rol);
+                await _context.HospitalRoles.AddAsync(rol);
                 await _context.SaveChangesAsync();
 
-                return ResponseHelper<Rol>.MakeResponseSuccess(rol, "seccion creada con exito");
+                return ResponseHelper<HospitalRole>.MakeResponseSuccess(rol, "seccion creada con exito");
 
             }
             catch (Exception ex)
             {
-                return ResponseHelper<Rol>.MakeResponseFail(ex);
+                return ResponseHelper<HospitalRole>.MakeResponseFail(ex);
             }
         }
 
-        public async Task<Response<PaginationResponse<Rol>>> GetListAsync(PaginationRequest request)
+        public async Task<Response<PaginationResponse<HospitalRole>>> GetListAsync(PaginationRequest request)
         {
             try
             {
-                IQueryable<Rol> query = _context.Roles.AsQueryable();
+                IQueryable<HospitalRole> query = _context.HospitalRoles.AsQueryable();
 
                 if (!string.IsNullOrWhiteSpace(request.Filter))
                 {
-                    query = query.Where(r => r.NameRol.ToLower().Contains(request.Filter.ToLower()));
+                    query = query.Where(r => r.Name.ToLower().Contains(request.Filter.ToLower()));
                 }
 
-                PagedList<Rol> list = await PagedList<Rol>.ToPagedListAsync(query, request);
+                PagedList<HospitalRole> list = await PagedList<HospitalRole>.ToPagedListAsync(query, request);
 
-                PaginationResponse<Rol> result = new PaginationResponse<Rol>
+                PaginationResponse<HospitalRole> result = new PaginationResponse<HospitalRole>
                 {
                     List = list,
                     TotalCount = list.Count,
@@ -71,58 +71,58 @@ namespace Hospital.Web.Services
                     Filter = request.Filter
                 };
 
-                return ResponseHelper<PaginationResponse<Rol>>.MakeResponseSuccess(result, "Roles obtenidos con exito");
+                return ResponseHelper<PaginationResponse<HospitalRole>>.MakeResponseSuccess(result, "Roles obtenidos con exito");
 
             }
             catch (Exception ex) { 
-                return ResponseHelper<PaginationResponse<Rol>>.MakeResponseFail(ex);
+                return ResponseHelper<PaginationResponse<HospitalRole>>.MakeResponseFail(ex);
             }
         }
 
-        public async Task<Response<Rol>> GetOneAsync(int Id)
+        public async Task<Response<HospitalRole>> GetOneAsync(int Id)
         {
             try
             {
-                Rol? rol = await _context.Roles.FirstOrDefaultAsync(r => r.Id == Id);
+                HospitalRole? rol = await _context.HospitalRoles.FirstOrDefaultAsync(r => r.Id == Id);
 
                 if (rol is null) {
-                    return ResponseHelper<Rol>.MakeResponseFail("El id indicado no existe");
+                    return ResponseHelper<HospitalRole>.MakeResponseFail("El id indicado no existe");
                 }
 
                 
-                return ResponseHelper<Rol>.MakeResponseSuccess(rol);
+                return ResponseHelper<HospitalRole>.MakeResponseSuccess(rol);
                 
             }
             catch (Exception ex)
             {
-                return ResponseHelper<Rol>.MakeResponseFail(ex);
+                return ResponseHelper<HospitalRole>.MakeResponseFail(ex);
             }
         }
 
-        public async Task<Response<Rol>> EditAsync(Rol model)
+        public async Task<Response<HospitalRole>> EditAsync(HospitalRole model)
         {
             try
             {
-                _context.Roles.Update(model);
+                _context.HospitalRoles.Update(model);
                 await _context.SaveChangesAsync();
 
-                return ResponseHelper<Rol>.MakeResponseSuccess(model, "seccion actualizada con exito");
+                return ResponseHelper<HospitalRole>.MakeResponseSuccess(model, "seccion actualizada con exito");
 
             }
             catch (Exception ex)
             {
-                return ResponseHelper<Rol>.MakeResponseFail(ex);
+                return ResponseHelper<HospitalRole>.MakeResponseFail(ex);
             }
 
 
         }
 
-        public async Task<Response<Rol>> DeleteAsync(int Id)
+        public async Task<Response<HospitalRole>> DeleteAsync(int Id)
         {
-            Rol? rol = await _context.Roles.FirstOrDefaultAsync(a => a.Id == Id);
-            _context.Roles.Remove(rol);
+            HospitalRole? rol = await _context.HospitalRoles.FirstOrDefaultAsync(a => a.Id == Id);
+            _context.HospitalRoles.Remove(rol);
             await _context.SaveChangesAsync();
-            return ResponseHelper<Rol>.MakeResponseSuccess(rol, "sección actualizada con éxito");
+            return ResponseHelper<HospitalRole>.MakeResponseSuccess(rol, "sección actualizada con éxito");
         }
 
     }

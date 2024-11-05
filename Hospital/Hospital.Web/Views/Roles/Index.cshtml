@@ -1,4 +1,4 @@
-﻿@model PaginationResponse<Rol>
+﻿@model PaginationResponse<HospitalRole>
 @{
     ViewData["Title"] = "Roles";
 }
@@ -60,11 +60,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(Rol item in Model.List)
+                    @foreach(HospitalRole item in Model.List)
                     {
                         <tr>
 
-                            <td>@item.NameRol</td>
+                            <td>@item.Name</td>
                             <td>
                                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
                                 <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: contents;">

@@ -6,10 +6,12 @@ using Hospital.Web.DTOs;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Hospital.Web.Helpers;
 using Hospital.Web.Core.Pagination;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Hospital.Web.Controllers
 {
+    [Authorize]
     public class MedicalSpeController : Controller
     {
         private readonly IMedicalSpeServices _medicalspeService;
