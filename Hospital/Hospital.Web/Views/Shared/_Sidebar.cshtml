@@ -14,20 +14,12 @@
                 <i class="bi bi-menu-button-wide"></i><span>Información </span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
 
-            <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                <li>
-                    <li class="nav-item">
-                        <a class="nav-link collapsed" asp-controller="Roles" asp-action="Index"> <!-- Boton para llevar a la tabla Roles -->
-                            <i class="bi bi-grid"></i>
-                            <span>Roles</span>
-                        </a>
-                    </li>
-
-                
+            <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">                
                 <li class="nav-item">
-                    <a class="nav-link collapsed" asp-controller="Users" asp-action="Index">
-                        <!-- Boton para llevar a la tabla Usuarios -->
-                        <i class="bi bi-grid"></i>
+                    <a class="nav-link  @(ViewContext.RouteData.Values["Controller"].ToString() == "Users" ? "" : "collapsed")"
+                       asp-controller="Users"
+                       asp-action="Index">
+                        <i class="bi bi-person"></i>
                         <span>Usuarios</span>
                     </a>
                 </li>
@@ -84,16 +76,7 @@
                         <i class="bi bi-grid"></i>
                         <span>Historia Clínica</span>
                     </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link collapsed" asp-controller="RolPermissions" asp-action="Index">
-                        <!-- Botón para llevar a la tabla RolPermisos -->
-                        <i class="bi bi-grid"></i>
-                        <span>Permisos de los roles</span>
-                    </a>
-                </li>
-
+                </li>>
                 </li>
     </ul>
 

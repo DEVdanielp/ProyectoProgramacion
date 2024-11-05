@@ -10,6 +10,7 @@ namespace Hospital.Web.Helpers
 {
     public interface ICombosHelpers
     {
+        Task<IEnumerable<SelectListItem>> GetComboHospitalRolesAsync();
         public Task<IEnumerable<SelectListItem>> GetComboRols();
         public Task<IEnumerable<SelectListItem>> GetComboDoctor();
         public Task<IEnumerable<SelectListItem>> GetComboMedications();
@@ -28,6 +29,22 @@ namespace Hospital.Web.Helpers
             _context = context;
         }
 
+        public async Task<IEnumerable<SelectListItem>> GetComboHospitalRolesAsync()
+        {
+            List<SelectListItem> list = await _context.HospitalRoles.Select(r => new SelectListItem
+            {
+                Text = r.Name,
+                Value = r.Id.ToString()     
+            }).ToListAsync();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "[Seleccione un rol...]",
+                Value = "0"
+            });
+
+            return list;
+        }
         public async Task<IEnumerable<SelectListItem>> GetComboRols()
         {
             List<SelectListItem> list = await _context.HospitalRoles.Select(r => new SelectListItem

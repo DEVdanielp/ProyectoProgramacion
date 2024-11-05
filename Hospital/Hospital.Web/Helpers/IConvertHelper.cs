@@ -12,16 +12,45 @@ namespace Hospital.Web.Helpers
         public MedicalHistory ToMedicalHistory(MedicalHistoryDTO dto);
         public Appoiment ToAppoiment(AppoimentDTO dto);
         public Status ToStatus(StatusDTO dto);
-   }
 
-    public class ConvertHelper : IConverterHelper
+        public Task<UserDTO> ToUserDTOAsync(User user, bool isNew = true);
+    }
+
+    public class ConverterHelper : IConverterHelper
     {
+        private readonly ICombosHelpers _combosHelper;
+
+        public ConverterHelper(ICombosHelpers combosHelper)
+        {
+            _combosHelper = combosHelper;
+        }
         public User ToUser(UserDTO dto)
         {
             return new User
             {
+                Id = dto.Id.ToString(),
+                Document = dto.Document,
                 FirstName = dto.FirstName,
-                LastName = dto.LastName
+                LastName = dto.LastName,
+                Email = dto.Email,
+                UserName = dto.Email,
+                HospitalRoleId = dto.HospitalRoleId,
+                PhoneNumber = dto.PhoneNumber,
+            };
+        }
+
+        public async Task<UserDTO> ToUserDTOAsync(User user, bool isNew = true)
+        {
+            return new UserDTO
+            {
+                Id = isNew ? Guid.NewGuid() : Guid.Parse(user.Id),
+                Document = user.Document,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                HospitalRoles = await _combosHelper.GetComboHospitalRolesAsync(),
+                HospitalRoleId = user.HospitalRoleId,
+                PhoneNumber = user.PhoneNumber
             };
         }
 
@@ -76,5 +105,6 @@ namespace Hospital.Web.Helpers
                 StatusAppoiment = dto.StatusAppoiment
             };
         }
+       
     }
 }

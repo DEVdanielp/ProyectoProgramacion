@@ -1,11 +1,12 @@
 ﻿using Hospital.Web.Data.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace Hospital.Web.DTOs
 {
     public class UserDTO
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Display(Name = "Documento")]
         [MaxLength(32, ErrorMessage = "El campo {0} debe terner máximo {1} caractéres.")]
@@ -22,10 +23,19 @@ namespace Hospital.Web.DTOs
         [Required(ErrorMessage = "El campo {0} es requerido.")]
         public string LastName { get; set; } = null!;
 
+        [Display(Name = "Teléfono")]
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        public string PhoneNumber { get; set; } = null!;
+
+        [Display(Name = "Email")]
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        [EmailAddress(ErrorMessage = "El campo {0} deve ser un Email válido")]
+        public string Email { get; set; } = null!;
+
         public string FullName => $"{FirstName} {LastName}";
 
         public int HospitalRoleId { get; set; }
 
-        public HospitalRole HospitalRole { get; set; }
+        public IEnumerable<SelectListItem>? HospitalRoles { get; set; }
     }
 }

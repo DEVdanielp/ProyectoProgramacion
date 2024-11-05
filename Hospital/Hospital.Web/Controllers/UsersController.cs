@@ -1,135 +1,135 @@
-﻿//using Hospital.Web.Data.Entities;
-//using Hospital.Web.Services;
-//using Hospital.Web.Core;
-//using Microsoft.AspNetCore.Mvc;
-//using Hospital.Web.DTOs;
-//using Hospital.Web.Data;
-//using AspNetCoreHero.ToastNotification.Abstractions;
-//using Hospital.Web.Helpers;
+﻿using Hospital.Web.Data.Entities;
+using Hospital.Web.Services;
+using Hospital.Web.Core;
+using Microsoft.AspNetCore.Mvc;
+using Hospital.Web.DTOs;
+using Hospital.Web.Data;
+using AspNetCoreHero.ToastNotification.Abstractions;
+using Hospital.Web.Helpers;
+using Hospital.Web.Core.Pagination;
+using Microsoft.AspNetCore.Authorization;
 
 
 
-//namespace Hospital.Web.Controllers
-//{
-//    public class UsersController : Controller
-//    {
-//        private readonly IUsersServices _userService;
+namespace Hospital.Web.Controllers
+{
+    [Authorize]
+    public class UsersController : Controller
+    {
+        private readonly ICombosHelpers _combosHelper;
+        private readonly INotyfService _notifyService;
+        private readonly IUsersService _usersService;
+        private readonly IConverterHelper _converterHelper;
 
-//        private readonly INotyfService _notifyService;
+        public UsersController(ICombosHelpers combosHelper, INotyfService notifyService, IUsersService usersService, IConverterHelper converterHelper)
+        {
+            _combosHelper = combosHelper;
+            _notifyService = notifyService;
+            _usersService = usersService;
+            _converterHelper = converterHelper;
+        }
 
-//        private readonly ICombosHelpers _comboshelper;
-//        public UsersController(IUsersServices userService, INotyfService notifyService, ICombosHelpers comboshelper)
-//        {
-//            _userService = userService;
-//            _notifyService = notifyService;
-//            _comboshelper = comboshelper;
-//        }
+        [HttpGet]
+        public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
+                                               [FromQuery] int? Page,
+                                               [FromQuery] string? Filter)
+        {
+            PaginationRequest request = new PaginationRequest
+            {
+                RecordsPerPage = RecordsPerPage ?? 15,
+                Page = Page ?? 1,
+                Filter = Filter
+            };
+
+            Response<PaginationResponse<User>> response = await _usersService.GetListAsync(request);
+            return View(response.Result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            UserDTO dto = new UserDTO
+            {
+                HospitalRoles = await _combosHelper.GetComboHospitalRolesAsync(),
+            };
+
+            return View(dto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(UserDTO dto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    _notifyService.Error("Debe ajustar los errores de validación");
+                    dto.HospitalRoles = await _combosHelper.GetComboHospitalRolesAsync();
+                    return View(dto);
+                }
+
+                Response<User> response = await _usersService.CreateAsync(dto);
+
+                if (response.IsSuccess)
+                {
+                    _notifyService.Success(response.Message);
+                    return RedirectToAction(nameof(Index));
+                }
+
+                _notifyService.Error(response.Message);
+                dto.HospitalRoles = await _combosHelper.GetComboHospitalRolesAsync();
+                return View(dto);
+            }
+            catch (Exception ex)
+            {
+                dto.HospitalRoles = await _combosHelper.GetComboHospitalRolesAsync();
+                return View(dto);
+            }
+        }
 
 
-//        [HttpGet]
-//        public async Task<IActionResult> Index()
-//        {
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            if (Guid.Empty.Equals(id))
+            {
+                return NotFound();
+            }
 
-//            Response<List<User>> response = await _userService.GetListAsync();
-//            return View(response.Result);
+            User user = await _usersService.GetUserAsync(id);
 
-//        }
+            if (user is null)
+            {
+                return NotFound();
+            }
 
-//        [HttpGet]
-//        public async Task<IActionResult> Create()
-//        {
-//            UserDTO dto = new UserDTO
-//            {
-//                HospitalRole = await _comboshelper.GetComboRols()
-//            };
-//            return View(dto);
-//        }
+            UserDTO dto = await _converterHelper.ToUserDTOAsync(user, false);
 
-//        [HttpPost]
-//        public async Task<IActionResult> Create(UserDTO udto)
-//        {
-//            try
-//            {
-//                if (!ModelState.IsValid)
-//                {
-//                    _notifyService.Error("Revise los datos ingresados por favor");
-//                    udto.HospitalRole = await _comboshelper.GetComboRols();
-//                    return View(udto);
-//                }
+            return View(dto);
+        }
 
-//                Response<User> response = await _userService.CreateAsync(udto);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(UserDTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                _notifyService.Error("Debe ajustar los errores de validación");
+                dto.HospitalRoles = await _combosHelper.GetComboHospitalRolesAsync();
+                return View(dto);
+            }
 
-//                if (!response.IsSuccess)
-//                {
-//                    _notifyService.Error("Revise los datos ingresados por favor");
-//                    udto.HospitalRole = await _comboshelper.GetComboRols();
-//                    return View(udto);
-//                }
+            Response<User> response = await _usersService.UpdateUserAsync(dto);
 
-//                _notifyService.Success("Se ha creado el Usuario con Èxito");
-//                return RedirectToAction(nameof(Index));
+            if (response.IsSuccess)
+            {
+                _notifyService.Success(response.Message);
+                return RedirectToAction(nameof(Index));
+            }
 
-//            }
-//            catch (Exception ex)
-//            {
-//                return View(udto);
-//            }
-//        }
-
-//        [HttpGet]
-//        public async Task<IActionResult> Edit([FromRoute] int id)
-//        {
-//            Response<UserDTO> response = await _userService.GetOneAsycn(id);
-//            if (response.IsSuccess)
-//            {
-
-//                return View(response.Result);
-//            }
-//            _notifyService.Error("Revise los datos ingresados por favor");
-//            return RedirectToAction(nameof(Index));
-//        }
-
-//        [HttpPost]
-//        public async Task<IActionResult> Edit(UserDTO section)
-//        {
-//            try
-//            {
-//                if (!ModelState.IsValid)
-//                {
-//                    _notifyService.Error("Revise los datos ingresados por favor");
-//                    return View(section);
-//                }
-//                Response<UserDTO> response = await _userService.EditAsync(section);
-
-//                if (response.IsSuccess)
-//                {
-//                    _notifyService.Success("Se ha actualizado con Èxito");
-//                    return RedirectToAction(nameof(Index));
-//                }
-//                _notifyService.Error("Revise los datos ingresados por favor");
-//                return View(response);
-//            }
-//            catch (Exception ex)
-//            {
-//                return View(section);
-//            }
-//        }
-
-//        [HttpPost]
-//        public async Task<IActionResult> Delete([FromRoute] int id)
-//        {   //Este metodo redirecciona confirma la eliminacion
-//            try
-//            {
-//                _notifyService.Success("Se ha eliminado con Èxito");
-//                await _userService.DeleteAsync(id);
-//                return RedirectToAction(nameof(Index));
-
-//            }
-//            catch
-//            {
-//                return RedirectToAction(nameof(Index));
-//            }
-
-//        }
-//    }
-//}
+            _notifyService.Error(response.Message);
+            dto.HospitalRoles = await _combosHelper.GetComboHospitalRolesAsync();
+            return View(dto);
+        }
+    }
+}

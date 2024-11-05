@@ -79,7 +79,7 @@ namespace Hospital.Web
 
 
             //Helpers
-            builder.Services.AddScoped<IConverterHelper, ConvertHelper>();
+            builder.Services.AddScoped<IConverterHelper, ConverterHelper>();
             builder.Services.AddScoped<ICombosHelpers, CombosHelper>();
         }
 
