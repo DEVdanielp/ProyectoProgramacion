@@ -34,7 +34,7 @@ namespace Hospital.Web.Controllers
                 Filter = filter 
             };
 
-            Response<PaginationResponse<Rol>> response = await _rolesService.GetListAsync(request);
+            Response<PaginationResponse<HospitalRole>> response = await _rolesService.GetListAsync(request);
             return View(response.Result);
         }
 
@@ -45,7 +45,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Rol rol)
+        public async Task<IActionResult> Create(HospitalRole rol)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace Hospital.Web.Controllers
                     return View(rol);
                 }
 
-                Response<Rol> response = await _rolesService.CreateAsync(rol);
+                Response<HospitalRole> response = await _rolesService.CreateAsync(rol);
 
                 if (response.IsSuccess)
                 {
@@ -76,7 +76,7 @@ namespace Hospital.Web.Controllers
         public async Task<IActionResult> Edit([FromRoute] int Id)
         {
 
-            Response<Rol> response = await _rolesService.GetOneAsync(Id);
+            Response<HospitalRole> response = await _rolesService.GetOneAsync(Id);
 
             if (response.IsSuccess)
             {
@@ -89,7 +89,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Rol rol)
+        public async Task<IActionResult> Edit(HospitalRole rol)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace Hospital.Web.Controllers
                     return View(rol);
                 }
 
-                Response<Rol> response = await _rolesService.EditAsync(rol);
+                Response<HospitalRole> response = await _rolesService.EditAsync(rol);
 
                 if (response.IsSuccess)
                 {

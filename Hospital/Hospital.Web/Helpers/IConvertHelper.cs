@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Web.Helpers
 {
-    public interface IConvertHelper
+    public interface IConverterHelper
     {
         public User ToUser(UserDTO dto);
         public MedicalSpe ToMedicalSpe(MedicalSpeDTO dto);
@@ -12,21 +12,16 @@ namespace Hospital.Web.Helpers
         public MedicalHistory ToMedicalHistory(MedicalHistoryDTO dto);
         public Appoiment ToAppoiment(AppoimentDTO dto);
         public Status ToStatus(StatusDTO dto);
-        public RolesPermission ToRP(RolPermissionsDTO dto);
    }
 
-    public class ConvertHelper : IConvertHelper
+    public class ConvertHelper : IConverterHelper
     {
         public User ToUser(UserDTO dto)
         {
             return new User
             {
                 FirstName = dto.FirstName,
-                LastName = dto.LastName,
-                Birth = dto.Birth,
-                UserName = dto.UserName,
-                Password = dto.Password,
-                RolId = dto.RolId,
+                LastName = dto.LastName
             };
         }
 
@@ -79,15 +74,6 @@ namespace Hospital.Web.Helpers
             {
                 AppoimentId = dto.AppoimentId,
                 StatusAppoiment = dto.StatusAppoiment
-            };
-        }
-
-        public RolesPermission ToRP(RolPermissionsDTO dto)
-        {
-            return new RolesPermission
-            {
-                PermisosId = dto.PermisosId,
-                rolId = dto.rolId
             };
         }
     }

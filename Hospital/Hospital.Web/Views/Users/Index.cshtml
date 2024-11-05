@@ -46,9 +46,8 @@
                         <tr>
                             <td>@item.Id</td>
                             <td>@item.FirstName @item.LastName</td>
-                            <td>@item.Birth</td>
                             <td>@item.UserName</td>
-                            <td>@item.Rol.NameRol</td>
+                            <td>@item.HospitalRole.Name</td>
                             <td>
                                 <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-fill"></i></a>
                                 <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: contents">
