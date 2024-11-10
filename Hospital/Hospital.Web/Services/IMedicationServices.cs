@@ -4,12 +4,13 @@ using Hospital.Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hospital.Web.Core;
+using Hospital.Web.Core.Pagination;
 
 namespace Hospital.Web.Services
 {
     public interface IMedicationsServices
     {
-        public Task<Response<List<Medication>>> GetListAsync();
+        public Task<Response<PaginationResponse<Medication>>> GetListAsync(PaginationRequest request);
         public Task<Response<Medication>> GetAsync(int Id);
         public Task<Response<Medication>> EditAsync(Medication model);
         public Task<Response<Medication>> CreateAsync(Medication model);
@@ -51,19 +52,36 @@ namespace Hospital.Web.Services
             }
         }
 
-        public async Task<Response<List<Medication>>> GetListAsync()
+        public async Task<Response<PaginationResponse<Medication>>> GetListAsync(PaginationRequest request)
         {
             try
             {
-                List<Medication> medications = await _context.Medications.ToListAsync();
-                return ResponseHelper<List<Medication>>.MakeResponseSuccess(medications);
+                IQueryable<Medication> query = _context.Medications.AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(request.Filter))
+                {
+                    query = query.Where(s => s.CommercialName.ToLower().Contains(request.Filter.ToLower()));
+                }
+
+                PagedList<Medication> list = await PagedList<Medication>.ToPagedListAsync(query, request);
+
+                PaginationResponse<Medication> result = new PaginationResponse<Medication>
+                {
+                    List = list,
+                    TotalCount = list.TotalCount,
+                    RecordsPerPage = list.RecordsPerPage,
+                    CurrentPage = list.CurrentPage,
+                    TotalPages = list.TotalPages,
+                    Filter = request.Filter
+                };
+
+                return ResponseHelper<PaginationResponse<Medication>>.MakeResponseSuccess(result, "Especialidad Medica obtenidas con exito");
             }
             catch (Exception ex)
             {
-                return ResponseHelper<List<Medication>>.MakeResponseFail(ex);
+                return ResponseHelper<PaginationResponse<Medication>>.MakeResponseFail(ex);
             }
         }
-
         public async Task<Response<Medication>> GetAsync(int Id)
         {
             try

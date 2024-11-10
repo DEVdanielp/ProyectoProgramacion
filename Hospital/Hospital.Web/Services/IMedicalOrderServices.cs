@@ -7,12 +7,13 @@ using Hospital.Web.Core;
 using Hospital.Web.DTOs;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Humanizer;
+using Hospital.Web.Core.Pagination;
 
 namespace Hospital.Web.Services
 {
     public interface IMedicalOrdersServices
     {
-        public Task<Response<List<MedicalOrder>>> GetListAsync();
+        public Task<Response<PaginationResponse<MedicalOrder>>> GetListAsync(PaginationRequest request);
         public Task<Response<MedicalOrder>> GetAsync(int Id);
         public Task<Response<MedicalOrderDTO>> EditAsync(MedicalOrderDTO model);
         public Task<Response<MedicalOrderDTO>> CreateAsync(MedicalOrderDTO model);
@@ -53,16 +54,37 @@ namespace Hospital.Web.Services
             }
         }
 
-        public async Task<Response<List<MedicalOrder>>> GetListAsync()
+        public async Task<Response<PaginationResponse<MedicalOrder>>> GetListAsync(PaginationRequest request)
         {
             try
             {
-                List<MedicalOrder> medicalOrders = await _context.MedicalOrders.ToListAsync();
-                return ResponseHelper<List<MedicalOrder>>.MakeResponseSuccess(medicalOrders);
+                IQueryable<MedicalOrder> query = _context.MedicalOrders.AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(request.Filter))
+                {
+                    if (int.TryParse(request.Filter, out int filterId))
+                    {
+                        query = query.Where(s => s.Id == filterId);
+                    }
+                }
+
+                PagedList<MedicalOrder> list = await PagedList<MedicalOrder>.ToPagedListAsync(query, request);
+
+                PaginationResponse<MedicalOrder> result = new PaginationResponse<MedicalOrder>
+                {
+                    List = list,
+                    TotalCount = list.TotalCount,
+                    RecordsPerPage = list.RecordsPerPage,
+                    CurrentPage = list.CurrentPage,
+                    TotalPages = list.TotalPages,
+                    Filter = request.Filter
+                };
+
+                return ResponseHelper<PaginationResponse<MedicalOrder>>.MakeResponseSuccess(result, "Especialidad Medica obtenidas con exito");
             }
             catch (Exception ex)
             {
-                return ResponseHelper<List<MedicalOrder>>.MakeResponseFail(ex);
+                return ResponseHelper<PaginationResponse<MedicalOrder>>.MakeResponseFail(ex);
             }
         }
 

@@ -16,6 +16,7 @@ namespace Hospital.Web.Data.Seeders
         {
             await new MedicalSpesSeeder(_context).SeedAsync();
             await new PermissionsSeeder(_context).SeedAsync();
+            await new MedicationSeeder(_context).SeedAsync();
             await new UserRolesSeeder(_context, _usersService).SeedAsync();
 
         }
