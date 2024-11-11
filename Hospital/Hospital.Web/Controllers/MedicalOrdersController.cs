@@ -5,12 +5,14 @@ using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
 using Hospital.Web.Helpers;
 using Hospital.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Web.Controllers
 {
+    [Authorize]
     public class MedicalOrdersController : Controller
     {
         readonly IMedicalOrdersServices _medicalOrdersService;

@@ -20,6 +20,9 @@ namespace Hospital.Web
                 Configuration.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection"));
             });
 
+            //
+            builder.Services.AddHttpContextAccessor();  
+
             //Se instancian los servicios 
             AddServices(builder);
 

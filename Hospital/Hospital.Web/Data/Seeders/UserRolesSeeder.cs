@@ -52,7 +52,7 @@ namespace Hospital.Web.Data.Seeders
 
             if (user is null)
             {
-                HospitalRole contentManagerRole = _context.HospitalRoles.FirstOrDefault(r => r.Name == "Gestor de contenido");
+                HospitalRole userManagerRole = _context.HospitalRoles.FirstOrDefault(r => r.Name == "Gestor de usuarios");
 
                 user = new User
                 {
@@ -62,7 +62,7 @@ namespace Hospital.Web.Data.Seeders
                     PhoneNumber = "31111111",
                     UserName = "sinNombre@yupimail.com",
                     Document = "22222",
-                    HospitalRole = contentManagerRole
+                    HospitalRole = userManagerRole
                 };
 
                 await _usersService.AddUserAsync(user, "1234");
@@ -87,6 +87,14 @@ namespace Hospital.Web.Data.Seeders
             {
                 HospitalRole role = new HospitalRole { Name = "Gestor de usuarios" };
                 await _context.HospitalRoles.AddAsync(role);
+
+                List<Permission> permissions = await _context.Permissions.Where(p => p.Module == "Usuarios").ToListAsync();
+                
+                foreach(Permission permission in permissions)
+                {
+                    await _context.RolePermissions.AddAsync(new RolePermission { Permission = permission, Role = role });
+                }
+
                 await _context.SaveChangesAsync();
             }
         }
@@ -99,6 +107,12 @@ namespace Hospital.Web.Data.Seeders
             {
                 HospitalRole role = new HospitalRole { Name = "Gestor de medicamentos" };
                 await _context.HospitalRoles.AddAsync(role);
+                List<Permission> permissions = await _context.Permissions.Where(p => p.Module == "Medicamentos").ToListAsync();
+
+                foreach (Permission permission in permissions)
+                {
+                    await _context.RolePermissions.AddAsync(new RolePermission { Permission = permission, Role = role });
+                }
                 await _context.SaveChangesAsync();
             }
         }

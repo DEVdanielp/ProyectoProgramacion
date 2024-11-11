@@ -31,7 +31,11 @@ namespace Hospital.Web.Data.Seeders
 
             foreach (Medication medication in Medications)
             {
-                bool exists = await _context.Medications.AnyAsync(s => s.CommercialName == medication.CommercialName && s.ScientificName == medication.ScientificName && s.Group == medication.Group && s.Description == medication.Description && s.Laboratory == medication.Laboratory);
+                bool exists = await _context.Medications.AnyAsync(s => s.CommercialName == medication.CommercialName && 
+                                                                       s.ScientificName == medication.ScientificName && 
+                                                                       s.Group == medication.Group && 
+                                                                       s.Description == medication.Description &&
+                                                                       s.Laboratory == medication.Laboratory);
 
                 if (!exists)
                 {

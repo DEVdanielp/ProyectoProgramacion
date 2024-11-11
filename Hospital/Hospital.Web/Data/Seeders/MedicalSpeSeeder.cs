@@ -25,9 +25,9 @@ namespace Hospital.Web.Data.Seeders
 
             foreach (MedicalSpe MedicalSpe in MedicalSpes)
             {
-                bool exists = await _context.MedicalSpe.AnyAsync( s => s.Name == MedicalSpe.Name);
+                bool exists = await _context.MedicalSpe.AnyAsync(s => s.Name == MedicalSpe.Name);
 
-                if (!exists) 
+                if (!exists)
                 {
                     await _context.AddAsync(MedicalSpe);
                 }
