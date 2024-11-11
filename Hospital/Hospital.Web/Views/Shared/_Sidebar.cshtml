@@ -1,106 +1,105 @@
-﻿<aside id="sidebar" class="sidebar">
+﻿@inject Hospital.Web.Services.IUsersService _usersService
 
+<aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
-
         <li class="nav-item">
             <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" ? "" : "collapsed")"
-                    asp-action="Index"
-                    asp-controller="Home">
+               asp-action="Index"
+               asp-controller="Home">
                 <i class="bi bi-grid"></i>
                 <span>Inicio</span>
             </a>
         </li><!-- End Dashboard Nav -->
 
-        <li class="nav-item"> <!-- Navegador de tablas -->
+        <li class="nav-item">
+            <!-- Navegador de tablas -->
             <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-menu-button-wide"></i><span>Información </span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
 
             <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                <li>
-                    <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Roles" ? "" : "collapsed")" 
-                            asp-controller="Roles" 
-                            asp-action="Index"> <!-- Boton para llevar a la tabla Roles -->
-                            <i class="bi bi-grid"></i>
-                            <span>Roles</span>
-                        </a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Roles" ? "" : "collapsed")"
+                       asp-controller="Roles"
+                       asp-action="Index">
+                        <i class="bi bi-grid"></i>
+                        <span>Roles</span>
+                    </a>
+                </li>
 
-                
                 <li class="nav-item">
                     <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Users" ? "" : "collapsed")"
-                        asp-controller="Users" 
-                        asp-action="Index">
-                        <!-- Boton para llevar a la tabla Usuarios -->
+                       asp-controller="Users"
+                       asp-action="Index">
                         <i class="bi bi-grid"></i>
                         <span>Usuarios</span>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "MedicalSpe" ? "" : "collapsed")" 
-                        asp-controller="MedicalSpe" 
-                        asp-action="Index">
-                        <!-- Botón para llevar a la tabla Especialidad Médico -->
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "MedicalSpe" ? "" : "collapsed")"
+                       asp-controller="MedicalSpe"
+                       asp-action="Index">
                         <i class="bi bi-grid"></i>
                         <span>Especialidad Médica</span>
                     </a>
                 </li>
 
-                <!-- Botón para llevar a la tabla Citas :) -->
                 <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Appoiments" ? "" : "collapsed")" 
-                        asp-controller="Appoiments" 
-                        asp-action="Index">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Appoiments" ? "" : "collapsed")"
+                       asp-controller="Appoiments"
+                       asp-action="Index">
                         <i class="bi bi-grid"></i>
                         <span>Citas</span>
                     </a>
                 </li>
-                <!-- Botón para llevar a la tabla Estado de las citas :) -->
+
                 <li class="nav-item">
                     <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Status" ? "" : "collapsed")"
-                        asp-controller="Status" 
-                        asp-action="Index">
+                       asp-controller="Status"
+                       asp-action="Index">
                         <i class="bi bi-grid"></i>
                         <span>Estado de las citas</span>
                     </a>
                 </li>
 
-                <!-- Botón para llevar a la tabla Medications -->
-                <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Medications" ? "" : "collapsed")"
-                        asp-controller="Medications" 
+                @if (await _usersService.CurrentUserIsAuthorizedAsync("showMedication", "Medicamentos"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Medications" ? "" : "collapsed")"
+                        asp-controller="Medications"
                         asp-action="Index">
-                        <i class="bi bi-grid"></i>
-                        <span>Medicamentos</span>
-                    </a>
-                </li>
-                <!-- Botón para llevar a la tabla Orden Medica -->
-                <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "MedicalOrders" ? "" : "collapsed")"
-                        asp-controller="MedicalOrders" 
+                            <i class="bi bi-grid"></i>
+                            <span>Medicamentos</span>
+                        </a>
+                    </li>
+                }
+
+                @if (await _usersService.CurrentUserIsAuthorizedAsync("showMedicalOrder", "Órdenes Médicas"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "MedicalOrders" ? "" : "collapsed")"
+                        asp-controller="MedicalOrders"
                         asp-action="Index">
-                        <i class="bi bi-grid"></i>
-                        <span>Ordenes Médicas</span>
-                    </a>
-                <li>
+                            <i class="bi bi-grid"></i>
+                            <span>Órdenes Médicas</span>
+                        </a>
+                    </li>
+                }
+
                 <li class="nav-item">
                     <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Permissions" ? "" : "collapsed")"
-                        asp-controller="Permissions" 
-                        asp-action="Index">
-                        <!-- Botón para llevar a la tabla Permisos -->
+                       asp-controller="Permissions"
+                       asp-action="Index">
                         <i class="bi bi-grid"></i>
                         <span>Permisos</span>
                     </a>
                 </li>
 
-                <li>
                 <li class="nav-item">
                     <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "MedicalHistory" ? "" : "collapsed")"
-                        asp-controller="MedicalHistory" 
-                        asp-action="Index">
-                        <!-- Botón para llevar a la tabla historial médico -->
+                       asp-controller="MedicalHistory"
+                       asp-action="Index">
                         <i class="bi bi-grid"></i>
                         <span>Historia Clínica</span>
                     </a>
@@ -108,15 +107,13 @@
 
                 <li class="nav-item">
                     <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "RolPermissions" ? "" : "collapsed")"
-                        asp-controller="RolPermissions" 
-                        asp-action="Index">
-                        <!-- Botón para llevar a la tabla RolPermisos -->
+                       asp-controller="RolPermissions"
+                       asp-action="Index">
                         <i class="bi bi-grid"></i>
                         <span>Permisos de los roles</span>
                     </a>
                 </li>
-
-                </li>
+            </ul>
+        </li>
     </ul>
-
-</aside><!-- End Sidebar-->
+</aside><!-- End Sidebar -->

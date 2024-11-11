@@ -1,5 +1,6 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Hospital.Web.Core;
+using Hospital.Web.Core.Attributes;
 using Hospital.Web.Core.Pagination;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
@@ -25,6 +26,7 @@ namespace Hospital.Web.Controllers
             _comboshelper = comboshelper;
         }
         [HttpGet]
+        [CustomAuthorize(permission: "showMedicalOrder", module: "Órdenes Médicas")]
         public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
                                                [FromQuery] int? Page,
                                                [FromQuery] string? Filter)
@@ -40,6 +42,7 @@ namespace Hospital.Web.Controllers
             return View(response.Result);
         }
         [HttpGet]
+        [CustomAuthorize(permission: "createMedicalOrder", module: "Órdenes Médicas")]
         public async Task<IActionResult> Create()
         {
             MedicalOrderDTO dto = new MedicalOrderDTO
@@ -50,6 +53,7 @@ namespace Hospital.Web.Controllers
             return View(dto);
         }
         [HttpPost]
+        [CustomAuthorize(permission: "createMedicalOrder", module: "Órdenes Médicas")]
         public async Task<IActionResult> Create(MedicalOrderDTO medicalOrderdto)
         {
             try
@@ -73,6 +77,7 @@ namespace Hospital.Web.Controllers
 
 
         [HttpGet]
+        [CustomAuthorize(permission: "updateMedicalOrder", module: "Órdenes Médicas")]
         public async Task<IActionResult> Edit([FromRoute] int id)
         {
             try
@@ -90,6 +95,7 @@ namespace Hospital.Web.Controllers
             }
         }
         [HttpPost]
+        [CustomAuthorize(permission: "updateMedicalOrder", module: "Órdenes Médicas")]
         public async Task<IActionResult> Edit(MedicalOrderDTO medicalorderdto)
         {
             try
@@ -111,6 +117,8 @@ namespace Hospital.Web.Controllers
             }
 
         }
+        [HttpPost]
+        [CustomAuthorize(permission: "deleteMedicalOrder", module: "Órdenes Médicas")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             try

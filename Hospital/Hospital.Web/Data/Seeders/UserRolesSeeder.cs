@@ -107,7 +107,7 @@ namespace Hospital.Web.Data.Seeders
             {
                 HospitalRole role = new HospitalRole { Name = "Gestor de medicamentos" };
                 await _context.HospitalRoles.AddAsync(role);
-                List<Permission> permissions = await _context.Permissions.Where(p => p.Module == "Medicamentos").ToListAsync();
+                List<Permission> permissions = await _context.Permissions.Where(p => p.Module == "Medicamentos" || p.Module== "Órdenes Médicas").ToListAsync();
 
                 foreach (Permission permission in permissions)
                 {
