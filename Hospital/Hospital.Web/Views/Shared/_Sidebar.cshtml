@@ -26,25 +26,28 @@
                         <span>Roles</span>
                     </a>
                 </li>
-
-                <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Users" ? "" : "collapsed")"
-                       asp-controller="Users"
-                       asp-action="Index">
-                        <i class="bi bi-grid"></i>
-                        <span>Usuarios</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "MedicalSpe" ? "" : "collapsed")"
-                       asp-controller="MedicalSpe"
-                       asp-action="Index">
-                        <i class="bi bi-grid"></i>
-                        <span>Especialidad Médica</span>
-                    </a>
-                </li>
-
+                @if (await _usersService.CurrentUserIsAuthorizedAsync("showUser", "Usuarios"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Users" ? "" : "collapsed")"
+                           asp-controller="Users"
+                           asp-action="Index">
+                            <i class="bi bi-grid"></i>
+                            <span>Usuarios</span>
+                        </a>
+                    </li>
+                }
+                @if (await _usersService.CurrentUserIsAuthorizedAsync("showMedicalSpecialization", "Especialidades Medicas"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "MedicalSpe" ? "" : "collapsed")"
+                           asp-controller="MedicalSpe"
+                           asp-action="Index">
+                            <i class="bi bi-grid"></i>
+                            <span>Especialidad Médica</span>
+                        </a>
+                    </li>
+                }
                 <li class="nav-item">
                     <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Appoiments" ? "" : "collapsed")"
                        asp-controller="Appoiments"
