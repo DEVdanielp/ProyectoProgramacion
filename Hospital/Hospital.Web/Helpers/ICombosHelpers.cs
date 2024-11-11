@@ -69,7 +69,7 @@ namespace Hospital.Web.Helpers
             {
 
                 Text = $"{u.FirstName} {u.LastName}",
-                Value = u.Id.ToString()
+                Value = u.Document.ToString()
             }).ToListAsync();
 
             list.Insert(0, new SelectListItem
@@ -87,7 +87,7 @@ namespace Hospital.Web.Helpers
             {
 
                 Text = $"{u.FirstName} {u.LastName}",
-                Value = u.Id.ToString()
+                Value = u.Document.ToString()
             }).ToListAsync();
 
             list.Insert(0, new SelectListItem

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241102234824_AddSquema")]
-    partial class AddSquema
+    [Migration("20241111213424_aa")]
+    partial class aa
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

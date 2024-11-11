@@ -52,7 +52,7 @@ namespace Hospital.Web.Data.Seeders
 
             if (user is null)
             {
-                HospitalRole contentManagerRole = _context.HospitalRoles.FirstOrDefault(r => r.Name == "Gestor de contenido");
+                HospitalRole contentManagerRole = _context.HospitalRoles.FirstOrDefault(r => r.Name == "Gestor de usuarios");
 
                 user = new User
                 {
