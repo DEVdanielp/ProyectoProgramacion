@@ -1,6 +1,9 @@
-﻿using Hospital.Web.Data.Entities;
+﻿using Hospital.Web.Data;
+using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
+using Humanizer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Hospital.Web.Helpers
 {
@@ -14,11 +17,14 @@ namespace Hospital.Web.Helpers
         public Status ToStatus(StatusDTO dto);
 
         public Task<UserDTO> ToUserDTOAsync(User user, bool isNew = true);
+        public Task<HospitalRoleDTO> ToRoleDTOAsync(object role);
+        HospitalRole ToRole(HospitalRoleDTO dto);
     }
 
     public class ConverterHelper : IConverterHelper
     {
         private readonly ICombosHelpers _combosHelper;
+        private readonly DataContext _context;
 
         public ConverterHelper(ICombosHelpers combosHelper)
         {
@@ -105,6 +111,41 @@ namespace Hospital.Web.Helpers
                 StatusAppoiment = dto.StatusAppoiment
             };
         }
-       
+
+        public async Task<HospitalRoleDTO> ToRoleDTOAsync(HospitalRole role)
+        {
+            List<PermissionForDTO> permissions = await _context.Permissions.Select(p => new PermissionForDTO
+
+            {
+                Id = p.Id,  
+                Name = p.Name,
+                Description = p.Description,
+                Module = p.Module,
+                Selected = _context.RolePermissions.Any(rp => rp.PermissionId == p.Id && rp.RoleId == role.Id)
+            }).ToListAsync();
+
+              
+            return new HospitalRoleDTO
+            {
+                Id = role.Id,
+                Name = role.Name,
+                Permissions = permissions,
+            };
+        }
+
+        public Task<HospitalRoleDTO> ToRoleDTOAsync(object role)
+        {
+            throw new NotImplementedException();
+        }
+
+        public HospitalRole ToRole(HospitalRoleDTO dto)
+        {
+            return new  HospitalRole
+                {
+                    Id = dto.Id,
+                    Name= dto.Name,
+
+                };
+        }
     }
 }

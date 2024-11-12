@@ -1,4 +1,5 @@
 ﻿using Hospital.Web.Core;
+using Hospital.Web.Data.Entities;
 
 namespace Hospital.Web.Helpers
 {
@@ -38,6 +39,11 @@ namespace Hospital.Web.Helpers
                 IsSuccess = false,
                 Message = message
             };
+        }
+
+        internal static Response<IEnumerable<Permission>> MakeResponseSuccess(IEnumerable<Permission> permissions)
+        {
+            throw new NotImplementedException();
         }
     }
 }
