@@ -18,18 +18,18 @@ namespace Hospital.Web.Services
     {
         public Task<Response<PaginationResponse<HospitalRole>>> GetListAsync(PaginationRequest request);
         public Task<Response<HospitalRoleDTO>> GetOneAsync(int Id);
-        public Task<Response<HospitalRole>> EditAsync(HospitalRole model);
+        //public Task<Response<HospitalRole>> EditAsync(HospitalRole model);
         public Task<Response<HospitalRole>> CreateAsync(HospitalRoleDTO dto);
-        public Task<Response<HospitalRole>> DeleteAsync(int Id);
+        //public Task<Response<HospitalRole>> DeleteAsync(int Id);
         public Task<Response<IEnumerable<Permission>>> GetPermissionsAsync();
     }
 
-    public class RolService : IRolesServices
+    public class RolServices : IRolesServices
     {
         private readonly DataContext _context;
         private readonly IConverterHelper _converterHelper;
 
-        public RolService(DataContext context)
+        public RolServices(DataContext context)
         {
             _context = context;
         }
@@ -53,7 +53,8 @@ namespace Hospital.Web.Services
                         permissionsIds = JsonConvert.DeserializeObject<List<int>>(dto.PermissionIds);
                     }
 
-                    foreach (int permissionsId in permissionsIds) {
+                    foreach (int permissionsId in permissionsIds)
+                    {
                         RolePermission rolePermission = new RolePermission
                         {
                             RoleId = role.Id,
@@ -74,105 +75,96 @@ namespace Hospital.Web.Services
                     return ResponseHelper<HospitalRole>.MakeResponseFail(ex);
                 }
             }
-
-
-            public async Task<Response<PaginationResponse<HospitalRole>>> GetListAsync(PaginationRequest request)
-            {
-                try
-                {
-                    IQueryable<HospitalRole> query = _context.HospitalRoles.AsQueryable();
-
-                    if (!string.IsNullOrWhiteSpace(request.Filter))
-                    {
-                        query = query.Where(r => r.Name.ToLower().Contains(request.Filter.ToLower()));
-                    }
-
-                    PagedList<HospitalRole> list = await PagedList<HospitalRole>.ToPagedListAsync(query, request);
-
-                    PaginationResponse<HospitalRole> result = new PaginationResponse<HospitalRole>
-                    {
-                        List = list,
-                        TotalCount = list.Count,
-                        RecordsPerPage = list.RecordsPerPage,
-                        CurrentPage = list.CurrentPage,
-                        TotalPages = list.TotalPages,
-                        Filter = request.Filter
-                    };
-
-                    return ResponseHelper<PaginationResponse<HospitalRole>>.MakeResponseSuccess(result, "Roles obtenidos con exito");
-
-                }
-                catch (Exception ex) {
-                    return ResponseHelper<PaginationResponse<HospitalRole>>.MakeResponseFail(ex);
-                }
-            }
-
-
-
-            public async Task<Response<HospitalRole>> EditAsync(HospitalRole model)
-            {
-                try
-                {
-                    _context.HospitalRoles.Update(model);
-                    await _context.SaveChangesAsync();
-
-                    return ResponseHelper<HospitalRole>.MakeResponseSuccess(model, "seccion actualizada con exito");
-
-                }
-                catch (Exception ex)
-                {
-                    return ResponseHelper<HospitalRole>.MakeResponseFail(ex);
-                }
-
-
-            }
-
-            public async Task<Response<HospitalRole>> DeleteAsync(int Id)
-            {
-                HospitalRole? rol = await _context.HospitalRoles.FirstOrDefaultAsync(a => a.Id == Id);
-                _context.HospitalRoles.Remove(rol);
-                await _context.SaveChangesAsync();
-                return ResponseHelper<HospitalRole>.MakeResponseSuccess(rol, "sección actualizada con éxito");
-            }
-
-            public async Task<Response<HospitalRoleDTO>> GetOneAsync(int Id)
-            {
-                try
-                {
-                    HospitalRole? rol = await _context.HospitalRoles.FirstOrDefaultAsync(r => r.Id == Id);
-
-                    if (rol is null)
-                    {
-                        return ResponseHelper<HospitalRoleDTO>.MakeResponseFail("El id indicado no existe");
-                    }
-
-
-                    return ResponseHelper<HospitalRoleDTO>.MakeResponseSuccess(await _converterHelper.ToRoleDTOAsync(rol));
-
-                }
-                catch (Exception ex)
-                {
-                    return ResponseHelper<HospitalRoleDTO>.MakeResponseFail(ex);
-                }
-            }
-
-
         }
 
-        public Task<Response<HospitalRole>> DeleteAsync(int Id)
+        public async Task<Response<PaginationResponse<HospitalRole>>> GetListAsync(PaginationRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                IQueryable<HospitalRole> query = _context.HospitalRoles.AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(request.Filter))
+                {
+                    query = query.Where(r => r.Name.ToLower().Contains(request.Filter.ToLower()));
+                }
+
+                PagedList<HospitalRole> list = await PagedList<HospitalRole>.ToPagedListAsync(query, request);
+
+                PaginationResponse<HospitalRole> result = new PaginationResponse<HospitalRole>
+                {
+                    List = list,
+                    TotalCount = list.Count,
+                    RecordsPerPage = list.RecordsPerPage,
+                    CurrentPage = list.CurrentPage,
+                    TotalPages = list.TotalPages,
+                    Filter = request.Filter
+                };
+
+                return ResponseHelper<PaginationResponse<HospitalRole>>.MakeResponseSuccess(result, "Roles obtenidos con exito");
+
+            }
+            catch (Exception ex)
+            {
+                return ResponseHelper<PaginationResponse<HospitalRole>>.MakeResponseFail(ex);
+            }
         }
 
-        public Task<Response<HospitalRole>> EditAsync(HospitalRole model)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<Response<PaginationResponse<HospitalRole>>> GetListAsync(PaginationRequest request)
-        {
-            throw new NotImplementedException();
-        }
+
+
+
+
+
+        //public async Task<Response<HospitalRole>> EditAsync(HospitalRole model)
+        //{
+        //    try
+        //    {
+        //        _context.HospitalRoles.Update(model);
+        //        await _context.SaveChangesAsync();
+
+        //        return ResponseHelper<HospitalRole>.MakeResponseSuccess(model, "seccion actualizada con exito");
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return ResponseHelper<HospitalRole>.MakeResponseFail(ex);
+        //    }
+
+
+        //}
+
+        //public async Task<Response<HospitalRole>> DeleteAsync(int Id)
+        //{
+        //    HospitalRole? rol = await _context.HospitalRoles.FirstOrDefaultAsync(a => a.Id == Id);
+        //    _context.HospitalRoles.Remove(rol);
+        //    await _context.SaveChangesAsync();
+        //    return ResponseHelper<HospitalRole>.MakeResponseSuccess(rol, "sección actualizada con éxito");
+        //}
+
+        //public async Task<Response<HospitalRoleDTO>> GetOneAsync(int Id)
+        //{
+        //    try
+        //    {
+        //        HospitalRole? rol = await _context.HospitalRoles.FirstOrDefaultAsync(r => r.Id == Id);
+
+        //        if (rol is null)
+        //        {
+        //            return ResponseHelper<HospitalRoleDTO>.MakeResponseFail("El id indicado no existe");
+        //        }
+
+
+        //        return ResponseHelper<HospitalRoleDTO>.MakeResponseSuccess(await _converterHelper.ToRoleDTOAsync(rol));
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return ResponseHelper<HospitalRoleDTO>.MakeResponseFail(ex);
+        //    }
+        //}
+
+
+
+
 
         public Task<Response<HospitalRoleDTO>> GetOneAsync(int Id)
         {
@@ -185,7 +177,7 @@ namespace Hospital.Web.Services
             {
                 IEnumerable<Permission> permissions = await _context.Permissions.ToListAsync();
 
-                return ResponseHelper<Permission>.MakeResponseSuccess(permissions);
+                return ResponseHelper<IEnumerable<Permission>>.MakeResponseSuccess(permissions);
             }
             catch (Exception ex)
             {

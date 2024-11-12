@@ -86,9 +86,9 @@ namespace Hospital.Web.Data.Seeders
 
 
         private List<Permission> RolesPermissions()
-                {
-                    {
-                        return new List<Permission> {
+        {
+            {
+                return new List<Permission> {
 
                 new Permission { Name = "showRoles", Description = " Ver Roles", Module = "Roles"},
                 new Permission { Name = "createRoles", Description = "Crear Roles", Module = "Roles" },
@@ -100,12 +100,11 @@ namespace Hospital.Web.Data.Seeders
 
 
 
-                    }
-
-
-
-                }
             }
-        }
 
+
+
+        }
+    }
+}
 

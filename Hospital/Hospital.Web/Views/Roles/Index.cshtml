@@ -1,4 +1,6 @@
-﻿@model PaginationResponse<HospitalRole>
+﻿
+@model PaginationResponse<HospitalRole>
+@inject Hospital.Web.Services.IUsersService _usersService
 @{
     ViewData["Title"] = "Roles";
 }
@@ -21,9 +23,13 @@
 
                 <h3 class="m-0 font-weight-bold text-primary col-md-11">Roles</h3>
 
-                <div class="col-md-1">
-                    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i></a>
-                </div>
+                @if (await _usersService.CurrentUserIsAuthorizedAsync("createRoles", "Roles"))
+                {
+
+                    <div class="col-md-1">
+                        <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i></a>
+                    </div>
+                }
             </div>
             
         </div>
@@ -54,27 +60,40 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col">Rol</th>
-                        <th scope="col">Descripción</th>
-                        <th scope="col"></th>
+                        <th>Rol</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(HospitalRole item in Model.List)
-                    {
-                        <tr>
+           
+                @* esto lo que hace es que el rol super admin no sea editado o eliminado  *@
+                @foreach (var item in Model.List)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Name) </td>
 
-                            <td>@item.Name</td>
-                            <td>
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
-                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: contents;">
-                                    <button class="btn btn-sm btn-danger btnDelete"><i class="bi bi-trash-fill"></i></button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
+                        <td>
+                            @if (item.Name != Env.SUPER_ADMIN_ROLE_NAME)
+                            {
+                                @if (await _usersService.CurrentUserIsAuthorizedAsync("updateRoles", "Roles"))
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
+                                }
+                                @if (await _usersService.CurrentUserIsAuthorizedAsync("deleteRoles", "Roles"))
+                                {
+                                    <form asp-action="Delete" asp-route-id="@item.Id" style="display:contents">
+                                        <button class="btn btn-danger btn-sm btnDelete"><i class= "bi bi-trash-fill"></i></button>
+                                    </form>
+                                }
 
-                
+                            }
+                        </td>
+
+
+
+
+                    </tr>
+                }
                 </tbody>
             </table>
             <!-- Tabla usada-->
