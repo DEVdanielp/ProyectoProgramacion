@@ -10,6 +10,7 @@ using System;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Hospital.Web.Helpers;
 using Hospital.Web.Core.Attributes;
+using Hospital.Web.Core.Pagination;
 
 namespace Hospital.Web.Controllers
 {
@@ -27,10 +28,18 @@ namespace Hospital.Web.Controllers
 
         [HttpGet]
         [CustomAuthorize(permission: "showMedicalHistory", module: "Historia Clínica")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
+                                               [FromQuery] int? Page,
+                                               [FromQuery] string? Filter)
         {
-            
-            Response<List<MedicalHistory>> response = await _medicalhistoryService.GetListAsync();
+            PaginationRequest request = new PaginationRequest
+            {
+                RecordsPerPage = RecordsPerPage ?? 15,
+                Page = Page ?? 1,
+                Filter = Filter
+            };
+
+            Response<PaginationResponse<MedicalHistory>> response = await _medicalhistoryService.GetListAsync(request);
             return View(response.Result);
         }
 
@@ -112,6 +121,7 @@ namespace Hospital.Web.Controllers
                 if (!ModelState.IsValid)
                 {
                     _notifyService.Error("Debes completar los campos ");
+                    medicalhistoryDTO.Appoiment = await _comboshelper.GetComboAppoiments();
                     return View(medicalhistoryDTO);
                 }
 
