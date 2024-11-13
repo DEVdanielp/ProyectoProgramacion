@@ -39,6 +39,30 @@ namespace Hospital.Web.Data.Seeders
                 new Permission { Name = "deleteMedicalSpecialization", Description = "Eliminar Especialidades Medicas", Module = "Especialidades Medicas" },
             };
         }
+
+        private List<Permission> Appoiments()
+        {
+            return new List<Permission>
+            {
+                new Permission { Name = "showAppoiment", Description = "Ver Citas", Module = "Citas" },
+                new Permission { Name = "createAppoiment", Description = "Crear Citas", Module = "Citas" },
+                new Permission { Name = "updateAppoiment", Description = "Editar Citas", Module = "Citas" },
+                new Permission { Name = "deleteAppoiment", Description = "Eliminar Citas", Module = "Citas" },
+            };
+        }
+
+        private List<Permission> Status()
+        {
+            return new List<Permission>
+            {
+                new Permission { Name = "showStatu", Description = "Ver Estado de la citas", Module = "Estado" },
+                new Permission { Name = "createStatu", Description = "Crear Estado de la citas", Module = "Estado" },
+                new Permission { Name = "updateStatu", Description = "Editar Estado de la citas", Module = "Estado" },
+                new Permission { Name = "deleteStatu", Description = "Eliminar Estado de la citas", Module = "Estado" },
+            };
+        }
+
+
         private List<Permission> Medications()
         {
             return new List<Permission>
