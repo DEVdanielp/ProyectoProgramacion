@@ -24,6 +24,8 @@ namespace Hospital.Web.Services
         public Task<IdentityResult> UpdateUserAsync(User user);
         public Task<Response<User>> UpdateUserAsync(UserDTO dto);
 
+        public Task<Response<User>> DeleteAsync(string Id);
+
 
     }
 
@@ -192,6 +194,15 @@ namespace Hospital.Web.Services
             {
                 return ResponseHelper<User>.MakeResponseFail(ex);
             }
+        }
+        public async Task<Response<User>> DeleteAsync(string Id)
+        {
+            User? user = await _context.Users.FirstOrDefaultAsync(a => a.Id == Id);
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+            return ResponseHelper<User>.MakeResponseSuccess(user, "sección actualizada con éxito");
+
         }
     }
 }

@@ -137,5 +137,24 @@ namespace Hospital.Web.Controllers
             dto.HospitalRoles = await _combosHelper.GetComboHospitalRolesAsync();
             return View(dto);
         }
+
+
+        [HttpPost]
+        [CustomAuthorize(permission: "deleteUser", module: "Usuarios")]
+        public async Task<IActionResult> Delete([FromRoute] string id)
+        {   //Este metodo redirecciona confirma la eliminacion
+            try
+            {
+                _notifyService.Success("Se ha eliminado con Èxito");
+                await _usersService.DeleteAsync(id);
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch
+            {
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
     }
 }
