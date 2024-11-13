@@ -29,6 +29,8 @@ namespace Hospital.Web
             //Identity and Acces Managment
             AddIAM(builder);
 
+            
+
             //Toast Notificaciòn 
             builder.Services.AddNotyf(config =>
             {
@@ -101,7 +103,7 @@ namespace Hospital.Web
             using (IServiceScope scope = scopeFactory!.CreateScope())
             {
                 SeedDb service = scope.ServiceProvider.GetService<SeedDb>();
-                service!.SeedAsync().Wait();
+                service.SeedAsync().Wait();
             }
         }
     }
