@@ -55,9 +55,9 @@ namespace Hospital.Web.Data
             // Role Permissions
             builder.Entity<RolePermission>().HasKey(rp => new { rp.RoleId, rp.PermissionId });
 
-           // builder.Entity<RolePermission>().HasOne(rp => rp.Role)
-                                            //.WithMany(r => r.RolePermissions)
-                                            //.HasForeignKey(rp => rp.RoleId);
+            builder.Entity<RolePermission>().HasOne(rp => rp.Role)
+                                            .WithMany(r => r.RolePermissions)
+                                            .HasForeignKey(rp => rp.RoleId);
 
             builder.Entity<RolePermission>().HasOne(rp => rp.Permission)
                                             .WithMany(p => p.RolePermissions)
