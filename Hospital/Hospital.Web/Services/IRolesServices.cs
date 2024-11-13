@@ -5,6 +5,7 @@ using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
 using Hospital.Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Newtonsoft.Json;
@@ -18,10 +19,11 @@ namespace Hospital.Web.Services
     {
         public Task<Response<PaginationResponse<HospitalRole>>> GetListAsync(PaginationRequest request);
         public Task<Response<HospitalRoleDTO>> GetOneAsync(int Id);
-        //public Task<Response<HospitalRole>> EditAsync(HospitalRole model);
+        public Task<Response<HospitalRole>> EditAsync(HospitalRoleDTO dto);
         public Task<Response<HospitalRole>> CreateAsync(HospitalRoleDTO dto);
         //public Task<Response<HospitalRole>> DeleteAsync(int Id);
         public Task<Response<IEnumerable<Permission>>> GetPermissionsAsync();
+        Task<Response<IEnumerable<PermissionForDTO>>> GetPermissionsByRoleAsync(int id);
     }
 
     public class RolServices : IRolesServices
@@ -29,9 +31,10 @@ namespace Hospital.Web.Services
         private readonly DataContext _context;
         private readonly IConverterHelper _converterHelper;
 
-        public RolServices(DataContext context)
+        public RolServices(DataContext context, IConverterHelper converterHelper)
         {
             _context = context;
+            _converterHelper = converterHelper;
         }
         public async Task<Response<HospitalRole>> CreateAsync(HospitalRoleDTO dto)
         {
@@ -77,7 +80,52 @@ namespace Hospital.Web.Services
             }
         }
 
-        public async Task<Response<PaginationResponse<HospitalRole>>> GetListAsync(PaginationRequest request)
+        public async Task<Response<HospitalRole>> EditAsync(HospitalRoleDTO dto)
+        {
+            
+                try
+                {
+                    if (dto.Name == Env.SUPER_ADMIN_ROLE_NAME)
+                    {
+                    return ResponseHelper<HospitalRole>.MakeResponseFail($"El role '{Env.SUPER_ADMIN_ROLE_NAME}' no puede ser editado");
+                    };
+                    List<int> permissionIds = new List<int>();
+                        if(!string.IsNullOrWhiteSpace(dto.PermissionIds))
+                          {
+                                permissionIds = JsonConvert.DeserializeObject<List<int>>(dto.PermissionIds);
+
+                          }
+                        //Eliminacion de permisos antiguos
+                        List<RolePermission> oldrolePermissions = await _context.RolePermissions.Where(rp => rp.RoleId == dto.Id).ToListAsync();
+                        _context.RolePermissions.RemoveRange(oldrolePermissions);
+
+                //Insercion de nuevos permisos
+                foreach (int permissionId in permissionIds)
+                {
+                    RolePermission rolePermission = new RolePermission
+                    {
+                        RoleId = dto.Id,
+                        PermissionId = permissionId
+                    };
+                    await _context.RolePermissions.AddAsync(rolePermission);
+                }
+
+                // actualizacion de rol
+                HospitalRole model = _converterHelper.ToRole(dto);
+
+                _context.HospitalRoles.Update(model);
+                await _context.SaveChangesAsync();
+
+                return ResponseHelper<HospitalRole>.MakeResponseSuccess(model, "Rol actualizado con éxito");
+                }
+                catch (Exception ex)
+                {
+                    return ResponseHelper<HospitalRole>.MakeResponseFail(ex);
+                }
+            
+        }
+
+            public async Task<Response<PaginationResponse<HospitalRole>>> GetListAsync(PaginationRequest request)
         {
             try
             {
@@ -115,23 +163,7 @@ namespace Hospital.Web.Services
 
 
 
-        //public async Task<Response<HospitalRole>> EditAsync(HospitalRole model)
-        //{
-        //    try
-        //    {
-        //        _context.HospitalRoles.Update(model);
-        //        await _context.SaveChangesAsync();
-
-        //        return ResponseHelper<HospitalRole>.MakeResponseSuccess(model, "seccion actualizada con exito");
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return ResponseHelper<HospitalRole>.MakeResponseFail(ex);
-        //    }
-
-
-        //}
+     
 
         //public async Task<Response<HospitalRole>> DeleteAsync(int Id)
         //{
@@ -176,6 +208,27 @@ namespace Hospital.Web.Services
                 return ResponseHelper<IEnumerable<Permission>>.MakeResponseFail(ex);
             }
 
+        }
+
+        public async Task<Response<IEnumerable<PermissionForDTO>>> GetPermissionsByRoleAsync(int id)
+        {
+            try
+            {
+                Response<HospitalRoleDTO> response = await GetOneAsync(id);
+                if( !response.IsSuccess )
+                {
+                    return ResponseHelper<IEnumerable<PermissionForDTO>>.MakeResponseFail(response.Message);
+
+                }
+                List<PermissionForDTO> permissions = response.Result.Permissions;
+
+                return ResponseHelper<IEnumerable<PermissionForDTO>>.MakeResponseSuccess(permissions);
+            }
+
+            catch (Exception ex)
+            {
+                return ResponseHelper<IEnumerable<PermissionForDTO>>.MakeResponseFail(ex);
+            }
         }
     }
 }

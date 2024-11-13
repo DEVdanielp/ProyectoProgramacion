@@ -47,4 +47,25 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+
+        $(document).ready(function () {
+            $('#btnCreate').click(function (event) {
+                const permissions = $('.permission:checked');
+
+                let permissionIds = [];
+
+                permissions.each(function ()
+                {
+                    const permissionId = $(this).data('permission-id')
+                    permissionIds.push(permissionId);
+
+                });
+                      
+                $('#permissionIds').val(JSON.stringify(permissionIds)) // formatear los permisos para enviarlos al controllador
+            });
+
+        });
+    </script>
 }

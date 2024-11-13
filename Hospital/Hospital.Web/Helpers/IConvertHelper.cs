@@ -18,7 +18,7 @@ namespace Hospital.Web.Helpers
 
         public Task<UserDTO> ToUserDTOAsync(User user, bool isNew = true);
         public Task<HospitalRoleDTO> ToRoleDTOAsync(HospitalRole role);
-        HospitalRole ToRole(HospitalRoleDTO dto);
+        public HospitalRole ToRole(HospitalRoleDTO dto);
     }
 
     public class ConverterHelper : IConverterHelper
@@ -26,9 +26,10 @@ namespace Hospital.Web.Helpers
         private readonly ICombosHelpers _combosHelper;
         private readonly DataContext _context;
 
-        public ConverterHelper(ICombosHelpers combosHelper)
+        public ConverterHelper(ICombosHelpers combosHelper, DataContext context)
         {
             _combosHelper = combosHelper;
+            _context = context;
         }
         public User ToUser(UserDTO dto)
         {
@@ -133,16 +134,16 @@ namespace Hospital.Web.Helpers
             };
         }
 
-   
+
 
         public HospitalRole ToRole(HospitalRoleDTO dto)
         {
-            return new  HospitalRole
-                {
-                    Id = dto.Id,
-                    Name= dto.Name,
-
-                };
-        }
+            return new HospitalRole
+            {
+                
+                Id = dto.Id,
+                Name = dto.Name,
+            };
+            }
     }
 }

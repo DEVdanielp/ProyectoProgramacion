@@ -74,37 +74,15 @@ namespace Hospital.Web.Controllers
         [CustomAuthorize(permission: "createRoles", module: "Roles")]
         public async Task<IActionResult> Create(HospitalRoleDTO dto)
         {
-         
-           
-                if (!ModelState.IsValid)
-                {
-                    _notifyService.Error("Debe ajustar los errores de validación");
 
-                    Response<IEnumerable<Permission>> response1 = await _rolesService.GetPermissionsAsync();
 
-                    dto.Permissions = response1.Result.Select(p => new PermissionForDTO
+            if (!ModelState.IsValid)
+            {
+                _notifyService.Error("Debe ajustar los errores de validación");
 
-                        {
-                            Id = p.Id,
-                            Name = p.Name,
-                            Description = p.Description,
-                            Module = p.Module,
+                Response<IEnumerable<Permission>> response1 = await _rolesService.GetPermissionsAsync();
 
-                        }).ToList();
-                    return View(dto);
-                }
-                Response<HospitalRole> createResponse = await _rolesService.CreateAsync(dto);
-
-                if (!createResponse.IsSuccess)
-                {
-                    _notifyService.Success(createResponse.Message);
-                    return RedirectToAction(nameof(Index));
-                }
-                _notifyService.Error(createResponse.Message);
-
-                Response<IEnumerable<Permission>> response = await _rolesService.GetPermissionsAsync();
-
-                dto.Permissions = response.Result.Select(p => new PermissionForDTO
+                dto.Permissions = response1.Result.Select(p => new PermissionForDTO
 
                 {
                     Id = p.Id,
@@ -115,73 +93,78 @@ namespace Hospital.Web.Controllers
                 }).ToList();
                 return View(dto);
             }
+            Response<HospitalRole> createResponse = await _rolesService.CreateAsync(dto);
 
+            if (!createResponse.IsSuccess)
+            {
+                _notifyService.Success(createResponse.Message);
+                return RedirectToAction(nameof(Index));
             }
+            _notifyService.Error(createResponse.Message);
+
+            Response<IEnumerable<Permission>> response = await _rolesService.GetPermissionsAsync();
+
+            dto.Permissions = response.Result.Select(p => new PermissionForDTO
+
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                Module = p.Module,
+
+            }).ToList();
+            return View(dto);
+        }
+
+
+        [HttpGet]
+        [CustomAuthorize(permission: "editRoles", module: "Roles")]
+        public async Task<IActionResult> Edit(int Id)
+        {
+
+            Response<HospitalRoleDTO> response = await _rolesService.GetOneAsync(Id);
+
+            if (!response.IsSuccess)
+            {
+                _notifyService.Error("Revise los datos ingresados por favor");
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(response.Result);
+        }
+
+        [HttpPost]
+        [CustomAuthorize(permission: "editRoles", module: "Roles")]
+        public async Task<IActionResult> Edit(HospitalRoleDTO dto)
+        {
+
+
+            if (!ModelState.IsValid)
+            {
+                _notifyService.Error("Debe ajustar los errores de validación");
+
+                Response<IEnumerable<PermissionForDTO>> permissionsByResponse= await _rolesService.GetPermissionsByRoleAsync(dto.Id);
+
+                dto.Permissions = permissionsByResponse.Result.ToList();
+                return View(dto);
+            }
+            Response<HospitalRole> editResponse = await _rolesService.EditAsync(dto);
+
+            if (!editResponse.IsSuccess)
+            {
+                _notifyService.Success(editResponse.Message);
+                return RedirectToAction(nameof(Index));
+            }
+            _notifyService.Error(editResponse.Message);
+
+            Response<IEnumerable<PermissionForDTO>> permissionsByResponse2 = await _rolesService.GetPermissionsByRoleAsync(dto.Id);
+
+            dto.Permissions = permissionsByResponse2.Result.ToList();
+            return View(dto);
+        }
+
     }
 
-
-        //[HttpGet]
-        //public async Task<IActionResult> Edit([FromRoute] int Id)
-        //{
-
-        //    Response<HospitalRole> response = await _rolesService.GetOneAsync(Id);
-
-        //    if (response.IsSuccess)
-        //    {
-        //        return View(response.Result);
-        //    }
-
-        //    _notifyService.Error("Revise los datos ingresados por favor");
-        //    return RedirectToAction(nameof(Index));
-
-        //}
-
-        //[HttpPost]
-        //public async Task<IActionResult> Edit(HospitalRole rol)
-        //{
-        //    try
-        //    {
-        //        if (!ModelState.IsValid)
-        //        {
-        //            _notifyService.Error("Revise los datos ingresados por favor");
-        //            return View(rol);
-        //        }
-
-        //        Response<HospitalRole> response = await _rolesService.EditAsync(rol);
-
-        //        if (response.IsSuccess)
-        //        {
-        //            _notifyService.Success("Se ha actualizado este rol con éxito");
-        //            return RedirectToAction(nameof(Index));
-        //        }
-
-        //        _notifyService.Error("Revise los datos ingresados por favor");
-        //        return View(response);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return View(rol);
-        //    }
-        //}
+}
 
 
-        //[HttpPost]
-        //public async Task<IActionResult> Delete([FromRoute] int id)
-        //{   //Este metodo redirecciona confirma la eliminacion
-        //    try
-        //    {
-        //        await _rolesService.DeleteAsync(id);
-        //        _notifyService.Success("Se ha eliminado con éxito");
-        //        return RedirectToAction(nameof(Index));
-
-        //    }
-        //    catch
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-
-        //}
-
-
-//    }
-//}

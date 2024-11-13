@@ -13,7 +13,7 @@ namespace Hospital.Web.Data.Entities
         [Required(ErrorMessage = "El campo {0} es requerido.")]
         public string Name { get; set; } = null!;
 
-       public ICollection<RolePermission> RolePermissions { get; set; }
+       public ICollection<RolePermission>? RolePermissions { get; set; }
         
     }
 }
