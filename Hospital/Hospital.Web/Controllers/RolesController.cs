@@ -97,10 +97,10 @@ namespace Hospital.Web.Controllers
 
             if (!createResponse.IsSuccess)
             {
-                _notifyService.Success(createResponse.Message);
+                _notifyService.Error(createResponse.Message);
                 return RedirectToAction(nameof(Index));
             }
-            _notifyService.Error(createResponse.Message);
+            _notifyService.Success(createResponse.Message);
 
             Response<IEnumerable<Permission>> response = await _rolesService.GetPermissionsAsync();
 
@@ -113,7 +113,7 @@ namespace Hospital.Web.Controllers
                 Module = p.Module,
 
             }).ToList();
-            return View(dto);
+            return RedirectToAction(nameof(Index));
         }
 
 
