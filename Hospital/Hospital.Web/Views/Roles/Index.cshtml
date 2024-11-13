@@ -1,6 +1,7 @@
 ﻿
 @model PaginationResponse<HospitalRole>
 @inject Hospital.Web.Services.IUsersService _usersService
+
 @{
     ViewData["Title"] = "Roles";
 }
@@ -22,14 +23,14 @@
             <div class="row">
 
                 <h3 class="m-0 font-weight-bold text-primary col-md-11">Roles</h3>
-
+@* 
                 @if (await _usersService.CurrentUserIsAuthorizedAsync("createRoles", "Roles"))
-                {
+                {  *@
 
                     <div class="col-md-1">
                         <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i></a>
                     </div>
-                }
+                @*  } *@
             </div>
             
         </div>
@@ -70,7 +71,7 @@
                 @foreach (var item in Model.List)
                 {
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.Name) </td>
+                        <td> @Html.DisplayFor(modelItem => item.Name) </td>
 
                         <td>
                             @if (item.Name != Env.SUPER_ADMIN_ROLE_NAME)

@@ -17,7 +17,7 @@ namespace Hospital.Web.Helpers
         public Status ToStatus(StatusDTO dto);
 
         public Task<UserDTO> ToUserDTOAsync(User user, bool isNew = true);
-        public Task<HospitalRoleDTO> ToRoleDTOAsync(object role);
+        public Task<HospitalRoleDTO> ToRoleDTOAsync(HospitalRole role);
         HospitalRole ToRole(HospitalRoleDTO dto);
     }
 
@@ -121,7 +121,7 @@ namespace Hospital.Web.Helpers
                 Name = p.Name,
                 Description = p.Description,
                 Module = p.Module,
-                Selected = _context.RolePermissions.Any(rp => rp.PermissionId == p.Id && rp.RoleId == role.Id)
+                Selected = _context.RolePermissions.Any(rp => rp.PermissionId == p.Id && rp.RoleId == role.Id) //darle permiso a las cosas que esten relacionadas con el rol
             }).ToListAsync();
 
               
@@ -133,10 +133,7 @@ namespace Hospital.Web.Helpers
             };
         }
 
-        public Task<HospitalRoleDTO> ToRoleDTOAsync(object role)
-        {
-            throw new NotImplementedException();
-        }
+   
 
         public HospitalRole ToRole(HospitalRoleDTO dto)
         {

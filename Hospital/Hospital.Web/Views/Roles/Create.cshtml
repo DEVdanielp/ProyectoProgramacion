@@ -1,10 +1,10 @@
-﻿@model HospitalRole
+﻿@model HospitalRoleDTO
 @{
-    ViewData["Title"] = "Crear Rol";
+    ViewData["Title"] = "Nuevo Rol";
 }
 
 <div class="pagetitle">
-    <h1>Roles</h1>
+    <h1>Nuevo Rol</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li>
@@ -15,24 +15,36 @@
 </div><!-- End Page Title -->
 
 <section class="section dashboard">
+    @*    ROL *@
 
-    <form class="row g-3" asp-action="Create" method="post">
-        <div class="col-12">
-            <label for="inputNanme4" class="form-label">@Html.DisplayFor(model => model.Name)</label>
-            <input asp-for="Name" class="form-control" id="inputNanme4" placeholder="Nombre del rol">
-            <span asp-validation-for="Name" class="text-danger"></span>
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Nuevo Rol</h3>
+
+            <form class="row g-3" asp-action="Create" method="POST" id="frmCreate">
+
+                <partial name="_Role" />
+            </form>
+
+
         </div>
 
-        <div class="text-center">
-            <button type="submit" class="btn btn-primary">Guardar</button>
-            <a asp-action="Index" class="btn btn-secondary">Volver</a>
-        </div>
-    </form><!-- Vertical Form -->
-        
+    </div>
+
+    @* PERMISOS *@
+    <partial name="_Permissions" />
+    <div class="text-center">
+
+        <button type="submit" class="btn btn primary" form="frmCreate" id="btnCreate">Guardar</button>
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+
+    </div>
+
+
 </section>
 
 @section Scripts {
     @{
-    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }

@@ -57,7 +57,7 @@ namespace Hospital.Web.Services
                     {
                         RolePermission rolePermission = new RolePermission
                         {
-                            RoleId = role.Id,
+                            RoleId = roleId,
                             PermissionId = permissionsId,
                         };
 
@@ -141,35 +141,27 @@ namespace Hospital.Web.Services
         //    return ResponseHelper<HospitalRole>.MakeResponseSuccess(rol, "sección actualizada con éxito");
         //}
 
-        //public async Task<Response<HospitalRoleDTO>> GetOneAsync(int Id)
-        //{
-        //    try
-        //    {
-        //        HospitalRole? rol = await _context.HospitalRoles.FirstOrDefaultAsync(r => r.Id == Id);
-
-        //        if (rol is null)
-        //        {
-        //            return ResponseHelper<HospitalRoleDTO>.MakeResponseFail("El id indicado no existe");
-        //        }
-
-
-        //        return ResponseHelper<HospitalRoleDTO>.MakeResponseSuccess(await _converterHelper.ToRoleDTOAsync(rol));
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return ResponseHelper<HospitalRoleDTO>.MakeResponseFail(ex);
-        //    }
-        //}
-
-
-
-
-
-        public Task<Response<HospitalRoleDTO>> GetOneAsync(int Id)
+        public async Task<Response<HospitalRoleDTO>> GetOneAsync(int Id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                HospitalRole? rol = await _context.HospitalRoles.FirstOrDefaultAsync(r => r.Id == Id);
+
+                if (rol is null)
+                {
+                    return ResponseHelper<HospitalRoleDTO>.MakeResponseFail("El id indicado no existe");
+                }
+
+
+                return ResponseHelper<HospitalRoleDTO>.MakeResponseSuccess(await _converterHelper.ToRoleDTOAsync(rol));
+
+            }
+            catch (Exception ex)
+            {
+                return ResponseHelper<HospitalRoleDTO>.MakeResponseFail(ex);
+            }
         }
+
 
         public async Task<Response<IEnumerable<Permission>>> GetPermissionsAsync()
         {
