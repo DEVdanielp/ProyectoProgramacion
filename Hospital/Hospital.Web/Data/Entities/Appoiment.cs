@@ -17,10 +17,10 @@ namespace Hospital.Web.Data.Entities
 
 
         public User UserPatient { get; set; }
-        public int? UserPatientId { get; set; }
+        public Guid UserPatientId { get; set; }
 
 
         public User UserDoctor { get; set; }
-        public int? UserDoctorId { get; set; }
+        public Guid UserDoctorId { get; set; }
     }
 }

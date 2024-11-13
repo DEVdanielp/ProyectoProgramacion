@@ -6,6 +6,7 @@ using Hospital.Web.Data;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
 using Hospital.Web.Helpers;
+using ClaimsUser = System.Security.Claims.ClaimsPrincipal;
 namespace Hospital.Web.Services
 {
     public interface IUsersService
@@ -16,12 +17,13 @@ namespace Hospital.Web.Services
         public Task<User> GetUserAsync(string email);
         public Task<SignInResult> LoginAsync(LoginDTO dto);
         public Task LogoutAsync();
-
+        public Task<bool> CurrentUserIsAuthorizedAsync(string permission, string module);
         public Task<Response<User>> CreateAsync(UserDTO dto);
         public Task<Response<PaginationResponse<User>>> GetListAsync(PaginationRequest request);
         public Task<User> GetUserAsync(Guid id);
         public Task<IdentityResult> UpdateUserAsync(User user);
         public Task<Response<User>> UpdateUserAsync(UserDTO dto);
+
 
     }
 
@@ -31,13 +33,16 @@ namespace Hospital.Web.Services
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly IConverterHelper _converterHelper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UsersService(DataContext context, SignInManager<User> signInManager, UserManager<User> userManager, IConverterHelper converterHelper)
+        public UsersService(DataContext context, SignInManager<User> signInManager, UserManager<User> userManager, 
+                IConverterHelper converterHelper, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _signInManager = signInManager;
             _userManager = userManager;
             _converterHelper = converterHelper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IdentityResult> AddUserAsync(User user, string password)
@@ -70,6 +75,31 @@ namespace Hospital.Web.Services
             {
                 return ResponseHelper<User>.MakeResponseFail(ex);
             }
+        }
+
+        public async Task<bool> CurrentUserIsAuthorizedAsync(string permission, string module)
+        {
+            ClaimsUser? claimUser = _httpContextAccessor.HttpContext?.User;
+            //valida si hay sesion
+            if(claimUser is null)
+            {
+                return false;
+            }
+            string? userName = claimUser.Identity.Name;
+
+            User? user = await GetUserAsync(userName);
+
+            if(user is null)
+            {
+                return false;
+            }
+            if(user.HospitalRole.Name == Env.SUPER_ADMIN_ROLE_NAME)
+            {
+                return true;
+            }
+            return await _context.Permissions.Include(p => p.RolePermissions)
+                                             .AnyAsync(p => (p.Module == module && p.Name == permission)
+                                                            && p.RolePermissions.Any(rp => rp.RoleId == user.HospitalRoleId));
         }
 
         public async Task<string> GenerateEmailConfirmationTokenAsync(User user)

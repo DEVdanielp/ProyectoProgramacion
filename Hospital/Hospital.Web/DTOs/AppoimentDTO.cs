@@ -18,13 +18,13 @@ namespace Hospital.Web.DTOs
 
 
         public IEnumerable<SelectListItem>? UserDoctor { get; set; }
-        [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un Doctor")]
+        [Range(265, int.MaxValue, ErrorMessage = "Debe seleccionar un Doctor")]
         [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public int UserDoctorId { get; set; }
+        public Guid? UserDoctorId { get; set; }
 
         public IEnumerable<SelectListItem>? UserPatient { get; set; }
-        [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un Paciente")]
+        [Range(265, int.MaxValue, ErrorMessage = "Debe seleccionar un Paciente")]
         [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public int UserPatientId { get; set; }
+        public Guid UserPatientId { get; set; }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Hospital.Web.Core;
+using Hospital.Web.Core.Attributes;
 using Hospital.Web.Core.Pagination;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +20,7 @@ namespace Hospital.Web.Controllers
             _notifyService = notifyService;
         }
         [HttpGet]
+        [CustomAuthorize(permission: "showMedication", module: "Medicamentos")]
         public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
                                                [FromQuery] int? Page,
                                                [FromQuery] string? Filter)
@@ -34,11 +37,13 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpGet]
+        [CustomAuthorize(permission: "createMedication", module: "Medicamentos")]
         public async Task<IActionResult> Create()
         {
             return View();
         }
         [HttpPost]
+        [CustomAuthorize(permission: "createMedication", module: "Medicamentos")]
         public async Task<IActionResult> Create(Medication medication)
         {
             try
@@ -65,6 +70,7 @@ namespace Hospital.Web.Controllers
             }
         }
         [HttpGet]
+        [CustomAuthorize(permission: "updateMedication", module: "Medicamentos")]
         public async Task<IActionResult> Edit([FromRoute] int Id)
         {
             Response<Medication> response = await _medicationsService.GetAsync(Id);
@@ -78,6 +84,7 @@ namespace Hospital.Web.Controllers
 
         }
         [HttpPost]
+        [CustomAuthorize(permission: "updateMedication", module: "Medicamentos")]
         public async Task<IActionResult> Edit(Medication medication)
         {
             try
@@ -105,6 +112,7 @@ namespace Hospital.Web.Controllers
 
         }
         [HttpPost]
+        [CustomAuthorize(permission: "deleteMedication", module: "Medicamentos")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             try

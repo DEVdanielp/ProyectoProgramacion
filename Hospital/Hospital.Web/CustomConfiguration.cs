@@ -20,6 +20,9 @@ namespace Hospital.Web
                 Configuration.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection"));
             });
 
+            //
+            builder.Services.AddHttpContextAccessor();  
+
             //Se instancian los servicios 
             AddServices(builder);
 
@@ -74,6 +77,7 @@ namespace Hospital.Web
             builder.Services.AddScoped<IMedicationsServices, MedicationService>();//Servicios de medicamentos
             builder.Services.AddScoped<IMedicalOrdersServices, MedicalOrdersServices>();//Servicios de Orden Medica
             builder.Services.AddScoped<IMedicalHistoryServices, MedicalHistoryService>(); //Servicios de Historia Clínica
+            builder.Services.AddScoped<IRolesServices, RolService>(); //Servicios de Historia Clínica
             builder.Services.AddTransient<SeedDb>();
 
 

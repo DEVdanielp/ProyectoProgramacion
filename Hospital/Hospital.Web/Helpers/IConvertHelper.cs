@@ -92,7 +92,7 @@ namespace Hospital.Web.Helpers
             {
                 Date = dto.Date,
                 Time = dto.Time,
-                UserDoctorId= dto.UserDoctorId,
+                UserDoctorId= (Guid)dto.UserDoctorId,
                 UserPatientId= dto.UserPatientId
             };
         }

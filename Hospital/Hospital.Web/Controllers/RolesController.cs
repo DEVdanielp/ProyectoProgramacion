@@ -49,6 +49,7 @@ namespace Hospital.Web.Controllers
         {
             try
             {
+                Console.WriteLine(rol.Name);
                 if (!ModelState.IsValid)
                 {
                     _notifyService.Error("Revise los datos ingresados por favor");

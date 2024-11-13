@@ -25,5 +25,8 @@ namespace Hospital.Web.Data.Entities
         public int HospitalRoleId { get; set; }
 
         public HospitalRole HospitalRole { get; set; }
+
+        //public List<Appoiment>? AppoimentPatient { get; set; }
+        //public List<Appoiment>? AppoimentDoctor { get; set; }
     }
 }

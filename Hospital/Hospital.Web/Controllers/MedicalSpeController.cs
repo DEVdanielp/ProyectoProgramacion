@@ -1,4 +1,4 @@
-﻿using Hospital.Web.Data.Entities;
+﻿        using Hospital.Web.Data.Entities;
 using Hospital.Web.Services;
 using Hospital.Web.Core;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +7,7 @@ using AspNetCoreHero.ToastNotification.Abstractions;
 using Hospital.Web.Helpers;
 using Hospital.Web.Core.Pagination;
 using Microsoft.AspNetCore.Authorization;
+using Hospital.Web.Core.Attributes;
 
 
 namespace Hospital.Web.Controllers
@@ -29,6 +30,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpGet]
+        [CustomAuthorize(permission: "showMedicalSpecialization",module: "Especialidades Medicas")]
         public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage, 
                                                [FromQuery] int? Page, 
                                                [FromQuery] string? Filter)
@@ -46,6 +48,7 @@ namespace Hospital.Web.Controllers
     
 
         [HttpGet]
+        [CustomAuthorize(permission: "createMedicalSpecialization", module: "Especialidades Medicas")]
         public async Task<IActionResult> Create()
         {
             MedicalSpeDTO dto = new MedicalSpeDTO
@@ -56,6 +59,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorize(permission: "createMedicalSpecialization", module: "Especialidades Medicas")]
         public async Task<IActionResult> Create(MedicalSpeDTO udto)
         {
             try
@@ -84,6 +88,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpGet]
+        [CustomAuthorize(permission: "updateMedicalSpecialization", module: "Especialidades Medicas")]
         public async Task<IActionResult> Edit([FromRoute] int id)
         {
             Response<MedicalSpeDTO> response = await _medicalspeService.GetOneAsycn(id);
@@ -97,6 +102,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorize(permission: "updateMedicalSpecialization", module: "Especialidades Medicas")]
         public async Task<IActionResult> Edit(MedicalSpeDTO section)
         {
             try
@@ -123,6 +129,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorize(permission: "deleteMedicalSpecialization", module: "Especialidades Medicas")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {   //Este metodo redirecciona confirma la eliminacion
             try

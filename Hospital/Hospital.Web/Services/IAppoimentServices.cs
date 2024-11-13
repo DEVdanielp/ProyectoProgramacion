@@ -37,6 +37,7 @@ namespace Hospital.Web.Services
         {
             try { 
             Appoiment b = _converter.ToAppoiment(dto);
+            
             await _context.Appoiments.AddAsync(b);
             await _context.SaveChangesAsync();
             return ResponseHelper<Appoiment>.MakeResponseSuccess(b, "sección creada con exito");
@@ -51,11 +52,12 @@ namespace Hospital.Web.Services
         {
             try
             {
-
+               
                 IQueryable<Appoiment> query = _context.Appoiments
                                               .Include(a => a.UserDoctor)  // Primer include
                                               .Include(a => a.UserPatient)  // Segundo include
                                               .AsQueryable();
+                Console.WriteLine(query.ToString());    
 
                 if (!string.IsNullOrWhiteSpace(request.Filter))
                 {

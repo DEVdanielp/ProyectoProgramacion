@@ -8,6 +8,7 @@ using AspNetCoreHero.ToastNotification.Abstractions;
 using Hospital.Web.Helpers;
 using Hospital.Web.Core.Pagination;
 using Microsoft.AspNetCore.Authorization;
+using Hospital.Web.Core.Attributes;
 
 
 
@@ -30,6 +31,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpGet]
+        [CustomAuthorize(permission: "showUser", module: "Usuarios")]
         public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
                                                [FromQuery] int? Page,
                                                [FromQuery] string? Filter)
@@ -46,6 +48,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpGet]
+        [CustomAuthorize(permission: "createUser", module: "Usuarios")]
         public async Task<IActionResult> Create()
         {
             UserDTO dto = new UserDTO
@@ -57,6 +60,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorize(permission: "createUser", module: "Usuarios")]
         public async Task<IActionResult> Create(UserDTO dto)
         {
             try
@@ -89,6 +93,7 @@ namespace Hospital.Web.Controllers
 
 
         [HttpGet]
+        [CustomAuthorize(permission: "updateUser", module: "Usuarios")]
         public async Task<IActionResult> Edit(Guid id)
         {
             if (Guid.Empty.Equals(id))
@@ -110,6 +115,7 @@ namespace Hospital.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorize(permission: "updateUser", module: "Usuarios")]
         public async Task<IActionResult> Edit(UserDTO dto)
         {
             if (!ModelState.IsValid)
