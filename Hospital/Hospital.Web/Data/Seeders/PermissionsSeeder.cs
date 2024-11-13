@@ -120,10 +120,6 @@ namespace Hospital.Web.Data.Seeders
                 new Permission { Name = "deleteRoles", Description = "Eliminar  Roles", Module = "Roles" },
 
                 };
-
-
-
-
             }
 
 

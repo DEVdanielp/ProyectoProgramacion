@@ -18,6 +18,7 @@
             </a>
 
             <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <!--Roles -->
                 @if (await _usersService.CurrentUserIsAuthorizedAsync("showRoles", "Roles"))
                 {
                     <li class="nav-item">
@@ -29,6 +30,7 @@
                         </a>
                     </li>
                 }
+                <!--Usuarios -->
                 @if (await _usersService.CurrentUserIsAuthorizedAsync("showUser", "Usuarios"))
                 {
                     <li class="nav-item">
@@ -40,6 +42,7 @@
                         </a>
                     </li>
                 }
+                <!--Espesciades Medicas -->
                 @if (await _usersService.CurrentUserIsAuthorizedAsync("showMedicalSpecialization", "Especialidades Medicas"))
                 {
                     <li class="nav-item">
@@ -51,7 +54,7 @@
                         </a>
                     </li>
                 }
-
+                <!-- Citas -->
                 @if (await _usersService.CurrentUserIsAuthorizedAsync("showAppoiment", "Citas"))
                 {
                 <li class="nav-item">
@@ -63,7 +66,7 @@
                     </a>
                 </li>
                 }
-
+                <!-- Estado de las Citas-->
                 @if(await _usersService.CurrentUserIsAuthorizedAsync("showStatu", "Estado"))
                 {
                 <li class="nav-item">
@@ -75,7 +78,7 @@
                     </a>
                 </li>
                 }
-
+                <!-- Medicamentos-->
                 @if (await _usersService.CurrentUserIsAuthorizedAsync("showMedication", "Medicamentos"))
                 {
                     <li class="nav-item">
@@ -87,8 +90,7 @@
                         </a>
                     </li>
                 }
-                
-
+                <!--Órdenes Médicas -->
                 @if (await _usersService.CurrentUserIsAuthorizedAsync("showMedicalOrder", "Órdenes Médicas"))
                 {
                     <li class="nav-item">
@@ -100,26 +102,29 @@
                         </a>
                     </li>
                 }
-
-                <li class="nav-item">
+                <!--Historia Medical -->
+                @if (await _usersService.CurrentUserIsAuthorizedAsync("showMedicalHistory", "Historia Clínica"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "MedicalHistory" ? "" : "collapsed")"
+                           asp-controller="MedicalHistory"
+                           asp-action="Index">
+                            <i class="bi bi-grid"></i>
+                            <span>Historia Clínica</span>
+                        </a>
+                    </li>
+                }
+@*                 <li class="nav-item">
                     <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Permissions" ? "" : "collapsed")"
                        asp-controller="Permissions"
                        asp-action="Index">
                         <i class="bi bi-grid"></i>
                         <span>Permisos</span>
                     </a>
-                </li>
+                </li> *@
 
-                <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "MedicalHistory" ? "" : "collapsed")"
-                       asp-controller="MedicalHistory"
-                       asp-action="Index">
-                        <i class="bi bi-grid"></i>
-                        <span>Historia Clínica</span>
-                    </a>
-                </li>
 
-                <li class="nav-item">
+@*                 <li class="nav-item">
                     <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "RolPermissions" ? "" : "collapsed")"
                        asp-controller="RolPermissions"
                        asp-action="Index">
@@ -127,7 +132,7 @@
                         <span>Permisos de los roles</span>
                     </a>
                 </li>
-
+ *@
                
             </ul>
         </li>
