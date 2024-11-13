@@ -14,7 +14,7 @@ namespace Hospital.Web.Data.Seeders
 
         public async Task SeedAsync()
         {
-            List<Permission> permissions = [.. MedicalSpes(), .. Medications(), .. Users(), .. MedicalOrderPermissions(), .. MedicalHistoryPermissions(), .. RolesPermissions()];
+            List<Permission> permissions = [.. MedicalSpes(), .. Medications(), .. Users(), .. MedicalOrderPermissions(), .. MedicalHistoryPermissions(), .. RolesPermissions(), .. Appoiments(), .. Status()];
 
             foreach (Permission permission in permissions)
             {
