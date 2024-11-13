@@ -4,6 +4,7 @@ using Hospital.Web.Data;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
 using Hospital.Web.Helpers;
+using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,7 @@ namespace Hospital.Web.Services
         public Task<Response<HospitalRoleDTO>> GetOneAsync(int Id);
         public Task<Response<HospitalRole>> EditAsync(HospitalRoleDTO dto);
         public Task<Response<HospitalRole>> CreateAsync(HospitalRoleDTO dto);
-        //public Task<Response<HospitalRole>> DeleteAsync(int Id);
+        public Task<Response<HospitalRole>> DeleteAsync(int Id, HospitalRoleDTO dto);
         public Task<Response<IEnumerable<Permission>>> GetPermissionsAsync();
         Task<Response<IEnumerable<PermissionForDTO>>> GetPermissionsByRoleAsync(int id);
     }
@@ -125,7 +126,7 @@ namespace Hospital.Web.Services
             
         }
 
-            public async Task<Response<PaginationResponse<HospitalRole>>> GetListAsync(PaginationRequest request)
+         public async Task<Response<PaginationResponse<HospitalRole>>> GetListAsync(PaginationRequest request)
         {
             try
             {
@@ -157,21 +158,16 @@ namespace Hospital.Web.Services
             }
         }
 
+        public async Task<Response<HospitalRole>> DeleteAsync(int Id, HospitalRoleDTO dto)
+        {
 
-
-
-
-
-
-     
-
-        //public async Task<Response<HospitalRole>> DeleteAsync(int Id)
-        //{
-        //    HospitalRole? rol = await _context.HospitalRoles.FirstOrDefaultAsync(a => a.Id == Id);
-        //    _context.HospitalRoles.Remove(rol);
-        //    await _context.SaveChangesAsync();
-        //    return ResponseHelper<HospitalRole>.MakeResponseSuccess(rol, "sección actualizada con éxito");
-        //}
+            HospitalRole? rol = await _context.HospitalRoles.FirstOrDefaultAsync(a => a.Id == Id);
+            List<RolePermission> oldrolePermissions = await _context.RolePermissions.Where(rp => rp.RoleId == dto.Id).ToListAsync();
+            _context.RolePermissions.RemoveRange(oldrolePermissions);
+            _context.HospitalRoles.Remove(rol);
+            await _context.SaveChangesAsync();
+            return ResponseHelper<HospitalRole>.MakeResponseSuccess(rol, "sección actualizada con éxito");
+        }
 
         public async Task<Response<HospitalRoleDTO>> GetOneAsync(int Id)
         {

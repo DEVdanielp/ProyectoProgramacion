@@ -1,4 +1,6 @@
-﻿@model PaginationResponse<MedicalSpe>
+﻿@using Hospital.Web.Core
+@model PaginationResponse<MedicalSpe>
+@inject Hospital.Web.Services.IUsersService _usersService
 @{
     ViewData["Title"] = "Especialidad Médica";
 }
@@ -20,10 +22,12 @@
             <div class="row">
 
                 <h3 class="m-0 font-weight-bold  text-primary col-md-11"> Especialidad Medica </h3>
+                @if (await _usersService.CurrentUserIsAuthorizedAsync("createMedicalSpecialization", "Especialidades Medicas"))
+                {
                 <div class="col-md-1">
                     <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i></a>
                 </div>
-
+                }
             </div>
         </div>
 
@@ -65,10 +69,17 @@
                             <td>@item.Name </td>
                             @* <td>@item.UserDoctor.FirstName @item.UserDoctor.LastName</td> *@
                             <td>
-                                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-fill"></i></a>
+                                @if (await _usersService.CurrentUserIsAuthorizedAsync("updateMedicalSpecialization", "Especialidades Medicas"))
+                                {
+                                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-fill"></i></a>
+                                }
+                                @if (await _usersService.CurrentUserIsAuthorizedAsync("deleteMedicalSpecialization", "Especialidades Medicas"))
+                                {
                                 <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: contents">
                                     <button class="btn btn-danger btnDelete"><i class="bi bi-trash-fill"></i></button>
                                 </form>
+                                }
+
                             </td>
                         </tr>
                     }

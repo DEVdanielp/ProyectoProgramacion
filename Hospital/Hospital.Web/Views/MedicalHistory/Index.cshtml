@@ -1,4 +1,7 @@
-﻿@model PaginationResponse<MedicalHistory>
+﻿@using Hospital.Web.Core
+
+@model PaginationResponse<MedicalHistory>
+@inject Hospital.Web.Services.IUsersService _usersService
 @{
     ViewData["Title"] = "Historia Clínica";
 }
@@ -18,9 +21,12 @@
         <div class="card-header">
             <div class="row">
                 <h3 class="m-0 font-weight-bold text-primary col-md-11">Historia Clínica</h3>
+                @if (await _usersService.CurrentUserIsAuthorizedAsync("createMedicalHistory", "Historia Clínica"))
+                {
                 <div class="col-md-1">
                     <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i></a>
                 </div>
+                }
             </div>
         </div>
 
@@ -60,12 +66,18 @@
                             <td>@item.Description</td>
                             <td>@item.AppoimentId</td>
                             <td>
+                                @if (await _usersService.CurrentUserIsAuthorizedAsync("updateMedicalHistory", "Historia Clínica"))
+                                {
                                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
+                                }
+                                @if (await _usersService.CurrentUserIsAuthorizedAsync("deleteMedicalHistory", "Historia Clínica"))
+                                {
                                 <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
                                     <button type="button" class="btn btn-sm btn-danger btnDelete">
                                         <i class="bi bi-trash-fill"></i>
                                     </button>
                                 </form>
+                                }
                             </td>
                         </tr>
                     }

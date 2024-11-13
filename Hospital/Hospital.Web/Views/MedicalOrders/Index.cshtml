@@ -1,4 +1,6 @@
-﻿@model PaginationResponse<MedicalOrder>
+﻿@using Hospital.Web.Core
+@model PaginationResponse<MedicalOrder>
+@inject Hospital.Web.Services.IUsersService _usersService
 @{
     ViewData["Title"] = "Orden Médica";
 }
@@ -17,10 +19,12 @@
         <div class="card-header">
             <div class="row">
                 <h3 class="m-0 font-weight-bold text-primary col-md-11">Orden de Médica</h3>
-
-                <div class="col-md-1">
-                    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i></a>
-                </div>
+                @if (await _usersService.CurrentUserIsAuthorizedAsync("createMedicalOrder", "Órdenes Médicas"))
+                {
+                    <div class="col-md-1">
+                        <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i></a>
+                    </div>
+                }
             </div>
         </div>
 
@@ -62,12 +66,20 @@
                             <td>@item.Description</td>
                             <td>@item.Diagnosis</td>
                             <td>
+
+                                @if (await _usersService.CurrentUserIsAuthorizedAsync("updateMedicalOrder", "Órdenes Médicas"))
+                                {                             
                                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
+                                }
+                                @if (await _usersService.CurrentUserIsAuthorizedAsync("deleteMedicalOrder", "Órdenes Médicas"))
+                                {
                                 <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
                                     <button type="button" class="btn btn-sm btn-danger btnDelete">
                                         <i class="bi bi-trash-fill"></i>
                                     </button>
                                 </form>
+                                }
+
                             </td>
                         </tr>
                     }

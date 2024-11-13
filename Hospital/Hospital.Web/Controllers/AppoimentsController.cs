@@ -24,7 +24,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpGet]
-        [CustomAuthorize(permission: "showAppoiment", module: "Citas") ]
+        [CustomAuthorize(permission: "showAppoiment", module: "Citas")]
         public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
                                                [FromQuery] int? Page,
                                                [FromQuery] string? Filter)
@@ -41,7 +41,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpGet]
-        [CustomAuthorize(permission: "createAppoiment", module: "Citas") ]
+        [CustomAuthorize(permission: "createAppoiment", module: "Citas")]
         public async Task<IActionResult> Create()
         {
             AppoimentDTO dto = new AppoimentDTO
@@ -84,7 +84,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpGet]
-        [CustomAuthorize(permission: "updateAppoiment", module: "Citas") ]
+        [CustomAuthorize(permission: "updateAppoiment", module: "Citas")]
         public async Task<IActionResult> Edit([FromRoute] int Id)
         {
 

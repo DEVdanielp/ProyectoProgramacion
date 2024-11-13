@@ -1,4 +1,6 @@
-﻿@model PaginationResponse<Appoiment>
+﻿@using Hospital.Web.Core
+@model PaginationResponse<Appoiment>
+@inject Hospital.Web.Services.IUsersService _usersService
 @{
     ViewData["Title"] = "Citas ";
 }
@@ -21,9 +23,13 @@
 
                 <h3 class="m-0 font-weight-bold text-primary col-md-11">Citas</h3>
 
-                <div class="col-md-1">
-                    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i></a>
-                </div>
+                @if (await _usersService.CurrentUserIsAuthorizedAsync("createAppoiment", "Citas"))
+                {
+                    <div class="col-md-1">
+                        <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i></a>
+                    </div>
+                }
+
             </div>
 
         </div>
@@ -76,16 +82,22 @@
                             <td>@item.UserPatient.FirstName @item.UserPatient.LastName</td>
                             <td>@item.UserDoctor.FirstName @item.UserDoctor.LastName</td  
                             
-
-
-                            <td>
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
-
-                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: contents;">
-                                    <button class="btn btn-sm btn-danger btnDelete"><i class="bi bi-trash-fill"></i></button>
-                                </form>
-                            </td>
+                            
                         </tr>
+                        <td>
+
+                            @if (await _usersService.CurrentUserIsAuthorizedAsync("updateAppoiment", "Citas"))
+                            {
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
+                            }
+                            @if (await _usersService.CurrentUserIsAuthorizedAsync("deleteAppoiment", "Citas"))
+                            {
+                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: contents;">
+                                <button class="btn btn-sm btn-danger btnDelete"><i class="bi bi-trash-fill"></i></button>
+                            </form>
+                            }
+
+                        </td>
                     }
 
                 </tbody>
