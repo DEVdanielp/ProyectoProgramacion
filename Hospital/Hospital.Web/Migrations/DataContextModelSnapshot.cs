@@ -36,23 +36,19 @@ namespace Hospital.Web.Migrations
                     b.Property<TimeOnly>("Time")
                         .HasColumnType("time");
 
-                    b.Property<int?>("UserDoctorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserDoctorId1")
+                    b.Property<string>("UserDoctorId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("UserPatientId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserPatientId1")
+                    b.Property<string>("UserPatientId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserDoctorId1");
+                    b.HasIndex("UserDoctorId");
 
-                    b.HasIndex("UserPatientId1");
+                    b.HasIndex("UserPatientId");
 
                     b.ToTable("Appoiments");
                 });
@@ -495,11 +491,15 @@ namespace Hospital.Web.Migrations
                 {
                     b.HasOne("Hospital.Web.Data.Entities.User", "UserDoctor")
                         .WithMany()
-                        .HasForeignKey("UserDoctorId1");
+                        .HasForeignKey("UserDoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Hospital.Web.Data.Entities.User", "UserPatient")
                         .WithMany()
-                        .HasForeignKey("UserPatientId1");
+                        .HasForeignKey("UserPatientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("UserDoctor");
 

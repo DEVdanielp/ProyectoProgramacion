@@ -70,14 +70,14 @@ namespace Hospital.Web
         //Se llaman a los servicios a usar
         public static void AddServices(WebApplicationBuilder builder)
         {
+            builder.Services.AddScoped<IRolesServices, RolServices>(); // Servicios de roles
             builder.Services.AddScoped<IAppoimentServices, AppoimentServices>(); //Servicios de citas
             builder.Services.AddScoped<IUsersService, UsersService>(); //Servicios de Usuario
             builder.Services.AddScoped<IStatusServices, StatusServices>(); //Servicios de citas
-            builder.Services.AddScoped<IMedicalSpeServices, MedicalSpeServices>(); //Servicios de Especialidad Medica
+            builder.Services.AddScoped<IMedicalSpeServices, MedicalSpeServices>(); //Servicios de Especialidad Medica           
             builder.Services.AddScoped<IMedicationsServices, MedicationService>();//Servicios de medicamentos
             builder.Services.AddScoped<IMedicalOrdersServices, MedicalOrdersServices>();//Servicios de Orden Medica
             builder.Services.AddScoped<IMedicalHistoryServices, MedicalHistoryService>(); //Servicios de Historia Clínica
-            builder.Services.AddScoped<IRolesServices, RolService>(); //Servicios de Historia Clínica
             builder.Services.AddTransient<SeedDb>();
 
 

@@ -18,14 +18,17 @@
             </a>
 
             <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Roles" ? "" : "collapsed")"
-                       asp-controller="Roles"
-                       asp-action="Index">
-                        <i class="bi bi-grid"></i>
-                        <span>Roles</span>
-                    </a>
-                </li>
+                @if (await _usersService.CurrentUserIsAuthorizedAsync("showRoles", "Roles"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Roles" ? "" : "collapsed")"
+                           asp-controller="Roles"
+                           asp-action="Index">
+                            <i class="bi bi-grid"></i>
+                            <span>Roles</span>
+                        </a>
+                    </li>
+                }
                 @if (await _usersService.CurrentUserIsAuthorizedAsync("showUser", "Usuarios"))
                 {
                     <li class="nav-item">
@@ -77,6 +80,7 @@
                         </a>
                     </li>
                 }
+                
 
                 @if (await _usersService.CurrentUserIsAuthorizedAsync("showMedicalOrder", "Órdenes Médicas"))
                 {
@@ -116,6 +120,8 @@
                         <span>Permisos de los roles</span>
                     </a>
                 </li>
+
+               
             </ul>
         </li>
     </ul>

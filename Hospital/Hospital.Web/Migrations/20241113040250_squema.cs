@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Hospital.Web.Migrations
 {
     /// <inheritdoc />
-    public partial class aa : Migration
+    public partial class squema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -158,24 +158,24 @@ namespace Hospital.Web.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Time = table.Column<TimeOnly>(type: "time", nullable: false),
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
-                    UserPatientId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    UserPatientId = table.Column<int>(type: "int", nullable: true),
-                    UserDoctorId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    UserDoctorId = table.Column<int>(type: "int", nullable: true)
+                    UserPatientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserDoctorId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Appoiments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Appoiments_AspNetUsers_UserDoctorId1",
-                        column: x => x.UserDoctorId1,
+                        name: "FK_Appoiments_AspNetUsers_UserDoctorId",
+                        column: x => x.UserDoctorId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Appoiments_AspNetUsers_UserPatientId1",
-                        column: x => x.UserPatientId1,
+                        name: "FK_Appoiments_AspNetUsers_UserPatientId",
+                        column: x => x.UserPatientId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -350,14 +350,14 @@ namespace Hospital.Web.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Appoiments_UserDoctorId1",
+                name: "IX_Appoiments_UserDoctorId",
                 table: "Appoiments",
-                column: "UserDoctorId1");
+                column: "UserDoctorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Appoiments_UserPatientId1",
+                name: "IX_Appoiments_UserPatientId",
                 table: "Appoiments",
-                column: "UserPatientId1");
+                column: "UserPatientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

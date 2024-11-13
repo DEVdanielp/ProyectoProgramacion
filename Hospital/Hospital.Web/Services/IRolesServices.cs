@@ -2,49 +2,78 @@
 using Hospital.Web.Core.Pagination;
 using Hospital.Web.Data;
 using Hospital.Web.Data.Entities;
+using Hospital.Web.DTOs;
 using Hospital.Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Newtonsoft.Json;
+using NuGet.Protocol.Plugins;
+using System.Data;
+
 
 namespace Hospital.Web.Services
 {
     public interface IRolesServices
     {
         public Task<Response<PaginationResponse<HospitalRole>>> GetListAsync(PaginationRequest request);
-        public Task<Response<HospitalRole>> GetOneAsync(int Id);
-        public Task<Response<HospitalRole>> EditAsync(HospitalRole model);
-        public Task<Response<HospitalRole>> CreateAsync(HospitalRole model);
-        public Task<Response<HospitalRole>> DeleteAsync(int Id);
-
+        public Task<Response<HospitalRoleDTO>> GetOneAsync(int Id);
+        //public Task<Response<HospitalRole>> EditAsync(HospitalRole model);
+        public Task<Response<HospitalRole>> CreateAsync(HospitalRoleDTO dto);
+        //public Task<Response<HospitalRole>> DeleteAsync(int Id);
+        public Task<Response<IEnumerable<Permission>>> GetPermissionsAsync();
     }
 
-    public class RolService : IRolesServices
+    public class RolServices : IRolesServices
     {
         private readonly DataContext _context;
+        private readonly IConverterHelper _converterHelper;
 
-        public RolService(DataContext context)
+        public RolServices(DataContext context)
         {
             _context = context;
         }
-
-        public async Task<Response<HospitalRole>> CreateAsync(HospitalRole model)
+        public async Task<Response<HospitalRole>> CreateAsync(HospitalRoleDTO dto)
         {
-            try
+            using (IDbContextTransaction transaction = await _context.Database.BeginTransactionAsync())
             {
-                HospitalRole rol = new HospitalRole
+                try
                 {
-                    Name = model.Name
-                };
+                    // creación del rol
+                    HospitalRole role = _converterHelper.ToRole(dto);
+                    await _context.HospitalRoles.AddAsync(role);
 
-                await _context.HospitalRoles.AddAsync(rol);
-                await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
+                    //insercion de permisos
+                    int roleId = role.Id;
 
-                return ResponseHelper<HospitalRole>.MakeResponseSuccess(rol, "seccion creada con exito");
+                    List<int> permissionsIds = new List<int>();
+                    if (!string.IsNullOrWhiteSpace(dto.PermissionIds))
+                    {
+                        permissionsIds = JsonConvert.DeserializeObject<List<int>>(dto.PermissionIds);
+                    }
 
-            }
-            catch (Exception ex)
-            {
-                return ResponseHelper<HospitalRole>.MakeResponseFail(ex);
+                    foreach (int permissionsId in permissionsIds)
+                    {
+                        RolePermission rolePermission = new RolePermission
+                        {
+                            RoleId = roleId,
+                            PermissionId = permissionsId,
+                        };
+
+                        await _context.RolePermissions.AddAsync(rolePermission);
+                    }
+                    await _context.SaveChangesAsync();
+
+                    transaction.Commit();
+
+                    return ResponseHelper<HospitalRole>.MakeResponseSuccess(role, "Rol creado con éxito");
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return ResponseHelper<HospitalRole>.MakeResponseFail(ex);
+                }
             }
         }
 
@@ -74,56 +103,79 @@ namespace Hospital.Web.Services
                 return ResponseHelper<PaginationResponse<HospitalRole>>.MakeResponseSuccess(result, "Roles obtenidos con exito");
 
             }
-            catch (Exception ex) { 
+            catch (Exception ex)
+            {
                 return ResponseHelper<PaginationResponse<HospitalRole>>.MakeResponseFail(ex);
             }
         }
 
-        public async Task<Response<HospitalRole>> GetOneAsync(int Id)
+
+
+
+
+
+
+        //public async Task<Response<HospitalRole>> EditAsync(HospitalRole model)
+        //{
+        //    try
+        //    {
+        //        _context.HospitalRoles.Update(model);
+        //        await _context.SaveChangesAsync();
+
+        //        return ResponseHelper<HospitalRole>.MakeResponseSuccess(model, "seccion actualizada con exito");
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return ResponseHelper<HospitalRole>.MakeResponseFail(ex);
+        //    }
+
+
+        //}
+
+        //public async Task<Response<HospitalRole>> DeleteAsync(int Id)
+        //{
+        //    HospitalRole? rol = await _context.HospitalRoles.FirstOrDefaultAsync(a => a.Id == Id);
+        //    _context.HospitalRoles.Remove(rol);
+        //    await _context.SaveChangesAsync();
+        //    return ResponseHelper<HospitalRole>.MakeResponseSuccess(rol, "sección actualizada con éxito");
+        //}
+
+        public async Task<Response<HospitalRoleDTO>> GetOneAsync(int Id)
         {
             try
             {
                 HospitalRole? rol = await _context.HospitalRoles.FirstOrDefaultAsync(r => r.Id == Id);
 
-                if (rol is null) {
-                    return ResponseHelper<HospitalRole>.MakeResponseFail("El id indicado no existe");
+                if (rol is null)
+                {
+                    return ResponseHelper<HospitalRoleDTO>.MakeResponseFail("El id indicado no existe");
                 }
 
-                
-                return ResponseHelper<HospitalRole>.MakeResponseSuccess(rol);
-                
+
+                return ResponseHelper<HospitalRoleDTO>.MakeResponseSuccess(await _converterHelper.ToRoleDTOAsync(rol));
+
             }
             catch (Exception ex)
             {
-                return ResponseHelper<HospitalRole>.MakeResponseFail(ex);
+                return ResponseHelper<HospitalRoleDTO>.MakeResponseFail(ex);
             }
         }
 
-        public async Task<Response<HospitalRole>> EditAsync(HospitalRole model)
+
+        public async Task<Response<IEnumerable<Permission>>> GetPermissionsAsync()
         {
             try
             {
-                _context.HospitalRoles.Update(model);
-                await _context.SaveChangesAsync();
+                IEnumerable<Permission> permissions = await _context.Permissions.ToListAsync();
 
-                return ResponseHelper<HospitalRole>.MakeResponseSuccess(model, "seccion actualizada con exito");
-
+                return ResponseHelper<IEnumerable<Permission>>.MakeResponseSuccess(permissions);
             }
             catch (Exception ex)
             {
-                return ResponseHelper<HospitalRole>.MakeResponseFail(ex);
+                return ResponseHelper<IEnumerable<Permission>>.MakeResponseFail(ex);
             }
 
-
         }
-
-        public async Task<Response<HospitalRole>> DeleteAsync(int Id)
-        {
-            HospitalRole? rol = await _context.HospitalRoles.FirstOrDefaultAsync(a => a.Id == Id);
-            _context.HospitalRoles.Remove(rol);
-            await _context.SaveChangesAsync();
-            return ResponseHelper<HospitalRole>.MakeResponseSuccess(rol, "sección actualizada con éxito");
-        }
-
     }
 }

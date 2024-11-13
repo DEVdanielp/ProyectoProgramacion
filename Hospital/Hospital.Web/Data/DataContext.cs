@@ -1,6 +1,7 @@
 ﻿using Hospital.Web.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace Hospital.Web.Data
 {
@@ -15,6 +16,16 @@ namespace Hospital.Web.Data
             //ConfigureAppoiments(builder);
             ConfigureKeys(builder);
             ConfigureIndexes(builder);
+
+            builder.Entity<Appoiment>().HasOne(a => a.UserPatient)
+                                       .WithMany()
+                                       .HasForeignKey(a => a.UserPatientId)
+                                       .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Appoiment>().HasOne(a => a.UserDoctor) 
+                                       .WithMany()
+                                       .HasForeignKey(a => a.UserDoctorId) 
+                                       .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);
         }

@@ -1,4 +1,5 @@
 ﻿using Hospital.Web.Core;
+using Hospital.Web.Data.Entities;
 
 namespace Hospital.Web.Helpers
 {
@@ -39,5 +40,6 @@ namespace Hospital.Web.Helpers
                 Message = message
             };
         }
+
     }
 }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Hospital.Web.Helpers;
+using Hospital.Web.Core.Attributes;
 
 namespace Hospital.Web.Controllers
 {
@@ -25,6 +26,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpGet]
+        [CustomAuthorize(permission: "showMedicalHistory", module: "Historia Clínica")]
         public async Task<IActionResult> Index()
         {
             
@@ -33,6 +35,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpGet]
+        [CustomAuthorize(permission: "createMedicalHistory", module: "Historia Clínica")]
         public async Task<IActionResult> Create()
         {
 
@@ -46,6 +49,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorize(permission: "createMedicalHistory", module: "Historia Clínica")]
         public async Task<IActionResult> Create(MedicalHistoryDTO medicalhistoryDTO)
         {
           
@@ -83,6 +87,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpGet]
+        [CustomAuthorize(permission: "updateMedicalHistory", module: "Historia Clínica")]
         public async Task<IActionResult> Edit([FromRoute] int Id)
         {
 
@@ -98,6 +103,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorize(permission: "updateMedicalHistory", module: "Historia Clínica")]
         public async Task<IActionResult> Edit(MedicalHistoryDTO medicalhistoryDTO)
         {
           
@@ -135,6 +141,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorize(permission: "deleteMedicalHistory", module: "Historia Clínica ")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
            

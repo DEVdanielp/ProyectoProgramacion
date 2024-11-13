@@ -14,7 +14,7 @@ namespace Hospital.Web.Data.Seeders
 
         public async Task SeedAsync()
         {
-            List<Permission> permissions = [.. MedicalSpes(),..Medications(), ..Users(),.. MedicalOrderPermissions()];
+            List<Permission> permissions = [.. MedicalSpes(), .. Medications(), .. Users(), .. MedicalOrderPermissions(), .. MedicalHistoryPermissions(), .. RolesPermissions()];
 
             foreach (Permission permission in permissions)
             {
@@ -70,7 +70,41 @@ namespace Hospital.Web.Data.Seeders
             };
         }
 
+        private List<Permission> MedicalHistoryPermissions()
+        {
+            {
+                return new List<Permission> {
+
+                new Permission { Name = "showMedicalHistory", Description = " Ver Historiales Clínicos", Module = "Historia Clínica"},
+                new Permission { Name = "createMedicalHistory", Description = "Crear Historiales Clínicos", Module = "Historia Clínica" },
+                new Permission { Name = "updateMedicalHistory", Description = "Editar Historiales Clínicos", Module = "Historia Clínica" },
+                new Permission { Name = "deleteMedicalHistory", Description = "Eliminar  Historiales Clínicos", Module = "Historia Clínica" },
+
+                };
+            }
+        }
 
 
+        private List<Permission> RolesPermissions()
+        {
+            {
+                return new List<Permission> {
+
+                new Permission { Name = "showRoles", Description = " Ver Roles", Module = "Roles"},
+                new Permission { Name = "createRoles", Description = "Crear Roles", Module = "Roles" },
+                new Permission { Name = "updateRoles", Description = "Editar Roles", Module = "Roles" },
+                new Permission { Name = "deleteRoles", Description = "Eliminar  Roles", Module = "Roles" },
+
+                };
+
+
+
+
+            }
+
+
+
+        }
     }
 }
+
