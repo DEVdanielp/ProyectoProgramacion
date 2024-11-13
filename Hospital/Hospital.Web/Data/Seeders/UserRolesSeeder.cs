@@ -70,6 +70,9 @@ namespace Hospital.Web.Data.Seeders
                 string token = await _usersService.GenerateEmailConfirmationTokenAsync(user);
                 await _usersService.ConfirmEmailAsync(user, token);
             }
+
+            user = await _usersService.GetUserAsync("doctor@yupimail.com");
+
         }
 
         private async Task CheckRoles() //Creacion automatica de los roles necesarios para el sistema
@@ -116,6 +119,8 @@ namespace Hospital.Web.Data.Seeders
                 await _context.SaveChangesAsync();
             }
         }
+
+
 
         private async Task AdminRoleAsync()
         {
