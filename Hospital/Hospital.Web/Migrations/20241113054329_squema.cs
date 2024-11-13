@@ -392,12 +392,6 @@ namespace Hospital.Web.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_Document",
-                table: "AspNetUsers",
-                column: "Document",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_HospitalRoleId",
                 table: "AspNetUsers",
                 column: "HospitalRoleId");

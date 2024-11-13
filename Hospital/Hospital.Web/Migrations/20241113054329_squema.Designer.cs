@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241113040250_squema")]
+    [Migration("20241113054329_squema")]
     partial class squema
     {
         /// <inheritdoc />
@@ -340,9 +340,6 @@ namespace Hospital.Web.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Document")
-                        .IsUnique();
 
                     b.HasIndex("HospitalRoleId");
 

@@ -338,9 +338,6 @@ namespace Hospital.Web.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Document")
-                        .IsUnique();
-
                     b.HasIndex("HospitalRoleId");
 
                     b.HasIndex("NormalizedEmail")

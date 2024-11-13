@@ -140,8 +140,7 @@ namespace Hospital.Web.Helpers
             return new  HospitalRole
                 {
                     Id = dto.Id,
-                    Name= dto.Name,
-
+                    Name = dto.Name,
                 };
         }
     }
