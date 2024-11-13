@@ -152,15 +152,15 @@ namespace Hospital.Web.Controllers
 
             if (!editResponse.IsSuccess)
             {
-                _notifyService.Success(editResponse.Message);
+                _notifyService.Error(editResponse.Message);
                 return RedirectToAction(nameof(Index));
             }
-            _notifyService.Error(editResponse.Message);
+            _notifyService.Success(editResponse.Message);
 
             Response<IEnumerable<PermissionForDTO>> permissionsByResponse2 = await _rolesService.GetPermissionsByRoleAsync(dto.Id);
 
             dto.Permissions = permissionsByResponse2.Result.ToList();
-            return View(dto);
+            return RedirectToAction(nameof(Index));
         }
 
     }
