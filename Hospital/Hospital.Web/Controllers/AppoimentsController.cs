@@ -31,7 +31,7 @@ namespace Hospital.Web.Controllers
             {
                 RecordsPerPage = RecordsPerPage ?? 5,
                 Page = Page ?? 1,
-                Filter = Filter 
+                Filter = Filter
             };
 
             Response<PaginationResponse<Appoiment>> response = await _appoimentsService.GetListAsync(request);
@@ -45,10 +45,10 @@ namespace Hospital.Web.Controllers
             {
                 UserDoctor = await _comboshelper.GetComboDoctor(),
                 UserPatient = await _comboshelper.GetComboPatient()
-                
+
             };
             return View(dto);
-            
+
         }
 
         [HttpPost]
