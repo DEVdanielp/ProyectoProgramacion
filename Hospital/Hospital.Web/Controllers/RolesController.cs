@@ -163,6 +163,24 @@ namespace Hospital.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        [CustomAuthorize(permission: "deleteRoles", module: "Roles")]
+        public async Task<IActionResult> Delete([FromRoute] int id, HospitalRoleDTO dto)
+        {
+            try
+            {
+                await _rolesService.DeleteAsync(id, dto);
+                _notifyService.Success("Se ha eliminado con éxito");
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+        }
+
     }
 
 }
