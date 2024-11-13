@@ -30,7 +30,7 @@ namespace Hospital.Web.Data.Entities
         //Antitusivos
         [MaxLength(256, ErrorMessage = "El campo '{0}' debe tener maximo '{1}' caracteres")]
         [Required(ErrorMessage = "El campo '{0}' es requerido.")]
-        public String? Description { get; set; }
+        public String Description { get; set; }
 
         [MaxLength(32, ErrorMessage = "El campo '{0}' debe tener maximo '{1}' caracteres")]
         [Required(ErrorMessage = "El campo '{0}' es requerido.")]

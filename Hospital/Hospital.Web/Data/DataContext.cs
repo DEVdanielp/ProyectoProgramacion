@@ -13,7 +13,6 @@ namespace Hospital.Web.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            //ConfigureAppoiments(builder);
             ConfigureKeys(builder);
             ConfigureIndexes(builder);
 
@@ -30,24 +29,6 @@ namespace Hospital.Web.Data
             base.OnModelCreating(builder);
         }
 
-        //private void ConfigureAppoiments(ModelBuilder builder)
-        //{
-
-        //    builder.Entity<Appoiment>().HasKey(rp => new { rp.Id });
-
-
-
-        //    builder.Entity<Appoiment>().HasOne(x => x.UserPatient)
-        //                               .WithMany(x => x.AppoimentPatient)
-        //                               .HasForeignKey(x => x.UserPatientId)
-        //                               .OnDelete(DeleteBehavior.ClientSetNull);
-
-        //    builder.Entity<Appoiment>().HasOne(x => x.UserDoctor)
-        //                               .WithMany(x => x.AppoimentDoctor)
-        //                               .HasForeignKey(x => x.UserDoctorId)
-        //                               .OnDelete(DeleteBehavior.ClientSetNull);
-
-        //}
 
         private void ConfigureKeys(ModelBuilder builder)
         {
@@ -74,8 +55,8 @@ namespace Hospital.Web.Data
             builder.Entity<MedicalSpe>().HasIndex(m => m.Name)
                                              .IsUnique();
             // Users
-            builder.Entity<User>().HasIndex(u => u.Document)
-                                             .IsUnique();
+            //builder.Entity<User>().HasIndex(u => u.Document)
+            //                                 .IsUnique();
         }
 
         public DbSet<User> Users { get; set; } 

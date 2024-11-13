@@ -69,7 +69,7 @@ namespace Hospital.Web.Helpers
             {
 
                 Text = $"{u.FirstName} {u.LastName}",
-                Value = u.Document.ToString()
+                Value = u.Id.ToString()
             }).ToListAsync();
 
             list.Insert(0, new SelectListItem
@@ -81,13 +81,14 @@ namespace Hospital.Web.Helpers
             return list;
         }
 
+
         public async Task<IEnumerable<SelectListItem>> GetComboPatient()
         {
             List<SelectListItem> list = await _context.Users.Select(u => new SelectListItem
             {
 
                 Text = $"{u.FirstName} {u.LastName}",
-                Value = u.Document.ToString()
+                Value = u.Id.ToString()
             }).ToListAsync();
 
             list.Insert(0, new SelectListItem
@@ -112,7 +113,7 @@ namespace Hospital.Web.Helpers
         {
             List<SelectListItem> list = await _context.Appoiments.Select(a => new SelectListItem
             {
-                Text = $"Fecha:{a.Date}, Hora:{a.Time}, Doctor: {a.UserDoctorId}",
+                Text = $"Fecha:{a.Date}, Hora:{a.Time}, Número Cita: {a.Id}",
                 Value = a.Id.ToString()
             }).ToListAsync();
             return list;

@@ -1,5 +1,6 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Hospital.Web.Core;
+using Hospital.Web.Core.Attributes;
 using Hospital.Web.Core.Pagination;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
@@ -24,6 +25,8 @@ namespace Hospital.Web.Controllers
             _comboshelper = comboshelper;
         }
 
+        [HttpGet]
+        [CustomAuthorize(permission: "showStatu", module: "Estado")]
         public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
                                                [FromQuery]int? Page,
                                                [FromQuery] string? Filter)
@@ -40,6 +43,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpGet]
+        [CustomAuthorize(permission: "createStatu", module: "Estado")]
         public async Task<IActionResult> Create()
         {
             StatusDTO dto = new StatusDTO
@@ -51,6 +55,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorize(permission: "createStatu", module: "Estado")]
         public async Task<IActionResult> Create(StatusDTO dto)
         {
             try
@@ -78,6 +83,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpGet]
+        [CustomAuthorize(permission: "updateStatu", module: "Estado")]
         public async Task<IActionResult> Edit([FromRoute] int Id)
         {
 
@@ -93,6 +99,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorize(permission: "updateStatu", module: "Estado")]
         public async Task<IActionResult> Edit(StatusDTO status)
         {
             try
@@ -120,6 +127,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorize(permission: "deleteStatu", module: "Estado")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {   //Este metodo redirecciona confirma la eliminacion
             try

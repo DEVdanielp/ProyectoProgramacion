@@ -1,4 +1,5 @@
 ﻿using Hospital.Web.Core;
+using Hospital.Web.Core.Pagination;
 using Hospital.Web.Data;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
@@ -13,11 +14,12 @@ namespace Hospital.Web.Services
 {
     public interface IMedicalHistoryServices
     {
-        Task<Response<List<MedicalHistory>>> GetListAsync();
-        Task<Response<MedicalHistoryDTO>> GetOneAsync(int Id);
-        Task<Response<MedicalHistory>> EditAsync(MedicalHistory model);
-        Task<Response<MedicalHistory>> CreateAsync(MedicalHistoryDTO model);
-        Task<Response<MedicalHistory>> DeleteAsync(int id);
+        public  Task<Response<List<MedicalHistory>>> GetListAsync();
+        public Task<Response<MedicalHistoryDTO>> GetOneAsync(int Id);
+        public Task<Response<MedicalHistory>> EditAsync(MedicalHistory model);
+        public Task<Response<MedicalHistory>> CreateAsync(MedicalHistoryDTO model);
+        public Task<Response<MedicalHistory>> DeleteAsync(int id);
+        public Task<Response<PaginationResponse<MedicalHistory>>> GetListAsync(PaginationRequest request);
     }
 
     public class MedicalHistoryService : IMedicalHistoryServices
@@ -49,6 +51,37 @@ namespace Hospital.Web.Services
             }
         }
 
+        public async Task<Response<PaginationResponse<MedicalHistory>>> GetListAsync(PaginationRequest request)
+        {
+            try
+            {
+                IQueryable<MedicalHistory> query = _context.MedicalHistory.AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(request.Filter))
+                {
+                    query = query.Where(s => s.NamePatient.ToLower().Contains(request.Filter.ToLower())
+                                          || s.Description.ToLower().Contains(request.Filter.ToLower()));
+                }
+
+                PagedList<MedicalHistory> list = await PagedList<MedicalHistory>.ToPagedListAsync(query, request);
+
+                PaginationResponse<MedicalHistory> result = new PaginationResponse<MedicalHistory>
+                {
+                    List = list,
+                    TotalCount = list.TotalCount,
+                    RecordsPerPage = list.RecordsPerPage,
+                    CurrentPage = list.CurrentPage,
+                    TotalPages = list.TotalPages,
+                    Filter = request.Filter
+                };
+
+                return ResponseHelper<PaginationResponse<MedicalHistory>>.MakeResponseSuccess(result, "Historias Médicas obtenidas con exito");
+            }
+            catch (Exception ex)
+            {
+                return ResponseHelper<PaginationResponse<MedicalHistory>>.MakeResponseFail(ex);
+            }
+        }
         public async Task<Response<List<MedicalHistory>>> GetListAsync()
         {
             try
