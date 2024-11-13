@@ -60,7 +60,11 @@ namespace Hospital.Web.Services
 
                 if (!string.IsNullOrWhiteSpace(request.Filter))
                 {
-                    query = query.Where(s => s.CommercialName.ToLower().Contains(request.Filter.ToLower()));
+                    query = query.Where(s => s.CommercialName.ToLower().Contains(request.Filter.ToLower())
+                                          || s.ScientificName.ToLower().Contains(request.Filter.ToLower())
+                                          || s.Description.ToLower().Contains(request.Filter.ToLower())
+                                          || s.Group.ToLower().Contains(request.Filter.ToLower())
+                                          || s.Laboratory.ToLower().Contains(request.Filter.ToLower()));
                 }
 
                 PagedList<Medication> list = await PagedList<Medication>.ToPagedListAsync(query, request);
@@ -75,7 +79,7 @@ namespace Hospital.Web.Services
                     Filter = request.Filter
                 };
 
-                return ResponseHelper<PaginationResponse<Medication>>.MakeResponseSuccess(result, "Especialidad Medica obtenidas con exito");
+                return ResponseHelper<PaginationResponse<Medication>>.MakeResponseSuccess(result, "Medicamentos obtenidos con exito");
             }
             catch (Exception ex)
             {

@@ -51,6 +51,9 @@
                         </a>
                     </li>
                 }
+
+                @if (await _usersService.CurrentUserIsAuthorizedAsync("showAppoiment", "Citas"))
+                {
                 <li class="nav-item">
                     <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Appoiments" ? "" : "collapsed")"
                        asp-controller="Appoiments"
@@ -59,7 +62,10 @@
                         <span>Citas</span>
                     </a>
                 </li>
+                }
 
+                @if(await _usersService.CurrentUserIsAuthorizedAsync("showStatu", "Estado"))
+                {
                 <li class="nav-item">
                     <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Status" ? "" : "collapsed")"
                        asp-controller="Status"
@@ -68,6 +74,7 @@
                         <span>Estado de las citas</span>
                     </a>
                 </li>
+                }
 
                 @if (await _usersService.CurrentUserIsAuthorizedAsync("showMedication", "Medicamentos"))
                 {

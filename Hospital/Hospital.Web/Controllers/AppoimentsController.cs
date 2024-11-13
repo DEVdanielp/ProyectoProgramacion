@@ -1,5 +1,6 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Hospital.Web.Core;
+using Hospital.Web.Core.Attributes;
 using Hospital.Web.Core.Pagination;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
@@ -23,6 +24,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpGet]
+        [CustomAuthorize(permission: "showAppoiment", module: "Citas") ]
         public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
                                                [FromQuery] int? Page,
                                                [FromQuery] string? Filter)
@@ -39,6 +41,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpGet]
+        [CustomAuthorize(permission: "createAppoiment", module: "Citas") ]
         public async Task<IActionResult> Create()
         {
             AppoimentDTO dto = new AppoimentDTO
@@ -52,6 +55,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorize(permission: "createAppoiment", module: "Citas")]
         public async Task<IActionResult> Create(AppoimentDTO dto)
         {
             try
@@ -80,6 +84,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpGet]
+        [CustomAuthorize(permission: "updateAppoiment", module: "Citas") ]
         public async Task<IActionResult> Edit([FromRoute] int Id)
         {
 
@@ -95,6 +100,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorize(permission: "updateAppoiment", module: "Citas")]
         public async Task<IActionResult> Edit(AppoimentDTO appoiment)
         {
             try
@@ -123,6 +129,7 @@ namespace Hospital.Web.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorize(permission: "deleteAppoiment", module: "Citas")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {   //Este metodo redirecciona confirma la eliminacion
             try

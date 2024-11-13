@@ -113,7 +113,7 @@ namespace Hospital.Web.Helpers
         {
             List<SelectListItem> list = await _context.Appoiments.Select(a => new SelectListItem
             {
-                Text = $"Fecha:{a.Date}, Hora:{a.Time}, Doctor: {a.UserDoctorId}",
+                Text = $"Fecha:{a.Date}, Hora:{a.Time}, Número Cita: {a.Id}",
                 Value = a.Id.ToString()
             }).ToListAsync();
             return list;
