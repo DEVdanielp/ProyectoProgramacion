@@ -2,6 +2,7 @@
 using Hospital.Web.Core;
 using Hospital.Web.Data.Entities;
 using Hospital.Web.Services;
+using System.Reflection;
 namespace Hospital.Web.Data.Seeders
 {
     public class UserRolesSeeder
@@ -71,7 +72,75 @@ namespace Hospital.Web.Data.Seeders
                 await _usersService.ConfirmEmailAsync(user, token);
             }
 
-            user = await _usersService.GetUserAsync("doctor@yupimail.com");
+            // Doctores
+            user = await _usersService.GetUserAsync("JuanPerez@yupimail.com");
+
+            if (user is null)
+            {
+                HospitalRole Doctor = _context.HospitalRoles.FirstOrDefault(r => r.Name == "Gestor de usuarios");
+
+                user = new User
+                {
+                    Email = "JuanPerez@yupimail.com",
+                    FirstName = "Juan",
+                    LastName = "Perez",
+                    PhoneNumber = "32222222",
+                    UserName = "JuanPerez@yupimail.com",
+                    Document = "33333",
+                    HospitalRole = Doctor
+                };
+
+                await _usersService.AddUserAsync(user, "1234");
+
+                string token = await _usersService.GenerateEmailConfirmationTokenAsync(user);
+                await _usersService.ConfirmEmailAsync(user, token);
+            }
+
+            user = await _usersService.GetUserAsync("RobertoGarcia@yupimail.com");
+
+            if (user is null)
+            {
+                HospitalRole Doctor = _context.HospitalRoles.FirstOrDefault(r => r.Name == "Gestor de usuarios");
+
+                user = new User
+                {
+                    Email = "RobertoGarcia@yupimail.com",
+                    FirstName = "Roberto",
+                    LastName = "Garcia",
+                    PhoneNumber = "33333333",
+                    UserName = "RobertoGarcia@yupimail.com",
+                    Document = "44444",
+                    HospitalRole = Doctor
+                };
+
+                await _usersService.AddUserAsync(user, "1234");
+
+                string token = await _usersService.GenerateEmailConfirmationTokenAsync(user);
+                await _usersService.ConfirmEmailAsync(user, token);
+            }
+
+            user = await _usersService.GetUserAsync("MariaLopez@yupimail.com");
+
+            if (user is null)
+            {
+                HospitalRole Doctor = _context.HospitalRoles.FirstOrDefault(r => r.Name == "Gestor de usuarios");
+
+                user = new User
+                {
+                    Email = "MariaLopez@yupimail.com",
+                    FirstName = "Maria",
+                    LastName = "Lopez",
+                    PhoneNumber = "34444444",
+                    UserName = "MariaLopez@yupimail.com",
+                    Document = "55555",
+                    HospitalRole = Doctor
+                };
+
+                await _usersService.AddUserAsync(user, "1234");
+
+                string token = await _usersService.GenerateEmailConfirmationTokenAsync(user);
+                await _usersService.ConfirmEmailAsync(user, token);
+            }
 
         }
 
@@ -80,6 +149,7 @@ namespace Hospital.Web.Data.Seeders
             await AdminRoleAsync();
             await ContentManagerAsync();
             await UserManagerAsync();
+            await ContentDoctorAsycn();
         }
 
         private async Task UserManagerAsync()
@@ -120,7 +190,23 @@ namespace Hospital.Web.Data.Seeders
             }
         }
 
+        private async Task ContentDoctorAsycn()
+        {
+            bool exists = await _context.HospitalRoles.AnyAsync(r => r.Name == "Doctor");
 
+            if (!exists)
+            {
+                HospitalRole role = new HospitalRole { Name = "Doctor" };
+                await _context.HospitalRoles.AddAsync(role);
+                List<Permission> permissions = await _context.Permissions.Where(p => p.Module == "Especialidades Medicas" || p.Module == "Órdenes Médicas" || p.Module == "Citas" || p.Module == "Estado" || p.Module == "Medicamentos" || p.Module == "Historia Clínica").ToListAsync();
+
+                foreach (Permission permission in permissions)
+                {
+                    await _context.RolePermissions.AddAsync(new RolePermission { Permission = permission, Role = role });
+                }
+                await _context.SaveChangesAsync();
+            }
+        }
 
         private async Task AdminRoleAsync()
         {

@@ -5,8 +5,6 @@ using Hospital.Web.Helpers;
 using Hospital.Web.Core;
 using Microsoft.EntityFrameworkCore;
 using Hospital.Web.Core.Pagination;
-using Azure.Core;
-using static System.Collections.Specialized.BitVector32;
 
 namespace Hospital.Web.Services
 {
@@ -49,17 +47,18 @@ namespace Hospital.Web.Services
             }
         }
 
-
-
         public async Task<Response<PaginationResponse<MedicalSpe>>> GetListAsync(PaginationRequest request)
         {
             try
             {
-                IQueryable<MedicalSpe> query = _context.MedicalSpe.AsQueryable().Include(s => s.UserDoctor);
+                IQueryable<MedicalSpe> query = _context.MedicalSpe.AsQueryable().Include(s => s.UserDoctor.HospitalRole);
 
                 if (!string.IsNullOrWhiteSpace(request.Filter))
                 {
-                    query = query.Where(s => s.Name.ToLower().Contains(request.Filter.ToLower()));
+                    query = query.Where(s => s.Name.ToLower().Contains(request.Filter.ToLower()) 
+                                          || s.UserDoctor.FirstName.Contains(request.Filter.ToLower())
+                                          || s.UserDoctor.LastName.ToLower().Contains(request.Filter.ToLower())
+                                          || s.UserDoctor.FullName.ToLower().Contains(request.Filter.ToLower()));
                 }
 
                 PagedList<MedicalSpe> list = await PagedList<MedicalSpe>.ToPagedListAsync(query, request);
@@ -90,7 +89,7 @@ namespace Hospital.Web.Services
                 MedicalSpe medic = await _context.MedicalSpe.FirstOrDefaultAsync(u => u.Id == dto.Id);
 
                 medic.Name = dto.Name;
-                /*edic.UserDoctor = await _context.Users.FirstOrDefaultAsync(a => a.Id == dto.UserDoctorId);*/
+                medic.UserDoctor = await _context.Users.FirstOrDefaultAsync(a => a.Id == dto.UserDoctorId);
 
 
 

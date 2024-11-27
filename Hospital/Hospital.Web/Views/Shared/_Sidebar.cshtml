@@ -57,34 +57,34 @@
                 <!-- Citas -->
                 @if (await _usersService.CurrentUserIsAuthorizedAsync("showAppoiment", "Citas"))
                 {
-                <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Appoiments" ? "" : "collapsed")"
-                       asp-controller="Appoiments"
-                       asp-action="Index">
-                        <i class="bi bi-grid"></i>
-                        <span>Citas</span>
-                    </a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Appoiments" ? "" : "collapsed")"
+                           asp-controller="Appoiments"
+                           asp-action="Index">
+                            <i class="bi bi-grid"></i>
+                            <span>Citas</span>
+                        </a>
+                    </li>
                 }
                 <!-- Estado de las Citas-->
-                @if(await _usersService.CurrentUserIsAuthorizedAsync("showStatu", "Estado"))
+                @if (await _usersService.CurrentUserIsAuthorizedAsync("showStatu", "Estado"))
                 {
-                <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Status" ? "" : "collapsed")"
-                       asp-controller="Status"
-                       asp-action="Index">
-                        <i class="bi bi-grid"></i>
-                        <span>Estado de las citas</span>
-                    </a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Status" ? "" : "collapsed")"
+                           asp-controller="Status"
+                           asp-action="Index">
+                            <i class="bi bi-grid"></i>
+                            <span>Estado de las citas</span>
+                        </a>
+                    </li>
                 }
                 <!-- Medicamentos-->
                 @if (await _usersService.CurrentUserIsAuthorizedAsync("showMedication", "Medicamentos"))
                 {
                     <li class="nav-item">
                         <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Medications" ? "" : "collapsed")"
-                        asp-controller="Medications"
-                        asp-action="Index">
+                           asp-controller="Medications"
+                           asp-action="Index">
                             <i class="bi bi-grid"></i>
                             <span>Medicamentos</span>
                         </a>
@@ -95,8 +95,8 @@
                 {
                     <li class="nav-item">
                         <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "MedicalOrders" ? "" : "collapsed")"
-                        asp-controller="MedicalOrders"
-                        asp-action="Index">
+                           asp-controller="MedicalOrders"
+                           asp-action="Index">
                             <i class="bi bi-grid"></i>
                             <span>Órdenes Médicas</span>
                         </a>
@@ -114,26 +114,7 @@
                         </a>
                     </li>
                 }
-@*                 <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Permissions" ? "" : "collapsed")"
-                       asp-controller="Permissions"
-                       asp-action="Index">
-                        <i class="bi bi-grid"></i>
-                        <span>Permisos</span>
-                    </a>
-                </li> *@
 
-
-@*                 <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "RolPermissions" ? "" : "collapsed")"
-                       asp-controller="RolPermissions"
-                       asp-action="Index">
-                        <i class="bi bi-grid"></i>
-                        <span>Permisos de los roles</span>
-                    </a>
-                </li>
- *@
-               
             </ul>
         </li>
     </ul>

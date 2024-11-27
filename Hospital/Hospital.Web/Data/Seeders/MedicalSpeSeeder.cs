@@ -16,11 +16,11 @@ namespace Hospital.Web.Data.Seeders
         {
             List<MedicalSpe> MedicalSpes = new List<MedicalSpe>
             {
-               new MedicalSpe { Name = "Cardíologo"},
-               new MedicalSpe { Name = "Neurología"},
-               new MedicalSpe { Name = "Dermatología"},
-               new MedicalSpe { Name = "Ginecología"},
-               new MedicalSpe { Name = "Pediatría"},
+               new MedicalSpe { Name = "Cardíologo", UserDoctorId = "33333" },
+               new MedicalSpe { Name = "Ortopedista", UserDoctorId = "44444"},
+               new MedicalSpe { Name = "Dermatología" , UserDoctorId = "44444"},
+               new MedicalSpe { Name = "Ginecología", UserDoctorId = "33333"},
+               new MedicalSpe { Name = "Pediatría", UserDoctorId = "55555"},
             };
 
             foreach (MedicalSpe MedicalSpe in MedicalSpes)

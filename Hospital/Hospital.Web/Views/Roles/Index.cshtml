@@ -17,6 +17,27 @@
         </nav>
     </div><!-- End Page Title -->
 
+<style>
+
+    .ejemplo:hover {
+        background-color: #e8f4fc;
+    }
+
+    button:hover, a:hover {
+        transform: scale(1.1);
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .centrar {
+        text-align: center
+    }
+
+    .titulo{
+        background-color: #a5c5f8;
+    }
+
+</style>
+
 <section class="section dashboard">
     <div class="card">
 
@@ -60,9 +81,9 @@
             <!-- Tabla usada -->
             <table class="table table-bordered">
                 <thead>
-                    <tr>
-                        <th>Rol</th>
-                        <th></th>
+                    <tr class="">
+                        <th class="">Rol</th>
+                        <th class="">Acciones disponibles</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,9 +92,9 @@
                 @foreach (var item in Model.List)
                 {
                     <tr>
-                        <td> @Html.DisplayFor(modelItem => item.Name) </td>
+                        <td class="ejemplo"> @Html.DisplayFor(modelItem => item.Name) </td>
 
-                        <td>
+                        <td class="">
                             @if (item.Name != Env.SUPER_ADMIN_ROLE_NAME)
                             {
                                 @if (await _usersService.CurrentUserIsAuthorizedAsync("updateRoles", "Roles"))
@@ -83,7 +104,7 @@
                                 @if (await _usersService.CurrentUserIsAuthorizedAsync("deleteRoles", "Roles"))
                                 {
                                     <form asp-action="Delete" asp-route-id="@item.Id" style="display:contents">
-                                        <button class="btn btn-danger btn-sm btnDelete"><i class= "bi bi-trash-fill"></i></button>
+                                        <button class="btn btn-danger btn-sm btnDelete "><i class= "bi bi-trash-fill"></i></button>
                                     </form>
                                 }
 

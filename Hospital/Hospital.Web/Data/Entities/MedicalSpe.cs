@@ -12,7 +12,7 @@ namespace Hospital.Web.Data.Entities
         public string Name { get; set; }
 
         public User UserDoctor { get; set; }
-        public int? UserDoctorId { get; set; }
+        public string? UserDoctorId { get; set; }
 
     }
 }
