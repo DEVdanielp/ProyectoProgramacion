@@ -10,8 +10,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Web.Controllers
 {
+    [Authorize]
     public class MedicationsController : Controller
     {
+        
         readonly IMedicationsServices _medicationsService;
         private readonly INotyfService _notifyService;
         public MedicationsController(IMedicationsServices medicationsServices, INotyfService notifyService)

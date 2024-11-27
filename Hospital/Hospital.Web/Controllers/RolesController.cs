@@ -8,12 +8,14 @@ using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
 using Hospital.Web.Helpers;
 using Hospital.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace Hospital.Web.Controllers
 {
+    [Authorize]
     public class RolesController : Controller
     {
         //Inyectamos la dependecia de la interfaz creada

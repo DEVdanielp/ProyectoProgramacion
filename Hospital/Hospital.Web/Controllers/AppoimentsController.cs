@@ -6,10 +6,12 @@ using Hospital.Web.Data.Entities;
 using Hospital.Web.DTOs;
 using Hospital.Web.Helpers;
 using Hospital.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Web.Controllers
 {
+    [Authorize]
     public class AppoimentsController : Controller
     {
         private readonly IAppoimentServices _appoimentsService;

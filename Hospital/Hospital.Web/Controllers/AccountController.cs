@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Web.Controllers
 {
+
     public class AccountController : Controller
     {
         private readonly INotyfService _notifyService;

@@ -11,9 +11,11 @@ using AspNetCoreHero.ToastNotification.Abstractions;
 using Hospital.Web.Helpers;
 using Hospital.Web.Core.Attributes;
 using Hospital.Web.Core.Pagination;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hospital.Web.Controllers
 {
+    [Authorize]
     public class MedicalHistoryController : Controller
     {
         readonly IMedicalHistoryServices _medicalhistoryService;
