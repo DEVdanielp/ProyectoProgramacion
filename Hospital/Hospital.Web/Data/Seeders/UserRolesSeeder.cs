@@ -24,7 +24,8 @@ namespace Hospital.Web.Data.Seeders
 
         private async Task CheckUsers() //Creacion automatica de usuarios necesarios para la base de datos
         {
-            // Usuario Admin
+
+            //Administrador
             User? user = await _usersService.GetUserAsync("DonNadie@yupimail.com");
 
             if (user is null)
@@ -47,8 +48,34 @@ namespace Hospital.Web.Data.Seeders
                 string token = await _usersService.GenerateEmailConfirmationTokenAsync(user);
                 await _usersService.ConfirmEmailAsync(user, token);
             }
+            //Final administrador
 
-            // Content Manager
+            //Gestor medicamentos
+            user = await _usersService.GetUserAsync("medicamentos@yupimail.com");
+
+            if (user is null)
+            {
+                HospitalRole medicamentos = _context.HospitalRoles.FirstOrDefault(r => r.Name == "Gestor de Medicamentos");
+
+                user = new User
+                {
+                    Email = "JuanPerez@yupimail.com",
+                    FirstName = "Juan",
+                    LastName = "Perez",
+                    PhoneNumber = "32222222",
+                    UserName = "JuanPerez@yupimail.com",
+                    Document = "33333",
+                    HospitalRole = medicamentos
+                };
+
+                await _usersService.AddUserAsync(user, "1234");
+
+                string token = await _usersService.GenerateEmailConfirmationTokenAsync(user);
+                await _usersService.ConfirmEmailAsync(user, token);
+            }
+            //Final gestor medicamentos
+
+            //Gestor de usuarios
             user = await _usersService.GetUserAsync("sinNombre@yupimail.com");
 
             if (user is null)
@@ -71,23 +98,24 @@ namespace Hospital.Web.Data.Seeders
                 string token = await _usersService.GenerateEmailConfirmationTokenAsync(user);
                 await _usersService.ConfirmEmailAsync(user, token);
             }
+            //Final gestor de usuarios
 
-            // Doctores
-            user = await _usersService.GetUserAsync("JuanPerez@yupimail.com");
+            //Doctor
+            user = await _usersService.GetUserAsync("Doctor@yupimail.com");
 
             if (user is null)
             {
-                HospitalRole Doctor = _context.HospitalRoles.FirstOrDefault(r => r.Name == "Gestor de usuarios");
+                HospitalRole doctor = _context.HospitalRoles.FirstOrDefault(r => r.Name == "Doctor");
 
                 user = new User
                 {
-                    Email = "JuanPerez@yupimail.com",
-                    FirstName = "Juan",
-                    LastName = "Perez",
+                    Email = "Doctor@yupimail.com",
+                    FirstName = "Doctor",
+                    LastName = "Atiende",
                     PhoneNumber = "32222222",
-                    UserName = "JuanPerez@yupimail.com",
+                    UserName = "Doctor@yupimail.com",
                     Document = "33333",
-                    HospitalRole = Doctor
+                    HospitalRole = doctor
                 };
 
                 await _usersService.AddUserAsync(user, "1234");
@@ -95,22 +123,24 @@ namespace Hospital.Web.Data.Seeders
                 string token = await _usersService.GenerateEmailConfirmationTokenAsync(user);
                 await _usersService.ConfirmEmailAsync(user, token);
             }
+            //Final Doctor
 
-            user = await _usersService.GetUserAsync("RobertoGarcia@yupimail.com");
+            //Paciente 1
+            user = await _usersService.GetUserAsync("paciente1@yupimail.com");
 
             if (user is null)
             {
-                HospitalRole Doctor = _context.HospitalRoles.FirstOrDefault(r => r.Name == "Gestor de usuarios");
+                HospitalRole medicamentos = _context.HospitalRoles.FirstOrDefault(r => r.Name == "Paciente");
 
                 user = new User
                 {
-                    Email = "RobertoGarcia@yupimail.com",
-                    FirstName = "Roberto",
-                    LastName = "Garcia",
-                    PhoneNumber = "33333333",
-                    UserName = "RobertoGarcia@yupimail.com",
-                    Document = "44444",
-                    HospitalRole = Doctor
+                    Email = "paciente@yupimail.com",
+                    FirstName = "Paciente",
+                    LastName = "Primero",
+                    PhoneNumber = "32222222",
+                    UserName = "paciente@yupimail.com",
+                    Document = "101010",
+                    HospitalRole = medicamentos
                 };
 
                 await _usersService.AddUserAsync(user, "1234");
@@ -118,22 +148,25 @@ namespace Hospital.Web.Data.Seeders
                 string token = await _usersService.GenerateEmailConfirmationTokenAsync(user);
                 await _usersService.ConfirmEmailAsync(user, token);
             }
+            //Final paciente 1
 
-            user = await _usersService.GetUserAsync("MariaLopez@yupimail.com");
+            //Paciente 2
+
+            user = await _usersService.GetUserAsync("paciente2@yupimail.com");
 
             if (user is null)
             {
-                HospitalRole Doctor = _context.HospitalRoles.FirstOrDefault(r => r.Name == "Gestor de usuarios");
+                HospitalRole medicamentos = _context.HospitalRoles.FirstOrDefault(r => r.Name == "Paciente");
 
                 user = new User
                 {
-                    Email = "MariaLopez@yupimail.com",
-                    FirstName = "Maria",
-                    LastName = "Lopez",
-                    PhoneNumber = "34444444",
-                    UserName = "MariaLopez@yupimail.com",
-                    Document = "55555",
-                    HospitalRole = Doctor
+                    Email = "paciente2@yupimail.com",
+                    FirstName = "Paciente",
+                    LastName = "Segundo",
+                    PhoneNumber = "32222222",
+                    UserName = "paciente2@yupimail.com",
+                    Document = "202020",
+                    HospitalRole = medicamentos
                 };
 
                 await _usersService.AddUserAsync(user, "1234");
@@ -142,14 +175,69 @@ namespace Hospital.Web.Data.Seeders
                 await _usersService.ConfirmEmailAsync(user, token);
             }
 
+            //Final paciente 2
+
+            //Recepcionista
+
+            user = await _usersService.GetUserAsync("recepcionista@yupimail.com");
+
+            if (user is null)
+            {
+                HospitalRole medicamentos = _context.HospitalRoles.FirstOrDefault(r => r.Name == "Recepcionista");
+
+                user = new User
+                {
+                    Email = "recepcionista@yupimail.com",
+                    FirstName = "Recepcionista",
+                    LastName = "Recepciona",
+                    PhoneNumber = "32222222",
+                    UserName = "recepcionista@yupimail.com",
+                    Document = "303030",
+                    HospitalRole = medicamentos
+                };
+
+                await _usersService.AddUserAsync(user, "1234");
+
+                string token = await _usersService.GenerateEmailConfirmationTokenAsync(user);
+                await _usersService.ConfirmEmailAsync(user, token);
+            }
+            //Final recepcionista
+
+            //Farmaceutico
+            user = await _usersService.GetUserAsync("farmaceutico@yupimail.com");
+
+            if (user is null)
+            {
+                HospitalRole medicamentos = _context.HospitalRoles.FirstOrDefault(r => r.Name == "Farmaceutico");
+
+                user = new User
+                {
+                    Email = "farmaceutico@yupimail.com",
+                    FirstName = "Farmacia",
+                    LastName = "Farmaceutica",
+                    PhoneNumber = "32222222",
+                    UserName = "farmaceutico@yupimail.com",
+                    Document = "404040",
+                    HospitalRole = medicamentos
+                };
+
+                await _usersService.AddUserAsync(user, "1234");
+
+                string token = await _usersService.GenerateEmailConfirmationTokenAsync(user);
+                await _usersService.ConfirmEmailAsync(user, token);
+            }
+            //Final farmaceutico
         }
 
         private async Task CheckRoles() //Creacion automatica de los roles necesarios para el sistema
         {
             await AdminRoleAsync();
-            await ContentManagerAsync();
+            await GestorMedicamentosAsync();
             await UserManagerAsync();
-            await ContentDoctorAsycn();
+            await DoctorAsync();
+            await PatientAsync();
+            await RecepcionistaAsync();
+            await FarmaceuticoAsync();
         }
 
         private async Task UserManagerAsync()
@@ -172,7 +260,7 @@ namespace Hospital.Web.Data.Seeders
             }
         }
 
-        private async Task ContentManagerAsync()
+        private async Task GestorMedicamentosAsync()
         {
             bool exists = await _context.HospitalRoles.AnyAsync(r => r.Name == "Gestor de medicamentos");
 
@@ -190,7 +278,7 @@ namespace Hospital.Web.Data.Seeders
             }
         }
 
-        private async Task ContentDoctorAsycn()
+        private async Task DoctorAsync()
         {
             bool exists = await _context.HospitalRoles.AnyAsync(r => r.Name == "Doctor");
 
@@ -219,5 +307,64 @@ namespace Hospital.Web.Data.Seeders
                 await _context.SaveChangesAsync();
             }
         }
+
+        private async Task PatientAsync()
+        {
+            bool exists = await _context.HospitalRoles.AnyAsync(r => r.Name == "Paciente");
+
+            if (!exists)
+            {
+                HospitalRole role = new HospitalRole { Name = "Paciente" };
+                await _context.HospitalRoles.AddAsync(role);
+                List<Permission> permissions = await _context.Permissions.Where(p => p.Module == "Citas" || p.Module == "Medicamentos" || p.Module == "Historia Clínica").ToListAsync();
+
+                foreach (Permission permission in permissions)
+                {
+                    await _context.RolePermissions.AddAsync(new RolePermission { Permission = permission, Role = role });
+                }
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task RecepcionistaAsync()
+        {
+            bool exists = await _context.HospitalRoles.AnyAsync(r => r.Name == "Recepcionista");
+
+            if (!exists)
+            {
+                HospitalRole role = new HospitalRole { Name = "Recepcionista" };
+                await _context.HospitalRoles.AddAsync(role);
+                List<Permission> permissions = await _context.Permissions.Where(p => p.Module == "Órdenes Médicas" || p.Module == "Citas" || p.Module == "Estado" || p.Module == "Medicamentos" || p.Module == "Historia Clínica").ToListAsync();
+
+                foreach (Permission permission in permissions)
+                {
+                    await _context.RolePermissions.AddAsync(new RolePermission { Permission = permission, Role = role });
+                }
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task FarmaceuticoAsync()
+        {
+            bool exists = await _context.HospitalRoles.AnyAsync(r => r.Name == "Farmaceutico");
+
+            if (!exists)
+            {
+                HospitalRole role = new HospitalRole { Name = "Farmaceutico" };
+                await _context.HospitalRoles.AddAsync(role);
+                List<Permission> permissions = await _context.Permissions.Where(p => p.Module == "Medicamentos" || p.Module == "Orden Medica").ToListAsync();
+
+                foreach (Permission permission in permissions)
+                {
+                    await _context.RolePermissions.AddAsync(new RolePermission { Permission = permission, Role = role });
+                }
+                await _context.SaveChangesAsync();
+            }
+        }
+
+
     }
+
+
 }
+

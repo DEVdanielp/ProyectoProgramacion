@@ -270,17 +270,17 @@ namespace Hospital.Web.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
-                    UserDoctorId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    UserDoctorId = table.Column<int>(type: "int", nullable: true)
+                    UserDoctorId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MedicalSpe", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MedicalSpe_AspNetUsers_UserDoctorId1",
-                        column: x => x.UserDoctorId1,
+                        name: "FK_MedicalSpe_AspNetUsers_UserDoctorId",
+                        column: x => x.UserDoctorId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -431,9 +431,9 @@ namespace Hospital.Web.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_MedicalSpe_UserDoctorId1",
+                name: "IX_MedicalSpe_UserDoctorId",
                 table: "MedicalSpe",
-                column: "UserDoctorId1");
+                column: "UserDoctorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RolePermissions_PermissionId",

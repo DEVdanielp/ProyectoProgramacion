@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241113054329_squema")]
+    [Migration("20241127055754_squema")]
     partial class squema
     {
         /// <inheritdoc />
@@ -150,10 +150,7 @@ namespace Hospital.Web.Migrations
                         .HasMaxLength(32)
                         .HasColumnType("nvarchar(32)");
 
-                    b.Property<int?>("UserDoctorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserDoctorId1")
+                    b.Property<string>("UserDoctorId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -161,7 +158,7 @@ namespace Hospital.Web.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.HasIndex("UserDoctorId1");
+                    b.HasIndex("UserDoctorId");
 
                     b.ToTable("MedicalSpe");
                 });
@@ -536,7 +533,8 @@ namespace Hospital.Web.Migrations
                 {
                     b.HasOne("Hospital.Web.Data.Entities.User", "UserDoctor")
                         .WithMany()
-                        .HasForeignKey("UserDoctorId1");
+                        .HasForeignKey("UserDoctorId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("UserDoctor");
                 });

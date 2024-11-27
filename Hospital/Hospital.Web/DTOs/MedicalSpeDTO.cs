@@ -12,7 +12,6 @@ namespace Hospital.Web.DTOs
         [Required(ErrorMessage = "El campo '{0}' es requerido.")]
         public string Name { get; set; }
         public IEnumerable<SelectListItem>? UserDoctor { get; set; }
-        [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un Doctor")]
         [Required(ErrorMessage = "El campo '{0}' es requerido.")]
         public string UserDoctorId { get; set; }
     }
