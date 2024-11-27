@@ -1,7 +1,5 @@
-﻿@using Hospital.Web.Core
-@model PaginationResponse<Appoiment>
+﻿@model PaginationResponse<Appoiment>
 @inject Hospital.Web.Services.IUsersService _usersService
-
 @{
     User user;
     try
@@ -13,12 +11,13 @@
         user = null;
     }
 }
+
 @{
-    ViewData["Title"] = "Citas ";
+    ViewData["Title"] = "Citas";
 }
 
 <div class="pagetitle">
-    <h1>Citas </h1>
+    <h1>Citas</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Inicio</a></li>
@@ -29,232 +28,177 @@
 
 <section class="section dashboard">
     <div class="card">
-
         <div class="card-header">
             <div class="row">
-
                 <h3 class="m-0 font-weight-bold text-primary col-md-11">Citas</h3>
-
-                @if (await _usersService.CurrentUserIsAuthorizedAsync("createAppoiment", "Citas"))
-                {
-                    <div class="col-md-1">
-                        <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i></a>
-                    </div>
-                }
-
+                <div class="col-md-1">
+                    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i></a>
+                </div>
             </div>
-
         </div>
 
         <div class="card-body mt-2">
-
+            <!-- Formulario de búsqueda -->
             <form class="navbar-search" asp-action="Index" method="GET">
-
                 <input type="hidden" name="Page" value="@Model.CurrentPage" />
                 <input type="hidden" name="RecordsPerPage" value="@Model.RecordsPerPage" />
 
                 <div class="input-group mb-3">
-
-                    <input type="text" class="form-control bg-light border-0 small" placeholder="Buscar..." aria-label="Serch" asp-form="@Model.Filter" name="Filter"/>
-
+                    <input type="text" class="form-control bg-light border-0 small" placeholder="Buscar..."
+                           aria-label="Search" asp-for="@Model.Filter" name="Filter" />
                     <div class="input-group-append">
-                        
                         <button class="btn btn-primary" type="submit">
-                            <i class="bi bi-search">
-
-                            </i>
+                            <i class="bi bi-search"></i>
                         </button>
-                        
                     </div>
-
                 </div>
-
-
             </form>
 
-            <!-- Tabla usada -->
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">Número de la cita</th>
-                        <th scope="col">Hora</th>
-                        <th scope="col">Fecha</th>
-                        <th scope="col">Paciente</th>
-                        <th scope="col">Doctor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (user.HospitalRole.Name == "Administrador")
+            <!-- Cards para mostrar citas -->
+            <div class="row">
+                @if(user.HospitalRole.Name == "Administrador")
+                {
+                    @foreach (Appoiment item in Model.List)
                     {
-                        @foreach (Appoiment item in Model.List)
-                        {
-                            <tr>
-
-                                <td>@item.Id</td>
-                                <td>@item.Time</td>
-                                <td>@item.Date</td>
-                                <td>@item.UserPatient.FirstName @item.UserPatient.LastName</td>
-                                <td>@item.UserDoctor.FirstName @item.UserDoctor.LastName</td>
-
-                                <td>
-
-                                    @if (await _usersService.CurrentUserIsAuthorizedAsync("updateAppoiment", "Citas"))
-                                    {
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
-                                    }
-                                    @if (await _usersService.CurrentUserIsAuthorizedAsync("deleteAppoiment", "Citas"))
-                                    {
-                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: contents;">
-                                            <button class="btn btn-sm btn-danger btnDelete"><i class="bi bi-trash-fill"></i></button>
-                                        </form>
-                                    }
-
-                                </td>
-                            </tr>
-
-                        }
-                    } else
-                    {
-                        @foreach (Appoiment item in Model.List.Where(item => item.UserPatient.FullName == user.FullName || item.UserDoctor.FullName == user.FullName))
-                        {
-                            <tr>
-
-                                <td>@item.Id</td>
-                                <td>@item.Time</td>
-                                <td>@item.Date</td>
-                                <td>@item.UserPatient.FirstName @item.UserPatient.LastName</td>
-                                <td>@item.UserDoctor.FirstName @item.UserDoctor.LastName</td>
-
-                                <td>
-
-                                    @if (await _usersService.CurrentUserIsAuthorizedAsync("updateAppoiment", "Citas"))
-                                    {
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
-                                    }
-                                    @if (await _usersService.CurrentUserIsAuthorizedAsync("deleteAppoiment", "Citas"))
-                                    {
-                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: contents;">
-                                            <button class="btn btn-sm btn-danger btnDelete"><i class="bi bi-trash-fill"></i></button>
-                                        </form>
-                                    }
-
-                                </td>
-                            </tr>
-
-                        }
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="card-title text-primary mb-0">
+                                            <i class="bi bi-calendar-event me-2"></i>Cita: @item.Id
+                                        </h5>
+                                        <span class="badge bg-success">Confirmada</span> <!-- Cambiar según el estado -->
+                                    </div>
+                                    <p class="card-text">
+                                        <i class="bi bi-clock me-2"></i><strong>Hora:</strong> @item.Time<br>
+                                        <i class="bi bi-calendar3 me-2"></i><strong>Fecha:</strong> @item.Date<br>
+                                        <i class="bi bi-person-fill me-2"></i><strong>Paciente:</strong> @item.UserPatient.FirstName @item.UserPatient.LastName<br>
+                                        <i class="bi bi-person-badge-fill me-2"></i><strong>Doctor:</strong> @item.UserDoctor.FirstName @item.UserDoctor.LastName
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-light d-flex justify-content-between">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-pencil-fill"></i> Editar
+                                    </a>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline">
+                                        <button class="btn btn-outline-danger btn-sm btnDelete">
+                                            <i class="bi bi-trash-fill"></i> Eliminar
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     }
+                }else{
 
-
-                </tbody>
-            </table>
-            <!-- Tabla usada-->
-
-            <nav aria-label="">
-
+             @foreach (Appoiment item in Model.List.Where(item => item.UserPatient.FullName == user.FullName || item.UserDoctor.FullName == user.FullName))
+                    {
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="card-title text-primary mb-0">
+                                        <i class="bi bi-calendar-event me-2"></i>Cita: @item.Id
+                                    </h5>
+                                    <span class="badge bg-success">Confirmada</span> <!-- Cambiar según el estado -->
+                                </div>
+                                <p class="card-text">
+                                    <i class="bi bi-clock me-2"></i><strong>Hora:</strong> @item.Time<br>
+                                    <i class="bi bi-calendar3 me-2"></i><strong>Fecha:</strong> @item.Date<br>
+                                    <i class="bi bi-person-fill me-2"></i><strong>Paciente:</strong> @item.UserPatient.FirstName @item.UserPatient.LastName<br>
+                                    <i class="bi bi-person-badge-fill me-2"></i><strong>Doctor:</strong> @item.UserDoctor.FirstName @item.UserDoctor.LastName
+                                </p>
+                            </div>
+                            <div class="card-footer bg-light d-flex justify-content-between">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-pencil-fill"></i> Editar
+                                </a>
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline">
+                                    <button class="btn btn-outline-danger btn-sm btnDelete">
+                                        <i class="bi bi-trash-fill"></i> Eliminar
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+             }
+            </div>
+            <!-- Fin Cards -->
+            <!-- Paginación -->
+            <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
-
-                    @* Primero *@
+                    <!-- Primero -->
                     <li class="page-item">
                         <a class="page-link @(Model.CurrentPage == 1 ? "disabled" : "")"
-                        asp-action="Index"
-                        asp-route-Page="1"
-                        asp-route-Filter="@Model.Filter"
-                        asp-route-RecordsPerPage="@Model.RecordsPerPage">
-                        &laquo;
-                    </a>
+                           asp-action="Index" asp-route-Page="1"
+                           asp-route-Filter="@Model.Filter"
+                           asp-route-RecordsPerPage="@Model.RecordsPerPage">&laquo;</a>
                     </li>
 
-                    @* Anterior *@
+                    <!-- Anterior -->
                     <li class="page-item">
                         <a class="page-link @(!Model.HasPrevious ? "disabled" : "")"
-                           asp-action="Index"
-                           asp-route-Page="@(Model.CurrentPage - 1)"
+                           asp-action="Index" asp-route-Page="@(Model.CurrentPage - 1)"
                            asp-route-Filter="@Model.Filter"
-                           asp-route-RecordsPerPage="@Model.RecordsPerPage">
-                            &lsaquo;
-                        </a>
+                           asp-route-RecordsPerPage="@Model.RecordsPerPage">&lsaquo;</a>
                     </li>
 
-                    @* Páginas *@
-                    @foreach(int page in Model.Pages)
+                    <!-- Páginas -->
+                    @foreach (var p in Model.Pages)
                     {
                         <li class="page-item">
-                            <a class="page-link @(Model.CurrentPage == page ? "disabled" : "")"
-                               asp-action="Index"
-                               asp-route-Page="@(page)"
+                            <a class="page-link @(Model.CurrentPage == p ? "active" : "")"
+                               asp-action="Index" asp-route-Page="@p"
                                asp-route-Filter="@Model.Filter"
                                asp-route-RecordsPerPage="@Model.RecordsPerPage">
-                               @(page)
+                                @p
                             </a>
                         </li>
-                        
                     }
 
-                    @* Siguiente *@
+                    <!-- Siguiente -->
                     <li class="page-item">
                         <a class="page-link @(!Model.HasNext ? "disabled" : "")"
-                           asp-action="Index"
-                           asp-route-Page="@(Model.CurrentPage + 1)"
+                           asp-action="Index" asp-route-Page="@(Model.CurrentPage + 1)"
                            asp-route-Filter="@Model.Filter"
-                           asp-route-RecordsPerPage="@Model.RecordsPerPage">
-                            &rsaquo;
-                        </a>
+                           asp-route-RecordsPerPage="@Model.RecordsPerPage">&rsaquo;</a>
                     </li>
 
-                    @* Último *@
+                    <!-- Último -->
                     <li class="page-item">
-                        <a class="page-link @(Model.TotalPages == Model.CurrentPage ? "disabled" : "")"
-                           asp-action="Index"
-                           asp-route-Page="@(Model.TotalPages)"
+                        <a class="page-link @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")"
+                           asp-action="Index" asp-route-Page="@(Model.TotalPages)"
                            asp-route-Filter="@Model.Filter"
-                           asp-route-RecordsPerPage="@Model.RecordsPerPage">
-                            &raquo;
-                        </a>
+                           asp-route-RecordsPerPage="@Model.RecordsPerPage">&raquo;</a>
                     </li>
-
                 </ul>
-
             </nav>
-
-
         </div>
     </div>
 </section>
 
 @section Scripts {
-        <script>
-
-            $(document).ready(function(){
-
-                $('.btnDelete').click(function(event){
-
-                    event.preventDefault();
-
-                   Swal.fire({
-                  title: "¿Estás seguro de eliminar esta cita?",
-                  text: "No podras revertir este cambio",
-                  icon: "question",
-                  showCancelButton: true,
-                  confirmButtonColor: "#3085d6",
-                  cancelButtonColor: "#d33",
-                  confirmButtonText: "Si, eliminar",
-                  cancelButtonText: "No, eliminar"
-
+    <script>
+        $(document).ready(function () {
+            $('.btnDelete').click(function (event) {
+                event.preventDefault();
+                Swal.fire({
+                    title: "¿Estás seguro de eliminar esta cita?",
+                    text: "No podrás revertir este cambio.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Sí, eliminar",
+                    cancelButtonText: "Cancelar"
                 }).then((result) => {
-
-                  if (result.isConfirmed) {
-
-                      const deleteForm = $(this).closest('form');
-                      deleteForm.submit();
-
-                  }
-
+                    if (result.isConfirmed) {
+                        const deleteForm = $(this).closest('form');
+                        deleteForm.submit();
+                    }
                 });
-
-                })
-
-            })
-
-        </script>
+            });
+        });
+    </script>
 }
-
