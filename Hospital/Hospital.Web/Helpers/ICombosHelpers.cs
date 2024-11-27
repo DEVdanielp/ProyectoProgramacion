@@ -65,7 +65,7 @@ namespace Hospital.Web.Helpers
 
         public async Task<IEnumerable<SelectListItem>> GetComboDoctor()
         {
-            List<SelectListItem> list = await _context.Users.Select(u => new SelectListItem
+            List<SelectListItem> list = await _context.Users.Where(u => u.HospitalRole.Name == "Doctor").Select(u => new SelectListItem
             {
 
                 Text = $"{u.FirstName} {u.LastName}",

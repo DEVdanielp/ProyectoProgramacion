@@ -1,6 +1,18 @@
 ﻿@using Hospital.Web.Core
 @model PaginationResponse<Appoiment>
 @inject Hospital.Web.Services.IUsersService _usersService
+
+@{
+    User user;
+    try
+    {
+        user = await _usersService.GetUserAsync(User.Identity.Name);
+    }
+    catch
+    {
+        user = null;
+    }
+}
 @{
     ViewData["Title"] = "Citas ";
 }
@@ -72,33 +84,66 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (Appoiment item in Model.List)
+                    @if (user.HospitalRole.Name == "Administrador")
                     {
-                        <tr>
+                        @foreach (Appoiment item in Model.List)
+                        {
+                            <tr>
 
-                            <td>@item.Id</td>
-                            <td>@item.Time</td>
-                            <td>@item.Date</td>
-                            <td>@item.UserPatient.FirstName @item.UserPatient.LastName</td>
-                            <td>@item.UserDoctor.FirstName @item.UserDoctor.LastName</td  
-                            
-                            
-                        </tr>
-                        <td>
+                                <td>@item.Id</td>
+                                <td>@item.Time</td>
+                                <td>@item.Date</td>
+                                <td>@item.UserPatient.FirstName @item.UserPatient.LastName</td>
+                                <td>@item.UserDoctor.FirstName @item.UserDoctor.LastName</td>
 
-                            @if (await _usersService.CurrentUserIsAuthorizedAsync("updateAppoiment", "Citas"))
-                            {
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
-                            }
-                            @if (await _usersService.CurrentUserIsAuthorizedAsync("deleteAppoiment", "Citas"))
-                            {
-                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: contents;">
-                                <button class="btn btn-sm btn-danger btnDelete"><i class="bi bi-trash-fill"></i></button>
-                            </form>
-                            }
+                                <td>
 
-                        </td>
+                                    @if (await _usersService.CurrentUserIsAuthorizedAsync("updateAppoiment", "Citas"))
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
+                                    }
+                                    @if (await _usersService.CurrentUserIsAuthorizedAsync("deleteAppoiment", "Citas"))
+                                    {
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: contents;">
+                                            <button class="btn btn-sm btn-danger btnDelete"><i class="bi bi-trash-fill"></i></button>
+                                        </form>
+                                    }
+
+                                </td>
+                            </tr>
+
+                        }
+                    } else
+                    {
+                        @foreach (Appoiment item in Model.List.Where(item => item.UserPatient.FullName == user.FullName || item.UserDoctor.FullName == user.FullName))
+                        {
+                            <tr>
+
+                                <td>@item.Id</td>
+                                <td>@item.Time</td>
+                                <td>@item.Date</td>
+                                <td>@item.UserPatient.FirstName @item.UserPatient.LastName</td>
+                                <td>@item.UserDoctor.FirstName @item.UserDoctor.LastName</td>
+
+                                <td>
+
+                                    @if (await _usersService.CurrentUserIsAuthorizedAsync("updateAppoiment", "Citas"))
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
+                                    }
+                                    @if (await _usersService.CurrentUserIsAuthorizedAsync("deleteAppoiment", "Citas"))
+                                    {
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display: contents;">
+                                            <button class="btn btn-sm btn-danger btnDelete"><i class="bi bi-trash-fill"></i></button>
+                                        </form>
+                                    }
+
+                                </td>
+                            </tr>
+
+                        }
                     }
+
 
                 </tbody>
             </table>

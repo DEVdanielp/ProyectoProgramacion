@@ -26,6 +26,11 @@ namespace Hospital.Web.Data
                                        .HasForeignKey(a => a.UserDoctorId) 
                                        .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<MedicalSpe>().HasOne(a => a.UserDoctor)
+                           .WithMany()
+                           .HasForeignKey(a => a.UserDoctorId)
+                           .OnDelete(DeleteBehavior.Restrict);
+
             base.OnModelCreating(builder);
         }
 
